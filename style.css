@@ -1,15 +1,75 @@
 body,
 html {
-    height: 100%;
     margin: 0;
+    height: 100%;
+}
+
+p {
+    margin: 0;
+}
+
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    background-color: #f7f7f7;
+}
+
+.login-header {
+    text-align: center;
+    margin: 0;
+}
+.login-header p {
+    margin: 0;
+    font-size: 2em;
+}
+
+.login-header-text {
+    padding: 40px 0; /* Increased padding */
+}
+
+.login-container-staff {
+    display: flex;
+    height: 100%;
+    background-color: #f7f7f7;
+}
+
+.login-container-staff > div {
+    flex: 1; /* Each div takes up half of the container */
+}
+
+.login-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.logo {
+    max-width: 80%; /* Adjust the size of the logo */
+    height: auto;
+}
+
+.logo-text {
+    margin-top: 2rem;
+    font-size: 3rem; /* Adjust the font size */
+    font-weight: bold; /* Make the logo name bold */
+}
+
+.additional-text {
+    margin-top: 10px;
+    font-size: 1.2rem; /* Adjust the font size */
+    color: #555; /* Adjust the color */
 }
 
 .login-card {
+    display: flex; /* Set as flex container */
+    flex-direction: column; /* Arrange children in a column */
+    justify-content: center; /* Center children vertically */
     max-width: 90%;
-    padding: 20px;
+    padding: 20px 20px 50px 20px;
     background-color: #f7f7f7;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -17,28 +77,60 @@ html {
     text-align: center;
 }
 
-.login-card i {
-    font-size: 7rem;
-    padding-top: 1rem;
+.login-card-staff {
+    display: flex; /* Set as flex container */
+    flex-direction: column; /* Arrange children in a column */
+    justify-content: center; /* Center children vertically */
+    gap: 40px; /* Increased gap */
+    max-width: 70%;
+    padding: 40px 40px 100px 40px; /* Increased padding */
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    text-align: center;
+}
+.login-card-staff h1 {
+    margin: 0;
+    font-size: 4rem; /* Increased font size */
+    padding-top: 1.5rem;
+}           
+
+i {
+    font-size: 14rem; /* Increased icon size */
+    padding-top: 2rem; /* Increased padding */
+}
+
+.login-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #f7f7f7;
 }
 
 .login-card input {
-    margin-bottom: 10px;
+    margin-bottom: 20px; /* Increased margin */
     width: 100%;
-    /* Ensure inputs take full width */
-    padding: 10px;
-    /* Add padding for better appearance */
+    padding: 20px; /* Increased padding */
     box-sizing: border-box;
-    /* Include padding in width calculation */
+}
+
+.login-card-staff input {
+    margin-bottom: 20px; /* Increased margin */
+    width: 100%;
+    padding: 20px; /* Increased padding */
+    box-sizing: border-box;
 }
 
 .login-inputs {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 70%;
 }
 
 .login-submit {
-    margin-top: 1rem;
-} 
+    margin-top: 2rem; /* Increased margin */
+    /* font-size: 1.5rem;  */
+}

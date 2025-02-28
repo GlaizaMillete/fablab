@@ -6,14 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>FabLab Master Portal</title>
+    <title>Admin Portal</title>
 </head>
 
 <body>
-    <div>
+    <div class="login-container">
         <div class="login-card">
-            <i class="fas fa-user-circle"></i>
-            <h1>FABLAB Master Portal</h1><br>
+            <div class="login-header">
+                <i class="fas fa-user-circle"></i>
+                <div class="login-header-text">
+                    <p>FABLAB</p>
+                    <p>Master Portal</p>
+                </div>
+            </div>
             <div class="login-inputs">
                 <form action="" method="">
                     <input type="text" name="username" placeholder="Username">
