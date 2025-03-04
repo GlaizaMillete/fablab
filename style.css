@@ -78,18 +78,22 @@ p {
 }
 
 .login-card-staff {
-    display: flex; /* Set as flex container */
-    flex-direction: column; /* Arrange children in a column */
-    justify-content: center; /* Center children vertically */
-    gap: 40px; /* Increased gap */
-    max-width: 70%;
-    padding: 40px 40px 50px 40px; /* Increased padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6rem;
+    max-width: 50%;
+    width: 100%;
+    height: 100%;
+    max-height: 70vh;
+    padding: 40px 40px 50px 40px;
     background-color: #f7f7f7;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     align-items: center;
     text-align: center;
 }
+
 .login-card-staff h1 {
     margin: 0;
     font-size: 4rem; /* Increased font size */
@@ -189,19 +193,25 @@ i {
 
 .full-width-container {
     width: 100%;
-        flex: 1;
-            /* Occupies 10% of the vertical space */
+    /* flex: 2; */
+    display: flex;
+    /* Add flex display to ensure children can use flex properties */
 }
 
 .add-button-container {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    /* Center content vertically */
+    width: 100%;
+    /* Ensure it takes up the full width */
+    height: 100%;
+    /* Ensure it takes up the full height */
     padding: 1rem;
+    margin-right: 2rem;
 }
 
 .add-button-container p {
-    display: flex;
-    justify-content: flex-end;
     background-color: #4CAF50;
     /* Green background */
     color: white;
@@ -215,13 +225,13 @@ i {
 }
 
 .contents {
-    flex: 9;
+    flex: 18;
     /* Occupies 90% of the vertical space */
     display: flex;
     flex-direction: column;
     overflow: auto;
     /* Allow scrolling if content overflows */
-    padding: 0 1rem 1rem 1rem;
+    /* padding: 1rem; */
     /* Add padding to the contents area */
     box-sizing: border-box;
     /* Include padding in the element's total width and height */
@@ -240,4 +250,5 @@ i {
     /* Example box shadow */
     box-sizing: border-box;
     /* Include padding in the element's total width and height */
+    margin: 2rem 2rem;
 }
