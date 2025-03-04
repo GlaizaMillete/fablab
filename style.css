@@ -83,7 +83,7 @@ p {
     justify-content: center; /* Center children vertically */
     gap: 40px; /* Increased gap */
     max-width: 70%;
-    padding: 40px 40px 100px 40px; /* Increased padding */
+    padding: 40px 40px 50px 40px; /* Increased padding */
     background-color: #f7f7f7;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -98,7 +98,6 @@ p {
 
 i {
     font-size: 14rem; /* Increased icon size */
-    padding-top: 2rem; /* Increased padding */
 }
 
 .login-right {
@@ -114,6 +113,10 @@ i {
     width: 100%;
     padding: 20px; /* Increased padding */
     box-sizing: border-box;
+}
+
+.login-card i {
+    padding-top: 1.5rem;
 }
 
 .login-card-staff input {
@@ -133,4 +136,108 @@ i {
 .login-submit {
     margin-top: 2rem; /* Increased margin */
     /* font-size: 1.5rem;  */
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.admin-left {
+    flex: 2;
+    background-color: #D9D9D9;
+    border-radius: 25px;
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-right {
+    flex: 10;
+    background-color: #627BCE;
+    display: flex;
+    flex-direction: column;
+    /* box-sizing: border-box; */
+    overflow: hidden;
+}
+
+.admin-header {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.admin-content p {
+    text-align: center;
+    background-color: #627BCE;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 11px;
+}
+
+.admin-content {
+    flex: 8;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.full-width-container {
+    width: 100%;
+        flex: 1;
+            /* Occupies 10% of the vertical space */
+}
+
+.add-button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.add-button-container p {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    /* White text */
+    padding: 10px 20px;
+    /* Some padding */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Pointer/hand icon */
+}
+
+.contents {
+    flex: 9;
+    /* Occupies 90% of the vertical space */
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    /* Allow scrolling if content overflows */
+    padding: 0 1rem 1rem 1rem;
+    /* Add padding to the contents area */
+    box-sizing: border-box;
+    /* Include padding in the element's total width and height */
+}
+
+.contents-box {
+    flex: 1;
+    /* Occupies all available space */
+    background-color: #D9D9D9;
+    /* Example background color */
+    padding: 1rem;
+    /* Add padding inside the contents box */
+    border-radius: 10px;
+    /* Example border radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Example box shadow */
+    box-sizing: border-box;
+    /* Include padding in the element's total width and height */
 }
