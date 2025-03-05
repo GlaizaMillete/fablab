@@ -29,7 +29,36 @@
             </div>
             <div class="contents">
                 <div class="contents-box">
-                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job ID</th>
+                                <th>Job Title</th>
+                                <th>Requester</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>3D Printing</td>
+                                <td>John Doe</td>
+                                <td>Pending</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Laser Cutting</td>
+                                <td>Jane Smith</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>CNC Milling</td>
+                                <td>Bob Johnson</td>
+                                <td>In Progress</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
