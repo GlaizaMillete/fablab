@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php $pageTitle = "Job Requests"; ?>
+<?php include 'header.php'; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Job Requests</title>
-</head>
-
-<body>
     <div class="container">
         <div class="container-left">
             <div class="header">
@@ -36,26 +28,26 @@
                         <thead>
                             <tr>
                                 <th>Job ID</th>
-                                <th>Job Title</th>
-                                <th>Requester</th>
+                                <th>Job Service</th>
+                                <th>Client</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
+                                <td>20250305</td>
                                 <td>3D Printing</td>
                                 <td>John Doe</td>
                                 <td>Pending</td>
                             </tr>
                             <tr>
-                                <td>2</td>
+                                <td>20250307</td>
                                 <td>Laser Cutting</td>
                                 <td>Jane Smith</td>
                                 <td>Completed</td>
                             </tr>
                             <tr>
-                                <td>3</td>
+                                <td>20250306</td>
                                 <td>CNC Milling</td>
                                 <td>Bob Johnson</td>
                                 <td>In Progress</td>
