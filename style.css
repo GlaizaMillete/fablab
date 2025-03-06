@@ -250,17 +250,11 @@ i {
 
 .contents-box {
     flex: 1;
-    /* Occupies all available space */
     background-color: #D9D9D9;
-    /* Example background color */
     padding: 1rem;
-    /* Add padding inside the contents box */
     border-radius: 10px;
-    /* Example border radius */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Example box shadow */
     box-sizing: border-box;
-    /* Include padding in the element's total width and height */
     margin: 0 2rem 2rem;
 }
 
@@ -296,5 +290,16 @@ th {
 .user-content .button:hover {
     background-color: #4CAF50;
     /* Change background color on hover */
+}
+
+.admin-image {
+    max-width: 100%;
+    height: auto;
+    width: 150px;
+    /* Adjust the width as needed */
+    margin: 0 auto;
+    /* Center the image */
+    display: block;
+    /* Ensure the image is displayed as a block element */
 }
 

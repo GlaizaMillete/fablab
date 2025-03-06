@@ -1,18 +1,16 @@
 <?php $pageTitle = "Admin Control Room"; ?>
 <?php include 'header.php'; ?>
 
-
 <div class="container">
     <div class="container-left">
         <div class="header">
-            <img src="path/to/your/image.jpg" alt="Description of image" class="admin-image">
-
+            <img src="FABLAB_LOGO.png" alt="Description of image" class="admin-image">
         </div>
         <div class="user-content">
-            <div class="button" onclick="location.href='#'">
+            <div class="button" onclick="showContent('users')">
                 <p>Users</p>
             </div>
-            <div class="button" onclick="location.href='#'">
+            <div class="button" onclick="showContent('logs')">
                 <p>Logs</p>
             </div>
         </div>
@@ -20,14 +18,14 @@
     <div class="container-right">
         <div class="full-width-container">
             <div class="title-container">
-                <h1>Users</h1>
+                <h1 id="content-title">Users</h1>
             </div>
-            <div class="add-button-container">
+            <div class="add-button-container" id="add-button-container">
                 <p>Add</p>
             </div>
         </div>
         <div class="contents">
-            <div class="contents-box">
+            <div class="contents-box" id="users-content">
                 <table>
                     <thead>
                         <tr>
@@ -56,9 +54,57 @@
                     </tbody>
                 </table>
             </div>
+            <div class="contents-box" id="logs-content" style="display: none;">
+                <table>
+                    <!-- <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead> -->
+                    <tbody>
+                        <tr>
+                            <td>2025-02-25 10:32:02</td>
+                            <td>Jade Raposa</td>
+                            <td>Change Billing details</td>
+                        </tr>
+                        <tr>
+                            <td>2025-03-06 09:15:45</td>
+                            <td>John Doe</td>
+                            <td>Login</td>
+                        </tr>
+                        <tr>
+                            <td>2025-03-06 17:45:30</td>
+                            <td>Jane Smith</td>
+                            <td>Logout</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    function showContent(contentId) {
+        // Hide all content boxes
+        document.getElementById('users-content').style.display = 'none';
+        document.getElementById('logs-content').style.display = 'none';
+
+        // Show the selected content box
+        document.getElementById(contentId + '-content').style.display = 'block';
+
+        // Update the title
+        document.getElementById('content-title').innerText = contentId.charAt(0).toUpperCase() + contentId.slice(1);
+
+        // Toggle the visibility of the add button
+        if (contentId === 'logs') {
+            document.getElementById('add-button-container').style.display = 'none';
+        } else {
+            document.getElementById('add-button-container').style.display = 'flex';
+        }
+    }
+</script>
 </body>
 
 </html>
