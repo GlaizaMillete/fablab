@@ -21,7 +21,7 @@
                 <h1 id="content-title">Users</h1>
             </div>
             <div class="add-button-container" id="add-button-container">
-                <p>Add</p>
+                <p onclick="showForm()">Add</p>
             </div>
         </div>
         <div class="contents">
@@ -85,7 +85,34 @@
         </div>
     </div>
 </div>
+
+<!-- Floating Form -->
+<div id="floating-form" class="floating-form">
+    <form>
+        <h2>Add New User</h2>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <button type="submit">Submit</button>
+        <button type="button" onclick="hideForm()">Cancel</button>
+    </form>
+</div>
+
+<!-- Background Overlay -->
+<div id="background-overlay" class="background-overlay"></div>
+
 <script>
+    function showForm() {
+        document.getElementById('floating-form').style.display = 'block';
+        document.getElementById('background-overlay').style.display = 'block';
+    }
+
+    function hideForm() {
+        document.getElementById('floating-form').style.display = 'none';
+        document.getElementById('background-overlay').style.display = 'none';
+    }
+
     function showContent(contentId) {
         // Hide all content boxes
         document.getElementById('users-content').style.display = 'none';
