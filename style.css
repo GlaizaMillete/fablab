@@ -171,10 +171,22 @@ i {
     /* Make the container a reference point for absolute positioning */
 }
 
+.container {
+    display: flex;
+    height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+    position: relative;
+    /* Make the container a reference point for absolute positioning */
+    overflow: visible;
+    /* Ensure the container does not clip child elements */
+}
+
 .container-left {
     width: 18%;
     background-color: #D9D9D9;
-    border-radius: 25px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
     margin-right: 1rem;
     display: flex;
     flex-direction: column;
@@ -198,6 +210,8 @@ i {
     padding: 0 2rem;
     margin: 2rem 2rem 2rem 0;
     box-sizing: border-box;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 
 .header {
@@ -339,7 +353,8 @@ th {
     margin-top: 10px;
 }
 
-.floating-form input {
+.floating-form input,
+.floating-form textarea {
     margin-top: 5px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -374,5 +389,34 @@ th {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+}
+
+/* Job Requests Tabs Styles */
+.job-requests-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.job-requests-tabs button {
+    background-color: #627BCE;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.job-requests-tabs button:hover {
+    background-color: #4CAF50;
+}
+
+.job-request-content {
+    display: none;
+}
+
+.job-request-content.active {
+    display: block;
 }
 
