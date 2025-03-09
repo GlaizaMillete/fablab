@@ -10,8 +10,7 @@ $name = $_POST["name"];
 
 $html = '<h1>Example</h1>';
 $html = "Hello <em>$name</em>";
-$html = '<img src="assets/img/bu_logo.png" alt="Logo">';
-$imagePath = __DIR__ . '/img/bu_logo.png';
+$html = '<img src="bu_logo.png">';
 
 /**
  * Set the Dompdf options

@@ -2,42 +2,209 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/gutenberg-css@0.6">
-    <img src="img/bu_logo.png" alt="Logo">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .content {
-            width: 100%;
-            text-align: center;
-            padding: 20px;
-            border: 5px solid #000;
-            margin: 10px;
-            box-sizing: border-box;
-        }
-        img {
-            max-width: 100%;
-            height: 100px;
-            position: absolute;
             margin: 20px;
-            opacity: 100%;
         }
-        .title {
-            font-size: 24px;
-            margin: 0;
-            padding-top: 150px;
+        .container {
+            width: 80%;
+            margin: auto;
+            border: 2px solid black;
+            padding: 20px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            width: 200px;
+            margin-right: 10px;
+            margin-left: 20px;
+        }
+        .company-info {
+            text-align: right;
+        }
+        .header {
             text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
-        </style>
-</head>
+        .section {
+            margin-bottom: 20px;
+        }
+        .box {
+            border: 1px solid black;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .flex-item {
+            width: 48%;
+        }
+        .client-profile-container {
+            display: flex;
+        }
+        .client-profile, .project-description {
+            width: 48%;
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .client-info {
+            display: flex;
+            justify-content: space-between;
+        }
+        .client-info, .p {
+            flex: 1;
+            margin: 0;
+        }
+        .align-right {
+            text-align: right;
+        }
+        .table-header th:nth-child(2),
+        .table-header th:nth-child(3) {
+            width: 10%;
+        }
+        
+        .table-header th:nth-child(1),
+        .table-header th:nth-child(4) {
+            width: 40%;
+        }
+        .company-info {
+            text-align: left    ;
+        }
+    </style>
 <body>
-
-    <h2 class="title">PAYMENT AND RELEASE FORM</h2>
-
-    <p>Name: {{ name }}</p>
-
+    <div class="container">
+        <div class="header-container">
+            <div class="logo">
+                <img src="bu_logo.png" alt="First Logo">
+                <img src="fablab.png" alt="Second Logo">
+            </div>
+            <div class="company-info">
+                <p>Republic of the Philippines</p>
+                <p>Bicol University</p>
+                <p>Research Development and Extension</p>
+                <p><strong>FAB LAB BICOL</strong></p>
+                <p>BU East Campus, Legazpi City</p>
+                <p>Email: fablab@bicol-u.edu.ph</p>
+            </div>
+        </div>
+        <div class="header">
+            <h2>PAYMENT AND RELEASING FORM</h2>
+        </div>
+        
+        <div class="section">
+            <strong>1. CLIENT INFORMATION</strong>
+            <div class="box">
+                <div class="client-info">
+                    <p>Client Name: ______________________</p>
+                    <p class="align-right">NO: ______________</p>
+                </div>
+                <p>Address: ____________________________________________</p>
+                <div class="client-info">
+                    <p>Contact No: ________________________________________</p>
+                    <p class="align-right">DATE: ______________</p>
+                </div>
+                <div class="client-profile-container">
+                    <div class="client-profile">
+                        <p><strong>Client Profile:</strong></p>
+                        <input type="checkbox"> STUDENT<br>
+                        <input type="checkbox"> MSME<br>
+                        <input type="checkbox"> OTHERS, SPECIFY: ______________
+                    </div>
+                    <div class="project-description">
+                        <p><strong>Description of the Project:</strong></p>
+                        <p></p>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <strong>2. DETAILS OF THE SERVICE TO BE RENDERED</strong>
+            <div class="box">
+                <table>
+                    <tr class="table-header">
+                        <th></th>
+                        <th>UNIT</th>
+                        <th>RATE</th>
+                        <th>TOTAL COST</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <p><strong>TOTAL</strong>: __________________________</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <p>Completion Date: _________________________</p>
+            <p>I, hereby understand and agree to the terms and conditions set by the Fab Lab Bicol</p>
+            <p>Signature: ________________________ DATE: ______________</p>
+        </div>
+        
+        <div class="flex-container">
+            <div class="flex-item">
+                <strong>3. ORDER PAYMENT</strong>
+                <div class="box">
+                    <p>Please issue an Official Receipt in favor of ________________________</p>
+                    <p>For the amount of ________________________</p>
+                    <p>Approved by:</p>
+                    <p><strong>ALFONSO M. PEÑOL, JR.</strong></p>
+                    <p>Director</p>
+                </div>
+            </div>
+            <div class="flex-item">
+                <strong>4. PAYMENT</strong>
+                <div class="box">
+                    <p>OR. NO: ______________ DATE: ______________</p>
+                    <p>Payment Received by: ________________________</p>
+                </div>
+                <strong>5. RECEIPT OF COMPLETED WORK</strong>
+                <div class="box">
+                    <p>I, the client, acknowledge that I have received the above product.</p>
+                    <p>Signature: ________________________ DATE: ______________</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
