@@ -167,24 +167,51 @@ i {
     height: 100vh;
     padding: 2rem;
     box-sizing: border-box;
+    position: relative;
+    /* Make the container a reference point for absolute positioning */
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+    position: relative;
+    /* Make the container a reference point for absolute positioning */
+    overflow: visible;
+    /* Ensure the container does not clip child elements */
 }
 
 .container-left {
-    flex: 2;
+    width: 18%;
     background-color: #D9D9D9;
-    border-radius: 25px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
     margin-right: 1rem;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 2;
+    /* Ensure it stays above the container-right */
 }
 
 .container-right {
-    flex: 10;
+    /* flex: 10; */
     background-color: #627BCE;
     display: flex;
     flex-direction: column;
-    /* box-sizing: border-box; */
     overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 17%;
+    z-index: 1;
+    padding: 0 2rem;
+    margin: 2rem 2rem 2rem 0;
+    box-sizing: border-box;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 
 .header {
@@ -250,18 +277,12 @@ i {
 
 .contents-box {
     flex: 1;
-    /* Occupies all available space */
     background-color: #D9D9D9;
-    /* Example background color */
     padding: 1rem;
-    /* Add padding inside the contents box */
     border-radius: 10px;
-    /* Example border radius */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Example box shadow */
     box-sizing: border-box;
-    /* Include padding in the element's total width and height */
-    margin: 0 2rem 2rem;
+    margin: 0 0 2rem 2rem;
 }
 
 table {
@@ -297,3 +318,105 @@ th {
     background-color: #4CAF50;
     /* Change background color on hover */
 }
+
+.admin-image {
+    max-width: 100%;
+    height: auto;
+    width: 150px;
+    /* Adjust the width as needed */
+    margin: 0 auto;
+    /* Center the image */
+    display: block;
+    /* Ensure the image is displayed as a block element */
+}
+
+/* Floating Form Styles */
+.floating-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+
+.floating-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.floating-form label {
+    margin-top: 10px;
+}
+
+.floating-form input,
+.floating-form textarea {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.floating-form button {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.floating-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.floating-form button[type="button"] {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Background Overlay Styles */
+.background-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+/* Job Requests Tabs Styles */
+.job-requests-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.job-requests-tabs button {
+    background-color: #627BCE;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.job-requests-tabs button:hover {
+    background-color: #4CAF50;
+}
+
+.job-request-content {
+    display: none;
+}
+
+.job-request-content.active {
+    display: block;
+}
+
