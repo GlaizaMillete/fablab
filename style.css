@@ -301,7 +301,6 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Add styles for the button divs */
 .user-content .button {
     text-align: center;
     background-color: #627BCE;
@@ -309,14 +308,12 @@ th {
     font-size: 1.5rem;
     border-radius: 11px;
     cursor: pointer;
-    /* Pointer/hand icon */
     transition: background-color 0.3s;
-    /* Smooth transition for background color */
 }
 
-.user-content .button:hover {
+.user-content .button:hover,
+.user-content .button.active {
     background-color: #4CAF50;
-    /* Change background color on hover */
 }
 
 .admin-image {
@@ -418,5 +415,11 @@ th {
 
 .job-request-content.active {
     display: block;
+}
+
+.job-request-content canvas {
+    width: 100% !important;
+    height: 100% !important;
+    /* Adjust the height as needed */
 }
 
