@@ -251,7 +251,7 @@ i {
     justify-content: flex-end;
     align-items: center;
     padding: 1rem 0 1rem 1rem;
-    margin-right: 2rem;
+    /* margin-right: 2rem; */
 }
 
 .add-button-container p {
@@ -407,6 +407,10 @@ th {
 
 .job-requests-tabs button:hover {
     background-color: #4CAF50;
+}
+
+#job-request-title {
+    text-transform: uppercase;
 }
 
 .job-request-content {
