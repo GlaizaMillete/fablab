@@ -31,7 +31,7 @@
                 <!-- this area should be dynamic according to the active job request tab (job description, billing, feedback) -->
             </div>
             <div class="add-button-container">
-                <p onclick="showForm()">Add</p>
+                <p onclick="redirectToAddPage()">Add</p>
                 <!-- will depend on the active tab, leave this area for now -->
             </div>
         </div>

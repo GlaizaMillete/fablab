@@ -54,7 +54,7 @@
     <div class="container-right">
         <div class="full-width-container">
             <div class="title-container">
-                <h1>Job Requests</h1>
+                <h1>Add Job Request</h1>
             </div>
             <!-- <div class="add-button-container">
                 <p>Add</p>
