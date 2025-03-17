@@ -1,5 +1,6 @@
 <?php $pageTitle = "Admin Control Room"; ?>
 <?php include 'header.php'; ?>
+<?php include 'config.php'; ?>
 
 <div class="container">
     <div class="container-left">
@@ -30,27 +31,27 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th>Username</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>
-                                <button>Edit</button>
-                                <button>Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jane Smith</td>
-                            <td>
-                                <button>Edit</button>
-                                <button>Delete</button>
-                            </td>
-                        </tr>
+                        <?php
+                        $sql = "SELECT staffID, staffUsername FROM staffFablab";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row["staffID"] . "</td>";
+                                echo "<td>" . $row["staffUsername"] . "</td>";
+                                echo "<td><button>Edit</button> <button>Delete</button></td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3'>No users found</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -88,12 +89,14 @@
 
 <!-- Floating Form -->
 <div id="floating-form" class="floating-form">
-    <form>
+    <form id="add-user-form" action="add-user-handler.php" method="post">
         <h2>Add New User</h2>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="confirm-password">Confirm Password:</label>
+        <input type="password" id="confirm-password" name="confirm-password" required>
         <button type="submit">Submit</button>
         <button type="button" onclick="hideForm()">Cancel</button>
     </form>

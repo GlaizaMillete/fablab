@@ -16,9 +16,9 @@
                 <!-- <h1>Fablab Portal</h1> -->
             </div>
             <div class="login-inputs">
-                <form action="" method="">
-                    <input type="text" name="username" placeholder="Username">
-                    <input type="password" name="password" placeholder="Password">
+                <form action="staff-login-handler.php" method="post">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
                     <input type="submit" class="login login-submit" name="login" value="Login">
                 </form>
             </div>
