@@ -111,9 +111,9 @@ include 'config.php';
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password">
         <label for="confirm-password">Confirm Password:</label>
-        <input type="password" id="confirm-password" name="confirm-password" required>
+        <input type="password" id="confirm-password" name="confirm-password">
         <button type="submit">Submit</button>
         <button type="button" onclick="hideForm()">Cancel</button>
     </form>
