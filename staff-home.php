@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="button" onclick="location.href='logout.php'">
-            <p>Logout</p>
+            <p class="logout">Logout</p>
         </div>
     </div>
     <div class="container-right">

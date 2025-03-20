@@ -338,10 +338,20 @@ th {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 399px;
+    /* Increased width */
+    padding: 30px;
+    /* Increased padding */
+    border-radius: 15px;
+    /* Slightly larger border radius */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    /* Slightly larger shadow */
     z-index: 1001;
+}
+
+.floating-form h2 {
+    margin: 0 0 1rem;
+    font-size: 1.8rem;
 }
 
 .floating-form form {
@@ -355,18 +365,19 @@ th {
 
 .floating-form input,
 .floating-form textarea {
-    margin-top: 5px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    margin-top: 10px;
+    padding: 15px;
+    /* Increased padding for inputs */
+    font-size: 1rem;
+    /* Larger font size for inputs */
 }
 
 .floating-form button {
     margin-top: 20px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 12px;
+    /* Increased button padding */
+    font-size: 1rem;
+    /* Larger font size for buttons */
 }
 
 .floating-form button[type="submit"] {
@@ -428,4 +439,14 @@ th {
     width: 100% !important;
     height: 100% !important;
     /* Adjust the height as needed */
+}
+
+.logout {
+    text-align: center;
+    background-color: rgb(98, 123, 206);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+    margin: 0 1rem 1rem;
+    border-radius: 11px;
 }

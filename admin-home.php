@@ -1,6 +1,17 @@
-<?php $pageTitle = "Admin Control Room"; ?>
-<?php include 'header.php'; ?>
-<?php include 'config.php'; ?>
+<?php
+session_start(); // Start the session
+
+// Check if the user is logged in
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    // Redirect to the login page if not logged in
+    header("Location: admin-login.php");
+    exit();
+}
+
+$pageTitle = "Admin Control Room";
+include 'header.php';
+include 'config.php';
+?>
 
 <div class="container">
     <div class="container-left">
@@ -14,6 +25,9 @@
             <div class="button" onclick="showContent('logs')">
                 <p>Logs</p>
             </div>
+        </div>
+        <div class="button" onclick="confirmLogout()">
+            <p class="logout">Logout</p>
         </div>
     </div>
     <div class="container-right">
@@ -132,6 +146,12 @@
             document.getElementById('add-button-container').style.display = 'none';
         } else {
             document.getElementById('add-button-container').style.display = 'flex';
+        }
+    }
+
+    function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = 'logout.php';
         }
     }
 </script>
