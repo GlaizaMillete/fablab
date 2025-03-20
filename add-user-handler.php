@@ -5,19 +5,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm-password'];
+    $userId = isset($_POST['user-id']) ? $_POST['user-id'] : null;
 
     if ($password === $confirmPassword) {
-        // Hash the password before storing it in the database
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO staffFablab (staffUsername, staffPassword) VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $username, $hashedPassword);
+        if ($userId) {
+            // Update existing user
+            $sql = "UPDATE staffFablab SET staffUsername = ?, staffPassword = ? WHERE staffID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssi", $username, $hashedPassword, $userId);
+        } else {
+            // Add new user
+            $sql = "INSERT INTO staffFablab (staffUsername, staffPassword) VALUES (?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ss", $username, $hashedPassword);
+        }
 
         if ($stmt->execute()) {
-            echo '<script>alert("User added successfully."); window.location.href = "admin-home.php";</script>';
+            echo '<script>alert("User saved successfully."); window.location.href = "admin-home.php";</script>';
         } else {
-            echo '<script>alert("Error adding user."); window.location.href = "admin-home.php";</script>';
+            echo '<script>alert("Error saving user."); window.location.href = "admin-home.php";</script>';
         }
 
         $stmt->close();

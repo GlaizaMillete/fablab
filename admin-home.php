@@ -59,7 +59,10 @@ include 'config.php';
                                 echo "<tr>";
                                 echo "<td>" . $row["staffID"] . "</td>";
                                 echo "<td>" . $row["staffUsername"] . "</td>";
-                                echo "<td><button>Edit</button> <button>Delete</button></td>";
+                                echo "<td>
+                <button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>
+                <button>Delete</button>
+              </td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -104,7 +107,7 @@ include 'config.php';
 <!-- Floating Form -->
 <div id="floating-form" class="floating-form">
     <form id="add-user-form" action="add-user-handler.php" method="post">
-        <h2>Add New User</h2>
+        <h2 id="form-title">Add New User</h2>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <label for="password">Password:</label>
@@ -121,13 +124,26 @@ include 'config.php';
 
 <script>
     function showForm() {
+        document.getElementById('form-title').innerText = 'Edit User'; // Change title for editing
         document.getElementById('floating-form').style.display = 'block';
         document.getElementById('background-overlay').style.display = 'block';
     }
 
     function hideForm() {
+        document.getElementById('form-title').innerText = 'Add New User'; // Reset title for adding
         document.getElementById('floating-form').style.display = 'none';
         document.getElementById('background-overlay').style.display = 'none';
+
+        // Clear the form fields
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('confirm-password').value = '';
+
+        // Remove the hidden user ID input if it exists
+        const userIdInput = document.getElementById('user-id');
+        if (userIdInput) {
+            userIdInput.remove();
+        }
     }
 
     function showContent(contentId) {
@@ -153,6 +169,27 @@ include 'config.php';
         if (confirm("Are you sure you want to log out?")) {
             window.location.href = 'logout.php';
         }
+    }
+
+    function editUser(id, username) {
+        // Populate the form fields with the user's details
+        document.getElementById('username').value = username;
+        document.getElementById('password').value = ''; // Clear the password field
+        document.getElementById('confirm-password').value = ''; // Clear the confirm password field
+
+        // Add a hidden input to store the user's ID for editing
+        let userIdInput = document.getElementById('user-id');
+        if (!userIdInput) {
+            userIdInput = document.createElement('input');
+            userIdInput.type = 'hidden';
+            userIdInput.id = 'user-id';
+            userIdInput.name = 'user-id';
+            document.getElementById('add-user-form').appendChild(userIdInput);
+        }
+        userIdInput.value = id;
+
+        // Show the floating form
+        showForm();
     }
 </script>
 </body>
