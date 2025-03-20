@@ -60,9 +60,9 @@ include 'config.php';
                                 echo "<td>" . $row["staffID"] . "</td>";
                                 echo "<td>" . $row["staffUsername"] . "</td>";
                                 echo "<td>
-                <button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>
-                <button>Delete</button>
-              </td>";
+                    <button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>
+                    <button onclick=\"confirmDelete('" . $row["staffID"] . "')\">Delete</button>
+                  </td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -143,6 +143,13 @@ include 'config.php';
         const userIdInput = document.getElementById('user-id');
         if (userIdInput) {
             userIdInput.remove();
+        }
+    }
+
+    function confirmDelete(id) {
+        if (confirm("Are you sure you want to delete this user?")) {
+            // Redirect to the delete handler with the user ID as a query parameter
+            window.location.href = `delete-user-handler.php?id=${id}`;
         }
     }
 
