@@ -9,6 +9,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     exit();
 }
 
+// Display a logout success message if redirected from logout.php
 if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
     echo '<script>alert("You have successfully logged out.");</script>';
 }

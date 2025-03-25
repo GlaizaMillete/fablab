@@ -26,7 +26,7 @@ include 'config.php';
                 <p>Logs</p>
             </div>
         </div>
-        <div class="button" onclick="confirmLogout()">
+        <div class="button" onclick="location.href='logout.php'">
             <p class="logout">Logout</p>
         </div>
     </div>
@@ -45,13 +45,14 @@ include 'config.php';
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Username</th>
+                            <th>User</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT staffID, staffUsername FROM staffFablab";
+                        $sql = "SELECT staffID, staffUsername, status FROM staffFablab";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
@@ -59,14 +60,15 @@ include 'config.php';
                                 echo "<tr>";
                                 echo "<td>" . $row["staffID"] . "</td>";
                                 echo "<td>" . $row["staffUsername"] . "</td>";
+                                echo "<td>" . $row["status"] . "</td>";
                                 echo "<td>
                     <button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>
-                    <button onclick=\"confirmDelete('" . $row["staffID"] . "')\">Delete</button>
+                    <button onclick=\"toggleStatus('" . $row["staffID"] . "', '" . $row["status"] . "')\">" . ($row["status"] === "Active" ? "Deactivate" : "Activate") . "</button>
                   </td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='3'>No users found</td></tr>";
+                            echo "<tr><td colspan='4'>No users found</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -146,10 +148,15 @@ include 'config.php';
         }
     }
 
-    function confirmDelete(id) {
-        if (confirm("Are you sure you want to delete this user?")) {
-            // Redirect to the delete handler with the user ID as a query parameter
-            window.location.href = `delete-user-handler.php?id=${id}`;
+    function toggleStatus(id, currentStatus) {
+        const newStatus = currentStatus === "Active" ? "Inactive" : "Active";
+        const confirmationMessage = currentStatus === "Active" ?
+            "Are you sure you want to deactivate this user?" :
+            "Are you sure you want to activate this user?";
+
+        if (confirm(confirmationMessage)) {
+            // Redirect to the toggle status handler with the user ID and new status as query parameters
+            window.location.href = `toggle-status-handler.php?id=${id}&status=${newStatus}`;
         }
     }
 

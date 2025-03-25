@@ -1,5 +1,22 @@
-<?php $pageTitle = "FabLab Login"; ?>
-<?php include 'header.php'; ?>
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(); // Start the session only if it's not already started
+}
+
+// Redirect to staff-home.php if the user is already logged in
+if (isset($_SESSION['staff_logged_in']) && $_SESSION['staff_logged_in'] === true) {
+    header("Location: staff-home.php");
+    exit();
+}
+
+// Display a logout success message if redirected from logout.php
+if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
+    echo '<script>alert("You have successfully logged out.");</script>';
+}
+
+$pageTitle = "FabLab Login";
+include 'header.php';
+?>
 
 <div class="login-container-staff">
     <div class="login-left">
@@ -7,13 +24,12 @@
         <i>
             <p class="logo-text">WELCOME TO FABLAB!</p>
         </i>
-        <p class="additional-text">Pogi ni jade</p> <!-- New text added here -->
+        <p class="additional-text">Pogi ni jade</p>
     </div>
     <div class="login-right">
         <div class="login-card-staff">
             <div>
                 <i class="fas fa-user-circle"></i>
-                <!-- <h1>Fablab Portal</h1> -->
             </div>
             <div class="login-inputs">
                 <form action="staff-login-handler.php" method="post">

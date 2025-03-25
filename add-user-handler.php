@@ -1,6 +1,15 @@
 <?php
 include 'config.php';
 
+session_start(); // Start the session
+
+// Check if the user is logged in
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    // Redirect to the login page if not logged in
+    header("Location: admin-login.php");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
