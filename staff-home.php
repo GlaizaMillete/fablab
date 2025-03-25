@@ -8,6 +8,11 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
     exit();
 }
 
+// Display a login success message if redirected from the login handler
+if (isset($_GET['login']) && $_GET['login'] === 'success') {
+    echo '<script>alert("You have successfully logged in.");</script>';
+}
+
 $pageTitle = "Job Requests";
 include 'header.php';
 ?>
@@ -18,6 +23,9 @@ include 'header.php';
             <img src="FABLAB_LOGO.png" alt="Description of image" class="admin-image">
         </div>
         <div class="user-content">
+            <div class="button" onclick="showTab('dashboard', 'Dashboard')">
+                <p>Dashboard</p>
+            </div>
             <div class="button" onclick="showTab('job-description', 'Job Requests')">
                 <p>Job Requests</p>
             </div>
@@ -26,9 +34,6 @@ include 'header.php';
             </div>
             <div class="button" onclick="showTab('feedback', 'Feedbacks')">
                 <p>Feedbacks</p>
-            </div>
-            <div class="button" onclick="showTab('summary', 'Summary')">
-                <p>Summary</p>
             </div>
         </div>
         <div class="button" onclick="location.href='logout.php'">
@@ -56,6 +61,7 @@ include 'header.php';
                                 <th>Job Service</th>
                                 <th>Client</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,18 +70,21 @@ include 'header.php';
                                 <td>3D Printing</td>
                                 <td>John Doe</td>
                                 <td>Pending</td>
+                                <td><button onclick="">View</button></td>
                             </tr>
                             <tr>
                                 <td>20250307</td>
                                 <td>Laser Cutting</td>
                                 <td>Jane Smith</td>
                                 <td>Completed</td>
+                                <td><button onclick="">View</button></td>
                             </tr>
                             <tr>
                                 <td>20250306</td>
                                 <td>CNC Milling</td>
                                 <td>Bob Johnson</td>
                                 <td>In Progress</td>
+                                <td><button onclick="">View</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -138,7 +147,7 @@ include 'header.php';
                         </tbody>
                     </table>
                 </div>
-                <div class="job-request-content" id="summary">
+                <div class="job-request-content active" id="dashboard">
                     <canvas id="summaryChart"></canvas>
                 </div>
             </div>
@@ -195,15 +204,15 @@ include 'header.php';
         // Add active class to the clicked button
         document.querySelector('.user-content .button[onclick="showTab(\'' + tabId + '\', \'' + title + '\')"]').classList.add('active');
 
-        // Render the chart if the summary tab is selected
-        if (tabId === 'summary') {
+        // Render the chart if the dashboard tab is selected
+        if (tabId === 'dashboard') {
             renderSummaryChart();
         }
     }
 
     // Show the default tab on page load
     document.addEventListener('DOMContentLoaded', function() {
-        showTab('job-description', 'Job Requests');
+        showTab('dashboard', 'Dashboard');
     });
 
     function renderSummaryChart() {

@@ -15,11 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Set a session variable to indicate the admin is logged in
         $_SESSION['admin_logged_in'] = true;
 
-        // Redirect to admin-home.php
-        header('Location: admin-home.php');
+        // Redirect to admin-home.php with a success message
+        header('Location: admin-home.php?login=success');
         exit();
     } else {
         // Invalid credentials
         echo '<script>alert("Invalid username or password."); window.location.href = "admin-login.php";</script>';
     }
 }
+?>

@@ -8,6 +8,11 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit();
 }
 
+// Display a login success message if redirected from the login handler
+if (isset($_GET['login']) && $_GET['login'] === 'success') {
+    echo '<script>alert("You have successfully logged in.");</script>';
+}
+
 $pageTitle = "Admin Control Room";
 include 'header.php';
 include 'config.php';

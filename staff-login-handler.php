@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['staff_logged_in'] = true;
             $_SESSION['staff_username'] = $username;
 
-            // Redirect to the staff home page
-            header("Location: staff-home.php");
+            // Redirect to the staff home page with a success message
+            header("Location: staff-home.php?login=success");
             exit();
         } else {
             echo '<script>alert("Invalid username or password."); window.location.href = "staff-login.php";</script>';
