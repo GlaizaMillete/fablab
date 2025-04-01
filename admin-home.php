@@ -22,6 +22,10 @@ include 'config.php';
     <div class="container-left">
         <div class="header">
             <img src="FABLAB_LOGO.png" alt="Description of image" class="admin-image">
+            <div class="header-text-admin">
+                <p>Hello <b>Admin!</b></p>
+                <!-- <p>Staff</p> -->
+            </div>
         </div>
         <div class="user-content">
             <div class="button" onclick="showContent('users')">

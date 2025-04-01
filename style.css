@@ -224,6 +224,20 @@ i {
     justify-content: center;
     align-items: center;
     padding: 1.5rem;
+    padding-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.header-text {
+    text-align: center;
+    line-height: 1.5;
+    }
+    .header-text p:last-child {
+        font-style: italic;
+    }
+
+.header-text-admin {
+    text-align: center;
 }
 
 .user-content {
