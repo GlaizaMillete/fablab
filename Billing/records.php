@@ -117,6 +117,10 @@ while ($row = $result->fetch_assoc()) {
         </div>
         
         <div class="dashboard">
+            <div class="chart-container">
+                <canvas id="profileChart"></canvas>
+            </div>
+            
             <div class="totals-card">
                 <h3>Total Revenue</h3>
                 <div class="total-amount">&#8369;<?php echo number_format($ovaTotal, 2); ?></div>
@@ -133,9 +137,6 @@ while ($row = $result->fetch_assoc()) {
                 </div>
             </div>
             
-            <div class="chart-container">
-                <canvas id="profileChart"></canvas>
-            </div>
         </div>
 
         <h2>Filter Billing Records</h2>
@@ -201,18 +202,15 @@ while ($row = $result->fetch_assoc()) {
                     <button type="submit">Filter</button>
                 </div>
             </form>
-        </div>
-
-        <h2>Search Client Name</h2>
-        <div class="filter-section">
-            <form method="GET" class="search-form">
-                <input type="text" name="search_name" placeholder="Enter client name" value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : '' ?>" style="flex-grow: 1;">
-                <button type="submit">Search</button>
-            </form>
+            <h2>Search Client Name</h2>
+                <form method="GET" class="search-form">
+                    <input type="text" name="search_name" placeholder="Enter client name" value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : '' ?>" style="flex-grow: 1;">
+                    <button type="submit">Search</button>
+                </form>
         </div>
 
         <h2>Billing Records</h2>
-        <button id="openFormBtn" style="margin-bottom: 15px;">Add New Billing</button>
+        <button id="openFormBtn" style="margin-bottom: 15px; float: right;">Add New Billing</button>
         <table>
             <thead>
                 <tr>
@@ -226,21 +224,26 @@ while ($row = $result->fetch_assoc()) {
             </thead>
             <tbody>
                 <?php
+                $equipmentTotals = [];
+                while ($row = $equipmentResult->fetch_assoc()) {
+                    $equipmentTotals[$row['equipment']] = $row['total'];
+                }
                 foreach ($rows as $row) {
                     $formattedDate = date("F d, Y", strtotime($row['billing_date']));
-                    echo "<tr>
-                        <td>{$row['client_profile']}</td>
-                        <td>{$row['client_name']}</td>
-                        <td>{$row['equipment']}</td>
-                        <td>&#8369;" . number_format($row['total_invoice'], 2) . "</td>
-                        <td>$formattedDate</td>
-                        <td>";
+                    echo "<tr data-id='{$row['id']}'>"; // Add data-id attribute
+                    echo "<td>{$row['client_profile']}</td>";
+                    echo "<td>{$row['client_name']}</td>";
+                    echo "<td>{$row['equipment']}</td>";
+                    echo "<td>&#8369;" . number_format($row['total_invoice'], 2) . "</td>";
+                    echo "<td>$formattedDate</td>";
+                    echo "<td>";
                     if (!empty($row['billing_pdf'])) {
                         echo "<a href='/Billing/uploads/{$row['billing_pdf']}' class='pdf-link' target='_blank'>View PDF</a>";
                     } else {
                         echo "<span class='no-pdf'>None</span>";
                     }
-                    echo "</td></tr>";
+                    echo "</td>";
+                    echo "</tr>";
                 }
                 ?>
             </tbody>
@@ -317,7 +320,7 @@ while ($row = $result->fetch_assoc()) {
                 alert("An error occurred while submitting the form.");
             });
         });
-
+        
         // Chart.js configuration
         const ctx = document.getElementById('profileChart').getContext('2d');
         const profileChart = new Chart(ctx, {
@@ -345,10 +348,10 @@ while ($row = $result->fetch_assoc()) {
                     legend: {
                         position: 'bottom',
                         labels: {
-                            boxWidth: 10,
+                            boxWidth: 20,
                             padding: 10,
                             font: {
-                                size: 11
+                                size: 12
                             }
                         }
                     },
@@ -359,13 +362,111 @@ while ($row = $result->fetch_assoc()) {
                             }
                         },
                         bodyFont: {
-                            size: 11
+                            size: 15
                         }
                     }
                 },
-                cutout: '65%'
+                cutout: '45%'
             }
         });
+        // // Edit functionality
+        // document.querySelector('table tbody').addEventListener('click', function(e) {
+        //     const row = e.target.closest('tr');
+        //     if (!row) return;
+            
+        //     const id = row.getAttribute('data-id');
+        //     if (!id) return;
+            
+        //     // Get all cells in the row
+        //     const cells = row.querySelectorAll('td');
+            
+        //     // If already in edit mode, ignore
+        //     if (row.classList.contains('editing')) return;
+            
+        //     // Enter edit mode
+        //     row.classList.add('editing');
+            
+        //     // Save original values
+        //     const originalValues = Array.from(cells).map(cell => cell.textContent);
+            
+        //     // Make cells editable
+        //     cells.forEach((cell, index) => {
+        //         // Skip the PDF column (last column)
+        //         if (index === cells.length - 1) return;
+                
+        //         const originalValue = cell.textContent;
+        //         cell.innerHTML = `<input type="text" value="${originalValue}" style="width:100%;">`;
+        //     });
+            
+        //     // Add save/cancel buttons to last cell
+        //     const lastCell = cells[cells.length - 1];
+        //     lastCell.innerHTML = `
+        //         <button class="save-btn">Save</button>
+        //         <button class="cancel-btn">Cancel</button>`;
+    
+        //     // Handle save
+        //     lastCell.querySelector('.save-btn').addEventListener('click', async function() {
+        //         const updatedData = {
+        //             id: id,
+        //             client_profile: cells[0].querySelector('input').value,
+        //             client_name: cells[1].querySelector('input').value,
+        //             equipment: cells[2].querySelector('input').value,
+        //             total_invoice: cells[3].querySelector('input').value.replace(/[^0-9.]/g, ''),
+        //             billing_date: cells[4].querySelector('input').value
+        //         };
+                
+        //         try {
+        //             const response = await fetch('update_billing.php', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json'
+        //                 },
+        //                 body: JSON.stringify(updatedData)
+        //             });
+                    
+        //             const result = await response.json();
+                    
+        //             if (result.success) {
+        //                 // Update row with new values
+        //                 cells[0].textContent = updatedData.client_profile;
+        //                 cells[1].textContent = updatedData.client_name;
+        //                 cells[2].textContent = updatedData.equipment;
+        //                 cells[3].textContent = '₱' + parseFloat(updatedData.total_invoice).toFixed(2);
+        //                 cells[4].textContent = new Date(updatedData.billing_date).toLocaleDateString('en-US', {
+        //                     year: 'numeric',
+        //                     month: 'long',
+        //                     day: 'numeric'
+        //                 });
+                        
+        //                 row.classList.remove('editing');
+        //             } else {
+        //                 alert('Error updating record: ' + result.message);
+        //             }
+        //         } catch (error) {
+        //             console.error('Error:', error);
+        //             alert('An error occurred while updating the record.');
+        //         }
+        //     });
+            
+        //     // Handle cancel
+        //     lastCell.querySelector('.cancel-btn').addEventListener('click', function() {
+        //         // Restore original values
+        //         cells.forEach((cell, index) => {
+        //             if (index === cells.length - 1) {
+        //                 if (originalValues[index].includes('View PDF')) {
+        //                     const pdfLink = originalValues[index].match(/href="([^"]*)"/)[1];
+        //                     cell.innerHTML = `<a href="${pdfLink}" class="pdf-link" target="_blank">View PDF</a>`;
+        //                 } else {
+        //                     cell.innerHTML = '<span class="no-pdf">None</span>';
+        //                 }
+        //             } else {
+        //                 cell.textContent = originalValues[index];
+        //             }
+        //         });
+                
+        //         row.classList.remove('editing');
+        //     });
+        // });
     </script>
 </body>
 </html>
