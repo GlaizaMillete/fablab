@@ -300,6 +300,10 @@ i {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     margin: 0 0 2rem 2rem;
+    height: 400px;
+    /* Set a fixed height */
+    overflow-y: auto;
+    /* Enable vertical scrolling for overflowing content */
 }
 
 table {

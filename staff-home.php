@@ -1,5 +1,7 @@
 <?php
 session_start(); // Start the session
+include 'header.php';
+include 'config.php';
 
 // Check if the user is logged in as staff
 if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== true) {
@@ -13,8 +15,8 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
     echo '<script>alert("You have successfully logged in.");</script>';
 }
 
+include 'fetch-billing-handler.php'; 
 $pageTitle = "Job Requests";
-include 'header.php';
 ?>
 
 <div class="container">
@@ -98,27 +100,32 @@ include 'header.php';
                         <thead>
                             <tr>
                                 <th>Billing ID</th>
+                                <th>Client</th>
+                                <th>Equipment</th>
                                 <th>Amount</th>
                                 <th>Date</th>
-                                <th>Status</th>
+                                <th>PDF</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>$100</td>
-                                <td>2025-03-01</td>
-                                <td>Paid</td>
-                                <td><button onclick="editBilling(1)">Edit</button></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>$200</td>
-                                <td>2025-03-05</td>
-                                <td>Unpaid</td>
-                                <td><button onclick="editBilling(2)">Edit</button></td>
-                            </tr>
+                            <?php foreach ($billingRows as $row): ?>
+                                <tr>
+                                    <td><?php echo $row['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($row['client_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['equipment']); ?></td>
+                                    <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
+                                    <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
+                                    <td>
+                                        <?php if (!empty($row['billing_pdf'])): ?>
+                                            <a href="/Billing/uploads/<?php echo htmlspecialchars($row['billing_pdf']); ?>" target="_blank">View PDF</a>
+                                        <?php else: ?>
+                                            <span class="no-pdf">None</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><button onclick="editBilling(<?php echo $row['id']; ?>)">Edit</button></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

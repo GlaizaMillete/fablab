@@ -20,7 +20,7 @@ include 'header.php';
 
 <div class="login-container-staff">
     <div class="login-left">
-        <img src="FABLAB_LOGO2.png" alt="Logo" class="logo">
+        <img src="FABLAB_BICOL_LOGO (04).png" alt="Logo" class="logo">
         <i>
             <p class="logo-text">WELCOME TO FABLAB!</p>
         </i>
