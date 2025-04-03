@@ -11,12 +11,13 @@ if (isset($_FILES['billing_pdf']) && $_FILES['billing_pdf']['error'] == UPLOAD_E
     if (!file_exists($targetDir)) {
         mkdir($targetDir, 0777, true);
     }
-    
-    $fileName = basename($_FILES["billing_pdf"]["name"]);
-    $targetFile = $targetDir . uniqid() . '_' . $fileName;
-    
+
+    $originalFileName = basename($_FILES["billing_pdf"]["name"]);
+    $hashedFileName = uniqid() . '_' . $originalFileName; // Add a unique hash prefix
+    $targetFile = $targetDir . $hashedFileName;
+
     if (move_uploaded_file($_FILES["billing_pdf"]["tmp_name"], $targetFile)) {
-        $pdfPath = $fileName;
+        $pdfPath = $hashedFileName; // Store the hashed file name
     }
 }
 
@@ -47,7 +48,7 @@ if ($conn->query($sql)) {
         'client_profile' => $clientProfile,
         'equipment' => $equipment,
         'total_invoice' => number_format($totalInvoice, 2),
-        'billing_pdf' => $pdfPath
+        'billing_pdf' => $pdfPath // Return the hashed file name
     ];
 } else {
     $response = ['success' => false, 'message' => "Error: " . $conn->error];

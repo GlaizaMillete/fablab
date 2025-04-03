@@ -224,13 +224,18 @@ while ($row = $result->fetch_assoc()) {
             </thead>
             <tbody>
                 <?php
-                $equipmentTotals = [];
-                while ($row = $equipmentResult->fetch_assoc()) {
-                    $equipmentTotals[$row['equipment']] = $row['total'];
+                // $equipmentTotals = [];
+                // while ($row = $equipmentResult->fetch_assoc()) {
+                //     $equipmentTotals[$row['equipment']] = $row['total'];
+                // }
+                $equipmentResult = $conn->query("SELECT equipment, SUM(total_invoice) AS total FROM billing GROUP BY equipment");
+
+                if (!$equipmentResult) {
+                    die("Error fetching equipment data: " . $conn->error);
                 }
                 foreach ($rows as $row) {
                     $formattedDate = date("F d, Y", strtotime($row['billing_date']));
-                    echo "<tr data-id='{$row['id']}'>"; // Add data-id attribute
+                    echo "<tr data-id='{$row['id']}'>";
                     echo "<td>{$row['client_profile']}</td>";
                     echo "<td>{$row['client_name']}</td>";
                     echo "<td>{$row['equipment']}</td>";
@@ -238,6 +243,7 @@ while ($row = $result->fetch_assoc()) {
                     echo "<td>$formattedDate</td>";
                     echo "<td>";
                     if (!empty($row['billing_pdf'])) {
+                        // Use the correct file name from the database
                         echo "<a href='/Billing/uploads/{$row['billing_pdf']}' class='pdf-link' target='_blank'>View PDF</a>";
                     } else {
                         echo "<span class='no-pdf'>None</span>";
