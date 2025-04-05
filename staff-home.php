@@ -1,5 +1,8 @@
 <?php
 session_start(); // Start the session
+
+$pageTitle = "Job Requests";
+
 include 'header.php';
 include 'config.php';
 
@@ -15,8 +18,7 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
     echo '<script>alert("You have successfully logged in.");</script>';
 }
 
-include 'fetch-billing-handler.php'; 
-$pageTitle = "Job Requests";
+include 'fetch-billing-handler.php';
 ?>
 
 <div class="container">
