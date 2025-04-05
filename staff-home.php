@@ -190,9 +190,6 @@ include 'fetch-feedback-handler.php';
             <label for="feedback_pdf">Upload Feedback PDF:</label>
             <input type="file" id="feedback_pdf" name="feedback_pdf" accept=".pdf">
 
-            <label for="feedback_date">Date:</label>
-            <input type="date" id="feedback_date" name="feedback_date" required>
-
             <button type="submit">Submit</button>
         </form>
     </div>

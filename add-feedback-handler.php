@@ -2,10 +2,13 @@
 session_start(); // Start the session
 include 'config.php';
 
+// Set the timezone to Philippines
+date_default_timezone_set('Asia/Manila');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $client_name = $_POST['client_name'];
-    $feedback_date = $_POST['feedback_date'];
     $feedback_pdf = '';
+    $feedback_date = date('Y-m-d H:i:s'); // Automatically set the current date and time
 
     // Correct the upload directory path
     $upload_dir = 'uploads/feedback/';
@@ -40,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die('Error: Staff name is not set in the session.');
         }
         $action = "Added feedback for client: $client_name";
-        $log_date = date('Y-m-d H:i:s');
+        $log_date = date('Y-m-d H:i:s'); // Current date and time in Asia/Manila timezone
 
         $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
         $log_stmt->bind_param('sss', $staff_name, $action, $log_date);

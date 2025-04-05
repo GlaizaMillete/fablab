@@ -94,7 +94,8 @@ include 'config.php';
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT log_date, staff_name, action FROM logs ORDER BY log_date DESC";
+                        // Fetch logs sorted by log_date in ascending order
+                        $sql = "SELECT log_date, staff_name, action FROM logs ORDER BY log_date ASC";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
