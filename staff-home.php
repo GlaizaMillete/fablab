@@ -19,6 +19,7 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
 }
 
 include 'fetch-billing-handler.php';
+include 'fetch-feedback-handler.php';
 ?>
 
 <div class="container">
@@ -55,8 +56,7 @@ include 'fetch-billing-handler.php';
                 <!-- this area should be dynamic according to the active job request tab (job description, billing, feedback) -->
             </div>
             <div class="add-button-container">
-                <p onclick="redirectToAddPage()">Add</p>
-                <!-- will depend on the active tab, leave this area for now -->
+                <p onclick="handleAddButton()">Add</p>
             </div>
         </div>
         <div class="contents">
@@ -143,20 +143,30 @@ include 'fetch-billing-handler.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>John Doe</td>
-                                <td>Great job!</td>
-                                <td>2025-03-02</td>
-                                <td><button onclick="editFeedback(1)">Edit</button></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jane Smith</td>
-                                <td>Very satisfied with the service.</td>
-                                <td>2025-03-06</td>
-                                <td><button onclick="editFeedback(2)">Edit</button></td>
-                            </tr>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                // Output data for each row
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['client_name']) . "</td>";
+                                    echo "<td>";
+                                    if (!empty($row['feedback_pdf'])) {
+                                        echo "<a href='uploads/feedback/" . htmlspecialchars($row['feedback_pdf']) . "' target='_blank'>View PDF</a>";
+                                    } else {
+                                        echo "<span class='no-pdf'>No Comments</span>";
+                                    }
+                                    echo "</td>";
+                                    echo "<td>" . htmlspecialchars($row['feedback_date']) . "</td>";
+                                    echo "<td><button onclick='editFeedback(" . htmlspecialchars($row['id']) . ")'>Edit</button></td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5'>No feedback available</td></tr>";
+                            }
+
+                            $conn->close();
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -168,33 +178,27 @@ include 'fetch-billing-handler.php';
     </div>
 </div>
 
-<!-- Floating Form -->
-<!-- <div id="floating-form" class="floating-form">
-    <form>
-        <h2>Add New Job Request</h2>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea>
-        <button type="submit">Submit</button>
-        <button type="button" onclick="hideForm()">Cancel</button>
-    </form>
-</div> -->
+<!-- Feedback Form Modal -->
+<div id="feedback-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeFeedbackForm()">&times;</span>
+        <h2>Add Feedback</h2>
+        <form action="add-feedback-handler.php" method="POST" enctype="multipart/form-data">
+            <label for="client_name">Client Name:</label>
+            <input type="text" id="client_name" name="client_name" required>
 
-<!-- Background Overlay -->
-<!-- <div id="background-overlay" class="background-overlay"></div> -->
+            <label for="feedback_pdf">Upload Feedback PDF:</label>
+            <input type="file" id="feedback_pdf" name="feedback_pdf" accept=".pdf">
+
+            <label for="feedback_date">Date:</label>
+            <input type="date" id="feedback_date" name="feedback_date" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
 
 <script>
-    // function showForm() {
-    //     document.getElementById('floating-form').style.display = 'block';
-    //     document.getElementById('background-overlay').style.display = 'block';
-    // }
-
-    // function hideForm() {
-    //     document.getElementById('floating-form').style.display = 'none';
-    //     document.getElementById('background-overlay').style.display = 'none';
-    // }
-
     function showTab(tabId, title) {
         // Hide all job request content
         document.querySelectorAll('.job-request-content').forEach(function(content) {
@@ -260,16 +264,38 @@ include 'fetch-billing-handler.php';
         });
     }
 
-    function redirectToAddPage() {
+    function handleAddButton() {
         const activeTab = document.querySelector('.job-request-content.active').id;
+
         if (activeTab === 'job-description') {
+            // Redirect to the Add Job Request page
             window.location.href = 'add_job_request.php';
         } else if (activeTab === 'billing') {
+            // Redirect to the Add Billing page
             window.location.href = 'add_billing.php';
         } else if (activeTab === 'feedback') {
-            window.location.href = 'add_feedback.php';
+            // Show the Add Feedback modal
+            showFeedbackForm();
         }
     }
+
+    // Show the feedback form modal
+    function showFeedbackForm() {
+        document.getElementById('feedback-modal').style.display = 'block';
+    }
+
+    // Close the feedback form modal
+    function closeFeedbackForm() {
+        document.getElementById('feedback-modal').style.display = 'none';
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('feedback-modal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
 
     function editJobRequest(id) {
         window.location.href = 'edit_job_request.php?id=' + id;
