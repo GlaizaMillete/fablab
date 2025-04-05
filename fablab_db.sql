@@ -1,10 +1,9 @@
--- filepath: j:\PHP\fablab\fablab_db.sql
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2025 at 04:05 PM
+-- Generation Time: Apr 03, 2025 at 06:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -21,29 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `fablab_db`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `stafffablab`
---
-
-CREATE TABLE `stafffablab` (
-  `staffID` int(11) NOT NULL,
-  `staffUsername` varchar(50) NOT NULL,
-  `staffPassword` varchar(255) NOT NULL,
-  `status` enum('Active','Inactive') DEFAULT 'Active'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `stafffablab`
---
-
-INSERT INTO `stafffablab` (`staffID`, `staffUsername`, `staffPassword`, `status`) VALUES
-(2, 'jane_smith', '$2y$10$mugZc6s.zZrF0njk3ZwDPOiYo0wfjQYsJuhNf3ydS/4IpN1aTWfO.', 'Active'),
-(3, 'alice_jones', '$2y$10$X/FsHKWBhAGfjafxEg0Z4uDFA0Q0e7/XbhRQLLtgsHdfUgtgcQbky', 'Active'),
-(4, 'jadeds', '$2y$10$Ufo.kgLVrFZD1.BA/aUkD.ousOhnAU742A1x3UwX1X9EkQ5m9I/7W', 'Active'),
-(5, 'sss', '$2y$10$IwwtjIKCM3cXO9EqmpRtNO12WCMMLFTEqukFMllVkGV6atmaq9YqK', 'Active');
 
 -- --------------------------------------------------------
 
@@ -98,17 +74,49 @@ INSERT INTO `billing` (`id`, `client_profile`, `client_name`, `equipment`, `bill
 (371, 'OTHERS', 'Nathan Torres', '3D Printer', '2025-03-30', 2600.00, ''),
 (372, 'STUDENT', 'Gab', '3D Printer,CNC Machine', '2025-03-21', 56789.00, ''),
 (373, 'Personal', 'Rey', '3D Printer,Laser Cutting Machine', '2025-03-21', 678.83, ''),
-(374, 'VIP', 'qwerty', '3D Printer,Laser Cutting Machine,Print and Cut Machine,Vacuum Forming', '2024-06-20', 345.50, '');
+(374, 'VIP', 'qwerty', '3D Printer,Laser Cutting Machine,Print and Cut Machine,Vacuum Forming', '2024-06-20', 345.50, ''),
+(385, 'STUDENT', 'jade', '3D Printer, Laser Cutting Machine, Print and Cut Machine, CNC MachineB', '2024-03-09', 1.00, 'Class-Schedule.pdf'),
+(386, 'STUDENT', 'jade', '3D Printer, 3D Scanner', '2023-01-18', 123456.00, '67ee43883cb70_inside01_BROCHURE.pdf');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `id` int(11) NOT NULL,
+  `client_name` varchar(255) NOT NULL,
+  `feedback_pdf` varchar(255) NOT NULL,
+  `feedback_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stafffablab`
+--
+
+CREATE TABLE `stafffablab` (
+  `staffID` int(11) NOT NULL,
+  `staffUsername` varchar(50) NOT NULL,
+  `staffPassword` varchar(255) NOT NULL,
+  `status` enum('Active','Inactive') DEFAULT 'Active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `stafffablab`
+--
+
+INSERT INTO `stafffablab` (`staffID`, `staffUsername`, `staffPassword`, `status`) VALUES
+(2, 'jane_smith', '$2y$10$mugZc6s.zZrF0njk3ZwDPOiYo0wfjQYsJuhNf3ydS/4IpN1aTWfO.', 'Active'),
+(3, 'alice_jones', '$2y$10$X/FsHKWBhAGfjafxEg0Z4uDFA0Q0e7/XbhRQLLtgsHdfUgtgcQbky', 'Active'),
+(4, 'jadeds', '$2y$10$Ufo.kgLVrFZD1.BA/aUkD.ousOhnAU742A1x3UwX1X9EkQ5m9I/7W', 'Active'),
+(5, 'sss', '$2y$10$IwwtjIKCM3cXO9EqmpRtNO12WCMMLFTEqukFMllVkGV6atmaq9YqK', 'Active');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `stafffablab`
---
-ALTER TABLE `stafffablab`
-  ADD PRIMARY KEY (`staffID`);
 
 --
 -- Indexes for table `billing`
@@ -117,20 +125,38 @@ ALTER TABLE `billing`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stafffablab`
+--
+ALTER TABLE `stafffablab`
+  ADD PRIMARY KEY (`staffID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `billing`
+--
+ALTER TABLE `billing`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=387;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`
 --
 ALTER TABLE `stafffablab`
   MODIFY `staffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `billing`
---
-ALTER TABLE `billing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
