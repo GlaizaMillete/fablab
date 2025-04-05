@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     // Prepare the SQL query to fetch the user
-    $sql = "SELECT staffID, staffPassword, status FROM stafffablab WHERE staffUsername = ?";
+    $sql = "SELECT staffID, staffUsername, staffPassword, status FROM stafffablab WHERE staffUsername = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Check if the user exists
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($staffID, $hashedPassword, $status);
+        $stmt->bind_result($staffID, $staffUsername, $hashedPassword, $status);
         $stmt->fetch();
 
         // Check if the account is active
@@ -30,24 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['staff_logged_in'] = true;
             $_SESSION['staff_username'] = $username;
             $_SESSION['staff_id'] = $staffID;
-
-            // Fetch the staff's name
-            $nameQuery = "SELECT staffUsername FROM stafffablab WHERE staffID = ?";
-            $nameStmt = $conn->prepare($nameQuery);
-            $nameStmt->bind_param("i", $staffID);
-            $nameStmt->execute();
-            $nameStmt->bind_result($staffName);
-            $nameStmt->fetch();
-            $_SESSION['staff_name'] = $staffName; // Store the name in the session
-            $nameStmt->close();
+            $_SESSION['staff_name'] = $staffUsername; // Store the staffUsername as staff_name in the session
 
             // Redirect to the staff home page with a success message
             header("Location: staff-home.php?login=success");
             exit();
         } else {
+            // Invalid password
             echo '<script>alert("Invalid username or password."); window.location.href = "staff-login.php";</script>';
         }
     } else {
+        // Invalid username
         echo '<script>alert("Invalid username or password."); window.location.href = "staff-login.php";</script>';
     }
 

@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -7,14 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $feedback_pdf = '';
 
     // Correct the upload directory path
-    $upload_dir = 'uploads/feedback/'; // Adjusted to match your folder structure
+    $upload_dir = 'uploads/feedback/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0777, true); // Create the directory if it doesn't exist
     }
 
     // Handle file upload
     if (isset($_FILES['feedback_pdf']) && $_FILES['feedback_pdf']['error'] === UPLOAD_ERR_OK) {
-        // Validate file type
         $file_type = mime_content_type($_FILES['feedback_pdf']['tmp_name']);
         if ($file_type !== 'application/pdf') {
             die('Error: Only PDF files are allowed.');
@@ -33,6 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param('sss', $client_name, $feedback_pdf, $feedback_date);
 
     if ($stmt->execute()) {
+        // Log the action
+        if (isset($_SESSION['staff_name'])) {
+            $staff_name = $_SESSION['staff_name']; // Get the staff's name from the session
+        } else {
+            die('Error: Staff name is not set in the session.');
+        }
+        $action = "Added feedback for client: $client_name";
+        $log_date = date('Y-m-d H:i:s');
+
+        $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
+        $log_stmt->bind_param('sss', $staff_name, $action, $log_date);
+        $log_stmt->execute();
+        $log_stmt->close();
+
         header('Location: staff-home.php?tab=feedback&status=success');
     } else {
         die('Error: ' . $stmt->error);

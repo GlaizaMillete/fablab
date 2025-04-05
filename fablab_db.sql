@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2025 at 06:17 PM
+-- Generation Time: Apr 05, 2025 at 07:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -99,8 +99,22 @@ INSERT INTO `feedback` (`id`, `client_name`, `feedback_pdf`, `feedback_date`) VA
 (1, 'John Doe', '', '2025-03-02'),
 (2, 'Jane Smith', '', '2025-03-06'),
 (3, 'Michael Johnson', 'feedback_report.pdf', '2025-03-10'),
-(4, 'Emily Davis', '', '2025-03-15'),
-(5, 'David Wilson', 'client_feedback.pdf', '2025-03-20');
+(5, 'David Wilson', 'client_feedback.pdf', '2025-03-20'),
+(10, 'Jaded', 'inside01_BROCHURE.pdf', '2025-03-10'),
+(11, 'larvie', 'outside_01BROCHURE.pdf', '2025-04-06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `staff_name` varchar(255) NOT NULL,
+  `action` text NOT NULL,
+  `log_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -142,6 +156,12 @@ ALTER TABLE `feedback`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `stafffablab`
 --
 ALTER TABLE `stafffablab`
@@ -161,7 +181,13 @@ ALTER TABLE `billing`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`

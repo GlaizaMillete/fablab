@@ -85,29 +85,30 @@ include 'config.php';
             </div>
             <div class="contents-box" id="logs-content" style="display: none;">
                 <table>
-                    <!-- <thead>
+                    <thead>
                         <tr>
                             <th>Date</th>
-                            <th>User</th>
+                            <th>Staff Name</th>
                             <th>Action</th>
                         </tr>
-                    </thead> -->
+                    </thead>
                     <tbody>
-                        <tr>
-                            <td>2025-02-25 10:32:02</td>
-                            <td>Jade Raposa</td>
-                            <td>Change Billing details</td>
-                        </tr>
-                        <tr>
-                            <td>2025-03-06 09:15:45</td>
-                            <td>John Doe</td>
-                            <td>Login</td>
-                        </tr>
-                        <tr>
-                            <td>2025-03-06 17:45:30</td>
-                            <td>Jane Smith</td>
-                            <td>Logout</td>
-                        </tr>
+                        <?php
+                        $sql = "SELECT log_date, staff_name, action FROM logs ORDER BY log_date DESC";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row['log_date']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['staff_name']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['action']) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3'>No logs available</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
