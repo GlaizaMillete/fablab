@@ -50,12 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $log_stmt->execute();
         $log_stmt->close();
 
+        // Redirect to staff-home.php with the feedback tab active
         header('Location: staff-home.php?tab=feedback&status=success');
+        $stmt->close();
+        $conn->close();
+        exit();
     } else {
         die('Error: ' . $stmt->error);
     }
-
-    $stmt->close();
-    $conn->close();
 }
 ?>

@@ -224,9 +224,17 @@ include 'fetch-feedback-handler.php';
         }
     }
 
-    // Show the default tab on page load
+    // Show the default or specified tab on page load
     document.addEventListener('DOMContentLoaded', function() {
-        showTab('dashboard', 'Dashboard');
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'dashboard'; // Default to 'dashboard' if no tab is specified
+        const tabTitleMap = {
+            'dashboard': 'Dashboard',
+            'job-description': 'Job Requests',
+            'billing': 'Billings',
+            'feedback': 'Feedbacks'
+        };
+        showTab(activeTab, tabTitleMap[activeTab]);
     });
 
     function renderSummaryChart() {
