@@ -101,7 +101,7 @@ include 'fetch-feedback-handler.php';
                     <table>
                         <thead>
                             <tr>
-                                <th>Billing ID</th>
+                                <th>ID</th>
                                 <th>Client</th>
                                 <th>Equipment</th>
                                 <th>Amount</th>
@@ -120,7 +120,7 @@ include 'fetch-feedback-handler.php';
                                     <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
                                     <td>
                                         <?php if (!empty($row['billing_pdf'])): ?>
-                                            <a href="/Billing/uploads/<?php echo htmlspecialchars($row['billing_pdf']); ?>" target="_blank">View PDF</a>
+                                            <a href="uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>" target="_blank">View PDF</a>
                                         <?php else: ?>
                                             <span class="no-pdf">None</span>
                                         <?php endif; ?>
@@ -175,6 +175,49 @@ include 'fetch-feedback-handler.php';
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Billing Form Modal -->
+<div id="billing-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeBillingForm()">&times;</span>
+        <h2>Add Billing</h2>
+        <form action="add-billing-handler.php" method="POST" enctype="multipart/form-data">
+            <label for="client_name">Client Name:</label>
+            <input type="text" id="client_name" name="client_name" required>
+
+            <label for="billing_date">Billing Date:</label>
+            <input type="date" id="billing_date" name="billing_date" required>
+
+            <label for="client_profile">Client Profile:</label><br>
+            <input type="radio" name="client_profile" value="STUDENT" required> STUDENT<br>
+            <input type="radio" name="client_profile" value="MSME" required> MSME<br>
+            <input type="radio" name="client_profile" value="OTHERS" required> OTHERS (Specify):
+            <input type="text" name="client_profile_other">
+
+            <label for="equipment">Equipment Used:</label><br>
+            <input type="checkbox" name="equipment[]" value="3D Printer"> 3D Printer<br>
+            <input type="checkbox" name="equipment[]" value="3D Scanner"> 3D Scanner<br>
+            <input type="checkbox" name="equipment[]" value="Laser Cutting Machine"> Laser Cutting Machine<br>
+            <input type="checkbox" name="equipment[]" value="Print and Cut Machine"> Print and Cut Machine<br>
+            <input type="checkbox" name="equipment[]" value="CNC Machine(Big)"> CNC Machine(Big)<br>
+            <input type="checkbox" name="equipment[]" value="CNC Machine(Small)"> CNC Machine(Small)<br>
+            <input type="checkbox" name="equipment[]" value="Vinyl Cutter"> Vinyl Cutter<br>
+            <input type="checkbox" name="equipment[]" value="Embroidery Machine(One Head)"> Embroidery Machine(One Head)<br>
+            <input type="checkbox" name="equipment[]" value="Embroidery Machine(Four Heads)"> Embroidery Machine(Four Heads)<br>
+            <input type="checkbox" name="equipment[]" value="Flatbed Cutter"> Flatbed Cutter<br>
+            <input type="checkbox" name="equipment[]" value="Vacuum Forming"> Vacuum Forming<br>
+            <input type="checkbox" name="equipment[]" value="Water Jet Machine"> Water Jet Machine<br>
+
+            <label for="total_invoice">Total Invoice:</label>
+            <input type="number" id="total_invoice" name="total_invoice" step="0.01" required>
+
+            <label for="billing_pdf">Attach PDF:</label>
+            <input type="file" id="billing_pdf" name="billing_pdf" accept="application/pdf">
+
+            <button type="submit">Submit</button>
+        </form>
     </div>
 </div>
 
@@ -276,8 +319,8 @@ include 'fetch-feedback-handler.php';
             // Redirect to the Add Job Request page
             window.location.href = 'add_job_request.php';
         } else if (activeTab === 'billing') {
-            // Redirect to the Add Billing page
-            window.location.href = 'add_billing.php';
+            // Show the Add Billing modal
+            showBillingForm();
         } else if (activeTab === 'feedback') {
             // Show the Add Feedback modal
             showFeedbackForm();
@@ -301,6 +344,49 @@ include 'fetch-feedback-handler.php';
             modal.style.display = 'none';
         }
     };
+
+    // Show the billing form modal
+    function showBillingForm() {
+        document.getElementById('billing-modal').style.display = 'block';
+    }
+
+    // Close the billing form modal
+    function closeBillingForm() {
+        document.getElementById('billing-modal').style.display = 'none';
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('billing-modal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Handle form submission via AJAX
+    document.getElementById('billing-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('save_billing.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Billing record added successfully!');
+                    location.reload(); // Reload the page to update the billing table
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the form.');
+            });
+    });
 
     function editJobRequest(id) {
         window.location.href = 'edit_job_request.php?id=' + id;
