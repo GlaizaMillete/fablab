@@ -214,7 +214,7 @@ include 'fetch-feedback-handler.php';
             <input type="number" id="total_invoice" name="total_invoice" step="0.01" required>
 
             <label for="billing_pdf">Attach PDF:</label>
-            <input type="file" id="billing_pdf" name="billing_pdf" accept="application/pdf">
+            <input type="file" id="billing_pdf" name="billing_pdf" accept="application/pdf" required>
 
             <button type="submit">Submit</button>
         </form>

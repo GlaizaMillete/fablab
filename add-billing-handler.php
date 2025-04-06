@@ -1,4 +1,3 @@
-<!-- filepath: j:\PHP\fablab\add-billing-handler.php -->
 <?php
 session_start(); // Start the session
 include 'config.php'; // Include the database connection
@@ -41,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $billingPdf = $hashedFileName; // Store the hashed file name
+    } else {
+        // If no file is uploaded, throw an error
+        die('Error: A PDF file is required for billing.');
     }
 
     // Insert billing data into the database
@@ -69,4 +71,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Error: ' . $stmt->error);
     }
 }
-?>
