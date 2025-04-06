@@ -244,32 +244,3 @@ a {
         flex-direction: column;
     }
 }
-/* tr.editing {
-    background-color: #fffde7 !important;
-}
-
-tr.editing td {
-    padding: 4px !important;
-}
-
-tr.editing input {
-    padding: 4px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    font-size: 13px;
-    width: calc(100% - 8px);
-}
-
-.save-btn, .cancel-btn {
-    padding: 4px 8px !important;
-    font-size: 12px !important;
-    margin-right: 5px;
-}
-
-.save-btn {
-    background-color: #4CAF50 !important;
-}
-
-.cancel-btn {
-    background-color: #f44336 !important;
-} */
