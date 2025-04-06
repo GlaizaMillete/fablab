@@ -3,7 +3,8 @@ $conn = new mysqli('localhost', 'root', '', 'fablab_db');
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+?>
+<?php
 $whereClauses = [];
 if (!empty($_GET['from_month']) && !empty($_GET['to_month'])) {
     $from_month = $_GET['from_month'];
@@ -224,15 +225,6 @@ while ($row = $result->fetch_assoc()) {
             </thead>
             <tbody>
                 <?php
-                // $equipmentTotals = [];
-                // while ($row = $equipmentResult->fetch_assoc()) {
-                //     $equipmentTotals[$row['equipment']] = $row['total'];
-                // }
-                $equipmentResult = $conn->query("SELECT equipment, SUM(total_invoice) AS total FROM billing GROUP BY equipment");
-
-                if (!$equipmentResult) {
-                    die("Error fetching equipment data: " . $conn->error);
-                }
                 foreach ($rows as $row) {
                     $formattedDate = date("F d, Y", strtotime($row['billing_date']));
                     echo "<tr data-id='{$row['id']}'>";
@@ -244,7 +236,7 @@ while ($row = $result->fetch_assoc()) {
                     echo "<td>";
                     if (!empty($row['billing_pdf'])) {
                         // Use the correct file name from the database
-                        echo "<a href='/Billing/uploads/{$row['billing_pdf']}' class='pdf-link' target='_blank'>View PDF</a>";
+                        echo "<a href='uploads/{$row['billing_pdf']}' class='pdf-link' target='_blank'>View PDF</a>";
                     } else {
                         echo "<span class='no-pdf'>None</span>";
                     }
@@ -307,7 +299,7 @@ while ($row = $result->fetch_assoc()) {
                         <td>${data.equipment}</td>
                         <td>&#8369;${parseFloat(data.total_invoice).toFixed(2)}</td>
                         <td>${formattedDate}</td>
-                        <td>${data.billing_pdf ? `<a href="/Billing/uploads/${data.billing_pdf}" class="pdf-link" target="_blank">View PDF</a>` : '<span class="no-pdf">None</span>'}</td>
+                        <td>${data.billing_pdf ? `<a href="uploads/${data.billing_pdf}" class="pdf-link" target="_blank">View PDF</a>` : '<span class="no-pdf">None</span>'}</td>
                     `;
                     
                     // Insert at the top of the table
@@ -375,104 +367,6 @@ while ($row = $result->fetch_assoc()) {
                 cutout: '45%'
             }
         });
-        // // Edit functionality
-        // document.querySelector('table tbody').addEventListener('click', function(e) {
-        //     const row = e.target.closest('tr');
-        //     if (!row) return;
-            
-        //     const id = row.getAttribute('data-id');
-        //     if (!id) return;
-            
-        //     // Get all cells in the row
-        //     const cells = row.querySelectorAll('td');
-            
-        //     // If already in edit mode, ignore
-        //     if (row.classList.contains('editing')) return;
-            
-        //     // Enter edit mode
-        //     row.classList.add('editing');
-            
-        //     // Save original values
-        //     const originalValues = Array.from(cells).map(cell => cell.textContent);
-            
-        //     // Make cells editable
-        //     cells.forEach((cell, index) => {
-        //         // Skip the PDF column (last column)
-        //         if (index === cells.length - 1) return;
-                
-        //         const originalValue = cell.textContent;
-        //         cell.innerHTML = `<input type="text" value="${originalValue}" style="width:100%;">`;
-        //     });
-            
-        //     // Add save/cancel buttons to last cell
-        //     const lastCell = cells[cells.length - 1];
-        //     lastCell.innerHTML = `
-        //         <button class="save-btn">Save</button>
-        //         <button class="cancel-btn">Cancel</button>`;
-    
-        //     // Handle save
-        //     lastCell.querySelector('.save-btn').addEventListener('click', async function() {
-        //         const updatedData = {
-        //             id: id,
-        //             client_profile: cells[0].querySelector('input').value,
-        //             client_name: cells[1].querySelector('input').value,
-        //             equipment: cells[2].querySelector('input').value,
-        //             total_invoice: cells[3].querySelector('input').value.replace(/[^0-9.]/g, ''),
-        //             billing_date: cells[4].querySelector('input').value
-        //         };
-                
-        //         try {
-        //             const response = await fetch('update_billing.php', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 },
-        //                 body: JSON.stringify(updatedData)
-        //             });
-                    
-        //             const result = await response.json();
-                    
-        //             if (result.success) {
-        //                 // Update row with new values
-        //                 cells[0].textContent = updatedData.client_profile;
-        //                 cells[1].textContent = updatedData.client_name;
-        //                 cells[2].textContent = updatedData.equipment;
-        //                 cells[3].textContent = '₱' + parseFloat(updatedData.total_invoice).toFixed(2);
-        //                 cells[4].textContent = new Date(updatedData.billing_date).toLocaleDateString('en-US', {
-        //                     year: 'numeric',
-        //                     month: 'long',
-        //                     day: 'numeric'
-        //                 });
-                        
-        //                 row.classList.remove('editing');
-        //             } else {
-        //                 alert('Error updating record: ' + result.message);
-        //             }
-        //         } catch (error) {
-        //             console.error('Error:', error);
-        //             alert('An error occurred while updating the record.');
-        //         }
-        //     });
-            
-        //     // Handle cancel
-        //     lastCell.querySelector('.cancel-btn').addEventListener('click', function() {
-        //         // Restore original values
-        //         cells.forEach((cell, index) => {
-        //             if (index === cells.length - 1) {
-        //                 if (originalValues[index].includes('View PDF')) {
-        //                     const pdfLink = originalValues[index].match(/href="([^"]*)"/)[1];
-        //                     cell.innerHTML = `<a href="${pdfLink}" class="pdf-link" target="_blank">View PDF</a>`;
-        //                 } else {
-        //                     cell.innerHTML = '<span class="no-pdf">None</span>';
-        //                 }
-        //             } else {
-        //                 cell.textContent = originalValues[index];
-        //             }
-        //         });
-                
-        //         row.classList.remove('editing');
-        //     });
-        // });
     </script>
 </body>
 </html>
