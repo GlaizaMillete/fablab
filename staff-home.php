@@ -1,6 +1,13 @@
 <?php
 session_start(); // Start the session
 
+// Check if the user is logged in as staff
+if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== true) {
+    // Redirect to the staff login page if not logged in
+    header("Location: staff-login.php");
+    exit();
+}
+
 $pageTitle = "Job Requests";
 
 include 'header.php';
