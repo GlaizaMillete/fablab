@@ -1,6 +1,13 @@
 <?php
 session_start(); // Start the session
 
+// Check if the user is logged in as staff
+if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== true) {
+    // Redirect to the staff login page if not logged in
+    header("Location: staff-login.php");
+    exit();
+}
+
 $pageTitle = "Job Requests";
 
 include 'header.php';
@@ -125,7 +132,9 @@ include 'fetch-feedback-handler.php';
                                             <span class="no-pdf">None</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td><button onclick="editBilling(<?php echo $row['id']; ?>)">Edit</button></td>
+                                    <td>
+                                        <button onclick="editBilling(<?php echo $row['id']; ?>)">Edit</button>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -182,8 +191,8 @@ include 'fetch-feedback-handler.php';
 <div id="billing-modal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeBillingForm()">&times;</span>
-        <h2>Add Billing</h2>
-        <form action="add-billing-handler.php" method="POST" enctype="multipart/form-data">
+        <h2 id="billing-modal-title">Add Billing</h2>
+        <form id="billing-form" action="add-billing-handler.php" method="POST" enctype="multipart/form-data">
             <label for="client_name">Client Name:</label>
             <input type="text" id="client_name" name="client_name" required>
 
@@ -201,11 +210,11 @@ include 'fetch-feedback-handler.php';
             <input type="checkbox" name="equipment[]" value="3D Scanner"> 3D Scanner<br>
             <input type="checkbox" name="equipment[]" value="Laser Cutting Machine"> Laser Cutting Machine<br>
             <input type="checkbox" name="equipment[]" value="Print and Cut Machine"> Print and Cut Machine<br>
-            <input type="checkbox" name="equipment[]" value="CNC Machine(Big)"> CNC Machine(Big)<br>
-            <input type="checkbox" name="equipment[]" value="CNC Machine(Small)"> CNC Machine(Small)<br>
+            <input type="checkbox" name="equipment[]" value="CNC Machine (Big)"> CNC Machine (Big)<br>
+            <input type="checkbox" name="equipment[]" value="CNC Machine (Small)"> CNC Machine (Small)<br>
             <input type="checkbox" name="equipment[]" value="Vinyl Cutter"> Vinyl Cutter<br>
-            <input type="checkbox" name="equipment[]" value="Embroidery Machine(One Head)"> Embroidery Machine(One Head)<br>
-            <input type="checkbox" name="equipment[]" value="Embroidery Machine(Four Heads)"> Embroidery Machine(Four Heads)<br>
+            <input type="checkbox" name="equipment[]" value="Embroidery Machine (One Head)"> Embroidery Machine (One Head)<br>
+            <input type="checkbox" name="equipment[]" value="Embroidery Machine (Four Heads)"> Embroidery Machine (Four Heads)<br>
             <input type="checkbox" name="equipment[]" value="Flatbed Cutter"> Flatbed Cutter<br>
             <input type="checkbox" name="equipment[]" value="Vacuum Forming"> Vacuum Forming<br>
             <input type="checkbox" name="equipment[]" value="Water Jet Machine"> Water Jet Machine<br>
@@ -350,6 +359,51 @@ include 'fetch-feedback-handler.php';
         document.getElementById('billing-modal').style.display = 'block';
     }
 
+    function editBilling(id) {
+        // Fetch the billing data using AJAX
+        fetch(`fetch-billing-handler.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Populate the modal fields with the fetched data
+                    document.getElementById('client_name').value = data.billing.client_name;
+                    document.getElementById('billing_date').value = data.billing.billing_date;
+                    document.querySelector(`input[name="client_profile"][value="${data.billing.client_profile}"]`).checked = true;
+
+                    // Populate equipment checkboxes
+                    const equipment = data.billing.equipment.split(', ');
+                    document.querySelectorAll('input[name="equipment[]"]').forEach(checkbox => {
+                        checkbox.checked = equipment.includes(checkbox.value);
+                    });
+
+                    document.getElementById('total_invoice').value = data.billing.total_invoice;
+
+                    // Show the modal
+                    document.getElementById('billing-modal').style.display = 'block';
+
+                    // Add a hidden input for the billing ID
+                    let billingIdInput = document.getElementById('billing_id');
+                    if (!billingIdInput) {
+                        billingIdInput = document.createElement('input');
+                        billingIdInput.type = 'hidden';
+                        billingIdInput.id = 'billing_id';
+                        billingIdInput.name = 'billing_id';
+                        document.getElementById('billing-form').appendChild(billingIdInput);
+                    }
+                    billingIdInput.value = data.billing.id;
+
+                    // Update the modal title to indicate editing
+                    document.getElementById('billing-modal-title').innerText = 'Edit Billing';
+                } else {
+                    alert('Error fetching billing data: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while fetching the billing data.');
+            });
+    }
+
     // Close the billing form modal
     function closeBillingForm() {
         document.getElementById('billing-modal').style.display = 'none';
@@ -363,42 +417,62 @@ include 'fetch-feedback-handler.php';
         }
     };
 
-    // Handle form submission via AJAX
+    // Confirmation dialog for billing form submission
     document.getElementById('billing-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default form submission
 
-        const formData = new FormData(this);
-
-        fetch('save_billing.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Billing record added successfully!');
-                    location.reload(); // Reload the page to update the billing table
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while submitting the form.');
-            });
+        // Show confirmation dialog
+        const confirmation = confirm('Are you sure you want to submit these billing details?');
+        if (confirmation) {
+            // If the user clicks "Yes", submit the form
+            this.submit();
+            alert('Billing details submitted successfully!');
+        } else {
+            // If the user clicks "No", do nothing
+            alert('Submission canceled.');
+        }
     });
 
-    function editJobRequest(id) {
-        window.location.href = 'edit_job_request.php?id=' + id;
-    }
+    // Confirmation dialog for feedback form submission
+    document.getElementById('feedback-modal').querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
 
-    function editBilling(id) {
-        window.location.href = 'edit_billing.php?id=' + id;
-    }
+        // Show confirmation dialog
+        const confirmation = confirm('Are you sure you want to submit this feedback?');
+        if (confirmation) {
+            // If the user clicks "Yes", submit the form
+            this.submit();
+            alert('Feedback submitted successfully!');
+        } else {
+            // If the user clicks "No", do nothing
+            alert('Submission canceled.');
+        }
+    });
 
-    function editFeedback(id) {
-        window.location.href = 'edit_feedback.php?id=' + id;
-    }
+    // Handle form submission via AJAX
+    // document.getElementById('billing-form').addEventListener('submit', function(e) {
+    //     e.preventDefault();
+
+    //     const formData = new FormData(this);
+
+    //     fetch('save_billing.php', {
+    //             method: 'POST',
+    //             body: formData
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.success) {
+    //                 alert('Billing record added successfully!');
+    //                 location.reload(); // Reload the page to update the billing table
+    //             } else {
+    //                 alert('Error: ' + data.message);
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //             alert('An error occurred while submitting the form.');
+    //         });
+    // });
 </script>
 </body>
 
