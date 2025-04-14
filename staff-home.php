@@ -73,7 +73,7 @@ include 'fetch-job_requests-handler.php';
                     <table>
                         <thead>
                             <tr>
-                                <th>Job ID</th>
+                                <th>ID</th>
                                 <th>Job Title</th>
                                 <th>Client</th>
                                 <th>Services/Equipment Availed</th>
@@ -155,38 +155,35 @@ include 'fetch-job_requests-handler.php';
                     <table>
                         <thead>
                             <tr>
-                                <th>Feedback ID</th>
-                                <th>User</th>
+                                <th>ID</th>
+                                <th>Client</th>
                                 <th>Comments</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                // Output data for each row
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . htmlspecialchars($row['id']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['client_name']) . "</td>";
-                                    echo "<td>";
-                                    if (!empty($row['feedback_pdf'])) {
-                                        echo "<a href='uploads/feedback/" . htmlspecialchars($row['feedback_pdf']) . "' target='_blank'>View PDF</a>";
-                                    } else {
-                                        echo "<span class='no-pdf'>No Comments</span>";
-                                    }
-                                    echo "</td>";
-                                    echo "<td>" . htmlspecialchars($row['feedback_date']) . "</td>";
-                                    echo "<td><button onclick='editFeedback(" . htmlspecialchars($row['id']) . ")'>Edit</button></td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='5'>No feedback available</td></tr>";
-                            }
-
-                            $conn->close();
-                            ?>
+                            <?php if (!empty($feedbackRows)): ?>
+                                <?php foreach ($feedbackRows as $row): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
+                                        <td>
+                                            <?php if (!empty($row['feedback_pdf'])): ?>
+                                                <a href="uploads/feedback/<?php echo htmlspecialchars($row['feedback_pdf']); ?>" target="_blank">View PDF</a>
+                                            <?php else: ?>
+                                                <span class="no-pdf">No Comments</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($row['feedback_date']); ?></td>
+                                        <td><button onclick="editFeedback(<?php echo htmlspecialchars($row['id']); ?>)">Edit</button></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5">No feedback available</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
