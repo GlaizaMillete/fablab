@@ -327,13 +327,13 @@ include 'fetch-job_requests-handler.php';
         activeTab.style.display = 'block';
         activeTab.classList.add('active');
 
-        // Update the title inside the active tab
-        const contentTitle = activeTab.querySelector('.content-title');
-        if (contentTitle) {
-            contentTitle.innerText = title;
-        } else {
-            console.warn('Content title element not found in the active tab.');
-        }
+        // // Update the title inside the active tab
+        // const contentTitle = activeTab.querySelector('.content-title');
+        // if (contentTitle) {
+        //     contentTitle.innerText = title;
+        // } else {
+        //     console.warn('Content title element not found in the active tab.');
+        // }
 
         // Remove active class from all buttons
         document.querySelectorAll('.user-content .button').forEach(function(button) {

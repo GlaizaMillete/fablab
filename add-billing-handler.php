@@ -140,9 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Redirect to staff-home.php with the billing tab active
-    header('Location: staff-home.php?tab=billing&status=success');
     $stmt->close();
     $conn->close();
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>
