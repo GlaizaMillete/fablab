@@ -49,7 +49,7 @@ include 'config.php';
             </div>
         </div>
         <div class="contents">
-            <div class="contents-box" id="users-content">
+            <div class="contents-box1" id="users-content">
                 <table>
                     <thead>
                         <tr>
@@ -136,16 +136,29 @@ include 'config.php';
 <div id="background-overlay" class="background-overlay"></div>
 
 <script>
-    function showForm() {
-        document.getElementById('form-title').innerText = 'Edit User'; // Change title for editing
-        document.getElementById('floating-form').style.display = 'block';
-        document.getElementById('background-overlay').style.display = 'block';
+    function showForm(action = 'add') {
+        const formTitle = document.getElementById('form-title');
+        const floatingForm = document.getElementById('floating-form');
+        const backgroundOverlay = document.getElementById('background-overlay');
+
+        if (action === 'edit') {
+            formTitle.innerText = 'Edit User'; // Set title for editing
+        } else {
+            formTitle.innerText = 'Add New User'; // Set title for adding
+        }
+
+        floatingForm.style.display = 'block';
+        backgroundOverlay.style.display = 'block';
     }
 
     function hideForm() {
-        document.getElementById('form-title').innerText = 'Add New User'; // Reset title for adding
-        document.getElementById('floating-form').style.display = 'none';
-        document.getElementById('background-overlay').style.display = 'none';
+        const formTitle = document.getElementById('form-title');
+        const floatingForm = document.getElementById('floating-form');
+        const backgroundOverlay = document.getElementById('background-overlay');
+
+        formTitle.innerText = 'Add New User'; // Reset title for adding
+        floatingForm.style.display = 'none';
+        backgroundOverlay.style.display = 'none';
 
         // Clear the form fields
         document.getElementById('username').value = '';
@@ -157,6 +170,27 @@ include 'config.php';
         if (userIdInput) {
             userIdInput.remove();
         }
+    }
+
+    function editUser(id, username) {
+        // Populate the form fields with the user's details
+        document.getElementById('username').value = username;
+        document.getElementById('password').value = ''; // Clear the password field
+        document.getElementById('confirm-password').value = ''; // Clear the confirm password field
+
+        // Add a hidden input to store the user's ID for editing
+        let userIdInput = document.getElementById('user-id');
+        if (!userIdInput) {
+            userIdInput = document.createElement('input');
+            userIdInput.type = 'hidden';
+            userIdInput.id = 'user-id';
+            userIdInput.name = 'user-id';
+            document.getElementById('add-user-form').appendChild(userIdInput);
+        }
+        userIdInput.value = id;
+
+        // Show the floating form with the "Edit User" title
+        showForm('edit');
     }
 
     function toggleStatus(id, currentStatus) {
@@ -194,27 +228,6 @@ include 'config.php';
         if (confirm("Are you sure you want to log out?")) {
             window.location.href = 'logout.php';
         }
-    }
-
-    function editUser(id, username) {
-        // Populate the form fields with the user's details
-        document.getElementById('username').value = username;
-        document.getElementById('password').value = ''; // Clear the password field
-        document.getElementById('confirm-password').value = ''; // Clear the confirm password field
-
-        // Add a hidden input to store the user's ID for editing
-        let userIdInput = document.getElementById('user-id');
-        if (!userIdInput) {
-            userIdInput = document.createElement('input');
-            userIdInput.type = 'hidden';
-            userIdInput.id = 'user-id';
-            userIdInput.name = 'user-id';
-            document.getElementById('add-user-form').appendChild(userIdInput);
-        }
-        userIdInput.value = id;
-
-        // Show the floating form
-        showForm();
     }
 </script>
 </body>
