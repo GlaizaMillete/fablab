@@ -58,18 +58,10 @@ include 'fetch-job_requests-handler.php';
         </div>
     </div>
     <div class="container-right">
-        <div class="full-width-container">
-            <div class="title-container">
-                <h1 id="job-request-title">Job Requests</h1>
-                <!-- this area should be dynamic according to the active job request tab (job description, billing, feedback) -->
-            </div>
-            <div class="add-button-container">
-                <p onclick="handleAddButton()">Add</p>
-            </div>
-        </div>
         <div class="contents">
             <div class="contents-box">
                 <div class="job-request-content active" id="job-description">
+                    <h1 class="content-title">Job Request</h1>
                     <table>
                         <thead>
                             <tr>
@@ -116,6 +108,7 @@ include 'fetch-job_requests-handler.php';
                     </table>
                 </div>
                 <div class="job-request-content" id="billing">
+                    <h1 class="content-title">Billing</h1>
                     <table>
                         <thead>
                             <tr>
@@ -152,6 +145,7 @@ include 'fetch-job_requests-handler.php';
                     </table>
                 </div>
                 <div class="job-request-content" id="feedback">
+                    <h1 class="content-title">Feedback</h1>
                     <table>
                         <thead>
                             <tr>
@@ -191,6 +185,7 @@ include 'fetch-job_requests-handler.php';
                     <canvas id="summaryChart"></canvas>
                 </div>
             </div>
+            <div class="floating-add-button" id="add-button" onclick="handleAddButton()">Add</div>
         </div>
     </div>
 </div>
@@ -256,47 +251,6 @@ include 'fetch-job_requests-handler.php';
 </div>
 
 <script>
-    function showTab(tabId, title) {
-        // Hide all job request content
-        document.querySelectorAll('.job-request-content').forEach(function(content) {
-            content.style.display = 'none';
-            content.classList.remove('active');
-        });
-
-        // Show the selected tab content
-        document.getElementById(tabId).style.display = 'block';
-        document.getElementById(tabId).classList.add('active');
-
-        // Update the title
-        document.getElementById('job-request-title').innerText = title;
-
-        // Remove active class from all buttons
-        document.querySelectorAll('.user-content .button').forEach(function(button) {
-            button.classList.remove('active');
-        });
-
-        // Add active class to the clicked button
-        document.querySelector('.user-content .button[onclick="showTab(\'' + tabId + '\', \'' + title + '\')"]').classList.add('active');
-
-        // Render the chart if the dashboard tab is selected
-        if (tabId === 'dashboard') {
-            renderSummaryChart();
-        }
-    }
-
-    // Show the default or specified tab on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = urlParams.get('tab') || 'dashboard'; // Default to 'dashboard' if no tab is specified
-        const tabTitleMap = {
-            'dashboard': 'Dashboard',
-            'job-description': 'Job Requests',
-            'billing': 'Billings',
-            'feedback': 'Feedbacks'
-        };
-        showTab(activeTab, tabTitleMap[activeTab]);
-    });
-
     function renderSummaryChart() {
         var ctx = document.getElementById('summaryChart').getContext('2d');
         var summaryChart = new Chart(ctx, {
@@ -343,6 +297,86 @@ include 'fetch-job_requests-handler.php';
             showFeedbackForm();
         }
     }
+
+    // Ensure the floating button is visible only for the active tab
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.job-request-content');
+        tabs.forEach(tab => {
+            const addButton = tab.querySelector('.floating-add-button');
+            if (addButton) {
+                if (tab.classList.contains('active')) {
+                    addButton.style.display = 'block';
+                } else {
+                    addButton.style.display = 'none';
+                }
+            }
+        });
+    });
+
+    function showTab(tabId, title) {
+        console.log(`Switching to tab: ${tabId}, Title: ${title}`); // Debugging
+
+        // Hide all job request content
+        document.querySelectorAll('.job-request-content').forEach(function(content) {
+            content.style.display = 'none';
+            content.classList.remove('active');
+        });
+
+        // Show the selected tab content
+        const activeTab = document.getElementById(tabId);
+        activeTab.style.display = 'block';
+        activeTab.classList.add('active');
+
+        // Update the title inside the active tab
+        const contentTitle = activeTab.querySelector('.content-title');
+        if (contentTitle) {
+            contentTitle.innerText = title;
+        } else {
+            console.warn('Content title element not found in the active tab.');
+        }
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.user-content .button').forEach(function(button) {
+            button.classList.remove('active');
+        });
+
+        // Add active class to the clicked button
+        document.querySelector(`.user-content .button[onclick="showTab('${tabId}', '${title}')"]`).classList.add('active');
+
+        // Update the "Add" button text based on the active tab
+        const addButton = document.getElementById('add-button');
+        if (addButton) {
+            if (tabId === 'job-description') {
+                addButton.innerText = 'Add Job Request';
+            } else if (tabId === 'billing') {
+                addButton.innerText = 'Add Billing';
+            } else if (tabId === 'feedback') {
+                addButton.innerText = 'Add Feedback';
+            } else {
+                addButton.innerText = 'Add';
+            }
+        } else {
+            console.error('Add button not found in the DOM'); // Debugging
+        }
+
+        // Render the chart if the dashboard tab is selected
+        if (tabId === 'dashboard') {
+            renderSummaryChart();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'dashboard'; // Default to 'dashboard' if no tab is specified
+        const tabTitleMap = {
+            'dashboard': 'Dashboard',
+            'job-description': 'Job Requests',
+            'billing': 'Billings',
+            'feedback': 'Feedbacks'
+        };
+        showTab(activeTab, tabTitleMap[activeTab]);
+    });
+
 
     // Show the feedback form modal
     function showFeedbackForm() {

@@ -293,17 +293,22 @@ i {
 }
 
 .contents-box {
+    position: relative;
     flex: 1;
     background-color: #D9D9D9;
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    margin: 0 0 2rem 2rem;
+    margin: 2rem 0 2rem 2rem;
     height: 400px;
     /* Set a fixed height */
     overflow-y: auto;
     /* Enable vertical scrolling for overflowing content */
+}
+
+.content-title {
+    margin: 0 0 1rem 0;
 }
 
 table {
@@ -503,4 +508,25 @@ th {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.floating-add-button {
+    position: absolute;
+    /* Position relative to the parent container */
+    bottom: 3rem;
+    /* Distance from the bottom of the parent container */
+    right: 3rem;
+    /* Distance from the right of the parent container */
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.floating-add-button:hover {
+    background-color: #0056b3;
 }
