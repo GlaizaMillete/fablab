@@ -67,7 +67,7 @@ while ($row = $result->fetch_assoc()) {
     <title>Billing Records</title>
     <link rel="icon" href="fablab.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="style2.css">
 </head>
 
 <body>
@@ -191,11 +191,11 @@ while ($row = $result->fetch_assoc()) {
                         <option value="3D Scanner" <?= isset($_GET['equipment']) && $_GET['equipment'] == '3D Scanner' ? 'selected' : '' ?>>3D Scanner</option>
                         <option value="Laser Cutting Machine" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Laser Cutting Machine' ? 'selected' : '' ?>>Laser Cutting Machine</option>
                         <option value="Print and Cut Machine" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Print and Cut Machine' ? 'selected' : '' ?>>Print and Cut Machine</option>
-                        <option value="CNC MachineB" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'CNC MachineB' ? 'selected' : '' ?>>CNC Machine(Big)</option>
-                        <option value="CNC MachineS" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'CNC MachineS' ? 'selected' : '' ?>>CNC Machine(Small)</option>
+                        <option value="CNC Machine (Big)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'CNC Machine (Big)' ? 'selected' : '' ?>>CNC Machine (Big)</option>
+                        <option value="CNC Machine (Small)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'CNC Machine (Small)' ? 'selected' : '' ?>>CNC Machine (Small)</option>
                         <option value="Vinyl Cutter" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Vinyl Cutter' ? 'selected' : '' ?>>Vinyl Cutter</option>
-                        <option value="Embroidery Machine1" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Embroidery Machine1' ? 'selected' : '' ?>>Embroidery Machine(One Head)</option>
-                        <option value="Embroidery Machine4" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Embroidery Machine4' ? 'selected' : '' ?>>Embroidery Machine(Four Heads)</option>
+                        <option value="Embroidery Machine (One Head)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Embroidery Machine (One Head)' ? 'selected' : '' ?>>Embroidery Machine (One Head)</option>
+                        <option value="Embroidery Machine (Four Heads)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Embroidery Machine (Four Heads)' ? 'selected' : '' ?>>Embroidery Machine (Four Heads)</option>
                         <option value="Flatbed Cutter" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Flatbed Cutter' ? 'selected' : '' ?>>Flatbed Cutter</option>
                         <option value="Vacuum Forming" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Vacuum Forming' ? 'selected' : '' ?>>Vacuum Forming</option>
                         <option value="Water Jet Machine" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Water Jet Machine' ? 'selected' : '' ?>>Water Jet Machine</option>

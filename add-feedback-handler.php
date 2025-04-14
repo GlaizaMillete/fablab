@@ -46,21 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Log the action
         if (isset($_SESSION['staff_name'])) {
             $staff_name = $_SESSION['staff_name']; // Get the staff's name from the session
-        } else {
-            die('Error: Staff name is not set in the session.');
+            $action = "Added feedback for client: $client_name";
+            $log_date = date('Y-m-d H:i:s'); // Current date and time in Asia/Manila timezone
+
+            $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
+            $log_stmt->bind_param('sss', $staff_name, $action, $log_date);
+            $log_stmt->execute();
+            $log_stmt->close();
         }
-        $action = "Added feedback for client: $client_name";
-        $log_date = date('Y-m-d H:i:s'); // Current date and time in Asia/Manila timezone
 
-        $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
-        $log_stmt->bind_param('sss', $staff_name, $action, $log_date);
-        $log_stmt->execute();
-        $log_stmt->close();
-
-        // Redirect to staff-home.php with the feedback tab active
-        header('Location: staff-home.php?tab=feedback&status=success');
+        // Redirect back to the referring page
         $stmt->close();
         $conn->close();
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     } else {
         die('Error: ' . $stmt->error);
