@@ -510,23 +510,32 @@ th {
     cursor: pointer;
 }
 
-.floating-add-button {
-    position: absolute;
-    /* Position relative to the parent container */
-    bottom: 3rem;
-    /* Distance from the bottom of the parent container */
-    right: 3rem;
-    /* Distance from the right of the parent container */
+/* Floating Buttons Container */
+.floating-buttons {
+    position: fixed;
+    bottom: 4rem;
+    right: 4rem;
+    display: flex;
+    gap: 10px;
+    /* Space between the buttons */
+    z-index: 1000;
+}
+
+/* Individual Buttons */
+.floating-add-button,
+.floating-redirect-button {
     background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border-radius: 50px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    z-index: 1000;
+    font-size: 16px;
+    text-align: center;
     transition: background-color 0.3s ease;
 }
 
-.floating-add-button:hover {
+.floating-add-button:hover,
+.floating-redirect-button:hover {
     background-color: #0056b3;
 }

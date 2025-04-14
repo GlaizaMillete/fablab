@@ -40,9 +40,9 @@ include 'fetch-job_requests-handler.php';
             </div>
         </div>
         <div class="user-content">
-            <div class="button" onclick="showTab('dashboard', 'Dashboard')">
+            <!-- <div class="button" onclick="showTab('dashboard', 'Dashboard')">
                 <p>Dashboard</p>
-            </div>
+            </div> -->
             <div class="button" onclick="showTab('job-description', 'Job Requests')">
                 <p>Job Requests</p>
             </div>
@@ -185,7 +185,10 @@ include 'fetch-job_requests-handler.php';
                     <canvas id="summaryChart"></canvas>
                 </div>
             </div>
-            <div class="floating-add-button" id="add-button" onclick="handleAddButton()">Add</div>
+            <div class="floating-buttons">
+                <div class="floating-add-button" onclick="handleAddButton()">Add</div>
+                <div class="floating-redirect-button" onclick="redirectToPage()">Go to Page</div>
+            </div>
         </div>
     </div>
 </div>
@@ -298,6 +301,20 @@ include 'fetch-job_requests-handler.php';
         }
     }
 
+    function redirectToPage() {
+        const activeTab = document.querySelector('.job-request-content.active').id;
+
+        if (activeTab === 'job-description') {
+            // Redirect to the Job Requests page
+            window.location.href = 'job-requests.php';
+        } else if (activeTab === 'billing') {
+            // Redirect to the Billing Records page
+            window.location.href = 'records.php';
+        } else {
+            alert('No specific page associated with this tab.');
+        }
+    }
+
     // Ensure the floating button is visible only for the active tab
     document.addEventListener('DOMContentLoaded', function() {
         const tabs = document.querySelectorAll('.job-request-content');
@@ -367,14 +384,13 @@ include 'fetch-job_requests-handler.php';
 
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = urlParams.get('tab') || 'dashboard'; // Default to 'dashboard' if no tab is specified
+        const activeTab = urlParams.get('tab') || 'job-description'; // Default to 'job-description' (Job Requests tab)
         const tabTitleMap = {
-            'dashboard': 'Dashboard',
             'job-description': 'Job Requests',
             'billing': 'Billings',
             'feedback': 'Feedbacks'
         };
-        showTab(activeTab, tabTitleMap[activeTab]);
+        showTab(activeTab, tabTitleMap[activeTab] || 'Job Requests');
     });
 
 
