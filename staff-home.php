@@ -27,6 +27,7 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
 
 include 'fetch-billing-handler.php';
 include 'fetch-feedback-handler.php';
+include 'fetch-job_requests-handler.php';
 ?>
 
 <div class="container">
@@ -73,34 +74,44 @@ include 'fetch-feedback-handler.php';
                         <thead>
                             <tr>
                                 <th>Job ID</th>
-                                <th>Job Service</th>
+                                <th>Job Title</th>
                                 <th>Client</th>
+                                <th>Services/Equipment Availed</th>
                                 <th>Status</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>PDF</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>20250305</td>
-                                <td>3D Printing</td>
-                                <td>John Doe</td>
-                                <td>Pending</td>
-                                <td><button onclick="">View</button></td>
-                            </tr>
-                            <tr>
-                                <td>20250307</td>
-                                <td>Laser Cutting</td>
-                                <td>Jane Smith</td>
-                                <td>Completed</td>
-                                <td><button onclick="">View</button></td>
-                            </tr>
-                            <tr>
-                                <td>20250306</td>
-                                <td>CNC Milling</td>
-                                <td>Bob Johnson</td>
-                                <td>In Progress</td>
-                                <td><button onclick="">View</button></td>
-                            </tr>
+                            <?php if (!empty($jobRequests)): ?>
+                                <?php foreach ($jobRequests as $job): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($job['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($job['request_title']); ?></td>
+                                        <td><?php echo htmlspecialchars($job['client_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($job['equipment']); ?></td>
+                                        <td><?php echo htmlspecialchars($job['status']); ?></td>
+                                        <td><?php echo htmlspecialchars($job['request_date']); ?></td>
+                                        <td><?php echo htmlspecialchars($job['priority']); ?></td>
+                                        <td>
+                                            <?php if (!empty($job['reference_file'])): ?>
+                                                <a href="uploads/job_requests/<?php echo htmlspecialchars($job['reference_file']); ?>" target="_blank">View PDF</a>
+                                            <?php else: ?>
+                                                <span class="no-pdf">None</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <button onclick="viewJobRequest(<?php echo $job['id']; ?>)">View</button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="9">No job requests found.</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

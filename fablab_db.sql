@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2025 at 07:13 PM
+-- Generation Time: Apr 14, 2025 at 09:28 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -81,6 +81,33 @@ INSERT INTO `billing` (`id`, `client_profile`, `client_name`, `equipment`, `bill
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `equipment`
+--
+
+CREATE TABLE `equipment` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `status` enum('Available','In Maintenance','Out of Service') DEFAULT 'Available',
+  `last_maintenance_date` date DEFAULT NULL,
+  `next_maintenance_date` date DEFAULT NULL,
+  `notes` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `equipment`
+--
+
+INSERT INTO `equipment` (`id`, `name`, `type`, `status`, `last_maintenance_date`, `next_maintenance_date`, `notes`) VALUES
+(1, '3D Printer', 'Manufacturing', 'Available', NULL, NULL, NULL),
+(2, '3D Scanner', 'Scanning', 'Available', NULL, NULL, NULL),
+(3, 'Laser Cutting Machine', 'Cutting', 'Available', NULL, NULL, NULL),
+(4, 'CNC Machine (Big)', 'Milling', 'Available', NULL, NULL, NULL),
+(5, 'Embroidery Machine (One Head)', 'Textile', 'Available', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `feedback`
 --
 
@@ -106,6 +133,37 @@ INSERT INTO `feedback` (`id`, `client_name`, `feedback_pdf`, `feedback_date`) VA
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `job_requests`
+--
+
+CREATE TABLE `job_requests` (
+  `id` int(11) NOT NULL,
+  `request_title` varchar(100) NOT NULL,
+  `request_date` date NOT NULL,
+  `client_name` varchar(100) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `client_profile` varchar(50) NOT NULL,
+  `client_profile_other` varchar(50) DEFAULT NULL,
+  `request_description` text NOT NULL,
+  `equipment` text DEFAULT NULL,
+  `priority` enum('Low','Medium','High') NOT NULL,
+  `completion_date` date NOT NULL,
+  `reference_file` varchar(255) DEFAULT NULL,
+  `status` enum('Pending','In Progress','Completed','Cancelled') DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `job_requests`
+--
+
+INSERT INTO `job_requests` (`id`, `request_title`, `request_date`, `client_name`, `contact_number`, `client_profile`, `client_profile_other`, `request_description`, `equipment`, `priority`, `completion_date`, `reference_file`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'asdsadsa', '2025-04-14', 'asa', '09471918324', 'STUDENT', NULL, 'asdsadsadsadsads', '3D Printer, 3D Scanner, Laser Cutting Machine', 'Medium', '2025-04-16', '67fcb14a3c161.pdf', 'Pending', '2025-04-14 06:55:06', '2025-04-14 06:55:06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `logs`
 --
 
@@ -115,6 +173,15 @@ CREATE TABLE `logs` (
   `action` text NOT NULL,
   `log_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `logs`
+--
+
+INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
+(1, 'alice_jones', 'Added billing for client: asa', '2025-04-10 11:32:37'),
+(2, 'alice_jones', 'Updated billing for client asadd\'s Client Name: \'asad\' -> \'asadd\'', '2025-04-10 11:50:10'),
+(3, 'alice_jones', 'Updated billing for client Glaiza Baba\'s Client Name: \'asadd\' -> \'Glaiza Baba\', Client Profile: \'MSME\' -> \'STUDENT\', Equipment: \'3D Scanner, CNC Machine (Big), CNC Machine (Small)\' -> \'3D Printer, 3D Scanner, Laser Cutting Machine, Print and Cut Machine, CNC Machine (Big), CNC Machine (Small), Vinyl Cutter, Embroidery Machine (One Head), Embroidery Machine (Four Heads), Flatbed Cutter, Vacuum Forming, Water Jet Machine\'', '2025-04-10 14:28:53');
 
 -- --------------------------------------------------------
 
@@ -150,9 +217,21 @@ ALTER TABLE `billing`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `equipment`
+--
+ALTER TABLE `equipment`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `feedback`
 --
 ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_requests`
+--
+ALTER TABLE `job_requests`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -175,7 +254,13 @@ ALTER TABLE `stafffablab`
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=387;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=388;
+
+--
+-- AUTO_INCREMENT for table `equipment`
+--
+ALTER TABLE `equipment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `feedback`
@@ -184,10 +269,16 @@ ALTER TABLE `feedback`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `job_requests`
+--
+ALTER TABLE `job_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`
