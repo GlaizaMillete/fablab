@@ -83,7 +83,7 @@ include 'config.php';
                     </tbody>
                 </table>
             </div>
-            <div class="contents-box" id="logs-content" style="display: none;">
+            <div class="contents-box1" id="logs-content" style="display: none;">
                 <table>
                     <thead>
                         <tr>

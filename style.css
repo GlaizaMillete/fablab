@@ -334,6 +334,7 @@ td {
     padding: 8px 12px;
     border: 1px solid #ddd;
     text-align: left;
+    max-width: 50vw;
 }
 
 th {
