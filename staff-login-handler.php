@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $hashedPassword)) {
             // Start the session and set session variables
             session_start();
-            $_SESSION['staff_logged_in'] = true;
-            $_SESSION['staff_username'] = $username;
-            $_SESSION['staff_id'] = $staffID;
-            $_SESSION['staff_name'] = $staffUsername; // Store the staffUsername as staff_name in the session
+            $_SESSION['staff_logged_in'] = true; // Indicates staff is logged in
+            $_SESSION['staff_username'] = $staffUsername; // Store the staff username
+            $_SESSION['staff_id'] = $staffID; // Store the staff ID
+            $_SESSION['staff_name'] = $staffUsername; // Store the staff name (for display purposes)
 
             // Redirect to the staff home page with a success message
             header("Location: staff-home.php?login=success");

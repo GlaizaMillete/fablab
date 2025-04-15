@@ -3,24 +3,44 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start(); // Start the session only if it's not already started
 }
 
+include 'config.php'; // Include the database connection
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Hard-coded credentials
-    $adminUsername = 'admin';
-    $adminPassword = 'password123';
+    // Fetch admin credentials from the database
+    $sql = "SELECT adminID, adminPassword FROM adminfablab WHERE adminUsername = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
 
-    if ($username === $adminUsername && $password === $adminPassword) {
-        // Set a session variable to indicate the admin is logged in
-        $_SESSION['admin_logged_in'] = true;
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($adminID, $hashedPassword);
+        $stmt->fetch();
 
-        // Redirect to admin-home.php with a success message
-        header('Location: admin-home.php?login=success');
-        exit();
+        // Verify the password
+        if (password_verify($password, $hashedPassword)) {
+            // Set admin session variables
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['admin_username'] = $username; // Store the admin's username
+            $_SESSION['admin_id'] = $adminID;
+
+            // Redirect to admin home page
+            header("Location: admin-home.php");
+            exit();
+        } else {
+            // Invalid password
+            echo '<script>alert("Invalid username or password."); window.location.href = "admin-login.php";</script>';
+        }
     } else {
-        // Invalid credentials
+        // Invalid username
         echo '<script>alert("Invalid username or password."); window.location.href = "admin-login.php";</script>';
     }
+
+    $stmt->close();
 }
-?> 
+
+$conn->close();
+?>

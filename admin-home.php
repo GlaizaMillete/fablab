@@ -23,8 +23,7 @@ include 'config.php';
         <div class="header">
             <img src="FABLAB_LOGO.png" alt="Description of image" class="admin-image">
             <div class="header-text-admin">
-                <p>Hello <b>Admin!</b></p>
-                <!-- <p>Staff</p> -->
+                <p>Hello <b><?php echo htmlspecialchars($_SESSION['admin_username']); ?>!</b></p>
             </div>
         </div>
         <div class="user-content">

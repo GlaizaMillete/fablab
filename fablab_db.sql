@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 14, 2025 at 09:28 AM
+-- Generation Time: Apr 15, 2025 at 09:24 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `fablab_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `adminfablab`
+--
+
+CREATE TABLE `adminfablab` (
+  `adminID` int(11) NOT NULL,
+  `adminUsername` varchar(50) NOT NULL,
+  `adminPassword` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `adminfablab`
+--
+
+INSERT INTO `adminfablab` (`adminID`, `adminUsername`, `adminPassword`) VALUES
+(1, 'admin', 'password123');
 
 -- --------------------------------------------------------
 
@@ -128,7 +147,9 @@ INSERT INTO `feedback` (`id`, `client_name`, `feedback_pdf`, `feedback_date`) VA
 (3, 'Michael Johnson', 'feedback_report.pdf', '2025-03-10'),
 (5, 'David Wilson', 'client_feedback.pdf', '2025-03-20'),
 (10, 'Jaded', 'inside01_BROCHURE.pdf', '2025-03-10'),
-(11, 'larvie', 'outside_01BROCHURE.pdf', '2025-04-06');
+(11, 'larvie', 'outside_01BROCHURE.pdf', '2025-04-06'),
+(12, 'asad', 'student-paper-setup-guide.pdf', '2025-04-14'),
+(13, 'aaaaaa', 'Millete_andrea_03 eLMS Activity 1 - ARG.pdf', '2025-04-14');
 
 -- --------------------------------------------------------
 
@@ -181,7 +202,9 @@ CREATE TABLE `logs` (
 INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 (1, 'alice_jones', 'Added billing for client: asa', '2025-04-10 11:32:37'),
 (2, 'alice_jones', 'Updated billing for client asadd\'s Client Name: \'asad\' -> \'asadd\'', '2025-04-10 11:50:10'),
-(3, 'alice_jones', 'Updated billing for client Glaiza Baba\'s Client Name: \'asadd\' -> \'Glaiza Baba\', Client Profile: \'MSME\' -> \'STUDENT\', Equipment: \'3D Scanner, CNC Machine (Big), CNC Machine (Small)\' -> \'3D Printer, 3D Scanner, Laser Cutting Machine, Print and Cut Machine, CNC Machine (Big), CNC Machine (Small), Vinyl Cutter, Embroidery Machine (One Head), Embroidery Machine (Four Heads), Flatbed Cutter, Vacuum Forming, Water Jet Machine\'', '2025-04-10 14:28:53');
+(3, 'alice_jones', 'Updated billing for client Glaiza Baba\'s Client Name: \'asadd\' -> \'Glaiza Baba\', Client Profile: \'MSME\' -> \'STUDENT\', Equipment: \'3D Scanner, CNC Machine (Big), CNC Machine (Small)\' -> \'3D Printer, 3D Scanner, Laser Cutting Machine, Print and Cut Machine, CNC Machine (Big), CNC Machine (Small), Vinyl Cutter, Embroidery Machine (One Head), Embroidery Machine (Four Heads), Flatbed Cutter, Vacuum Forming, Water Jet Machine\'', '2025-04-10 14:28:53'),
+(4, 'alice_jones', 'Added feedback for client: asad', '2025-04-14 15:59:47'),
+(5, 'alice_jones', 'Added feedback for client: aaaaaa', '2025-04-14 16:12:20');
 
 -- --------------------------------------------------------
 
@@ -209,6 +232,12 @@ INSERT INTO `stafffablab` (`staffID`, `staffUsername`, `staffPassword`, `status`
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `adminfablab`
+--
+ALTER TABLE `adminfablab`
+  ADD PRIMARY KEY (`adminID`);
 
 --
 -- Indexes for table `billing`
@@ -251,6 +280,12 @@ ALTER TABLE `stafffablab`
 --
 
 --
+-- AUTO_INCREMENT for table `adminfablab`
+--
+ALTER TABLE `adminfablab`
+  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
@@ -266,7 +301,7 @@ ALTER TABLE `equipment`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `job_requests`
@@ -278,7 +313,7 @@ ALTER TABLE `job_requests`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`

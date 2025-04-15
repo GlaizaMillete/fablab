@@ -21,10 +21,10 @@ include 'header.php';
 <div class="login-container-staff">
     <div class="login-left">
         <img src="FABLAB_BICOL_LOGO (04).png" alt="Logo" class="logo">
+        <p class="logo-text">WELCOME TO FABLAB!</p>
         <i>
-            <p class="logo-text">WELCOME TO FABLAB!</p>
+            <p class="additional-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit!</p>
         </i>
-        <p class="additional-text">Pogi ni jade</p>
     </div>
     <div class="login-right">
         <div class="login-card-staff">
