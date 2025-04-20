@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2025 at 02:40 PM
+-- Generation Time: Apr 20, 2025 at 04:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -162,11 +162,27 @@ CREATE TABLE `job_requests` (
   `request_title` varchar(100) NOT NULL,
   `request_date` date NOT NULL,
   `client_name` varchar(100) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `gender` varchar(50) NOT NULL,
+  `gender_optional` varchar(255) DEFAULT NULL,
+  `age` int(11) NOT NULL,
+  `designation` varchar(50) NOT NULL,
+  `designation_other` varchar(255) DEFAULT NULL,
+  `company` varchar(255) NOT NULL,
+  `service_requested` text NOT NULL,
   `contact_number` varchar(20) NOT NULL,
   `client_profile` varchar(50) NOT NULL,
   `client_profile_other` varchar(50) DEFAULT NULL,
   `request_description` text NOT NULL,
   `equipment` text DEFAULT NULL,
+  `hand_tools_other` varchar(255) DEFAULT NULL,
+  `equipment_other` varchar(255) DEFAULT NULL,
+  `consultation_mode` varchar(50) DEFAULT NULL,
+  `consultation_schedule` varchar(255) DEFAULT NULL,
+  `equipment_schedule` datetime DEFAULT NULL,
+  `work_description` text NOT NULL,
+  `personnel_name` varchar(255) DEFAULT NULL,
+  `personnel_date` date DEFAULT NULL,
   `priority` enum('Low','Medium','High') NOT NULL,
   `completion_date` date NOT NULL,
   `reference_file` varchar(255) DEFAULT NULL,
@@ -179,8 +195,8 @@ CREATE TABLE `job_requests` (
 -- Dumping data for table `job_requests`
 --
 
-INSERT INTO `job_requests` (`id`, `request_title`, `request_date`, `client_name`, `contact_number`, `client_profile`, `client_profile_other`, `request_description`, `equipment`, `priority`, `completion_date`, `reference_file`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'asdsadsa', '2025-04-14', 'asa', '09471918324', 'STUDENT', NULL, 'asdsadsadsadsads', '3D Printer, 3D Scanner, Laser Cutting Machine', 'Medium', '2025-04-16', '67fcb14a3c161.pdf', 'Pending', '2025-04-14 06:55:06', '2025-04-14 06:55:06');
+INSERT INTO `job_requests` (`id`, `request_title`, `request_date`, `client_name`, `address`, `gender`, `gender_optional`, `age`, `designation`, `designation_other`, `company`, `service_requested`, `contact_number`, `client_profile`, `client_profile_other`, `request_description`, `equipment`, `hand_tools_other`, `equipment_other`, `consultation_mode`, `consultation_schedule`, `equipment_schedule`, `work_description`, `personnel_name`, `personnel_date`, `priority`, `completion_date`, `reference_file`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'asdsadsa', '2025-04-14', 'asa', '', '', NULL, 0, '', NULL, '', '', '09471918324', 'STUDENT', NULL, 'asdsadsadsadsads', '3D Printer, 3D Scanner, Laser Cutting Machine', NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, 'Medium', '2025-04-16', '67fcb14a3c161.pdf', 'Pending', '2025-04-14 06:55:06', '2025-04-14 06:55:06');
 
 -- --------------------------------------------------------
 

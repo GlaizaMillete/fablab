@@ -63,70 +63,125 @@ $chartData = [
                 <span class="close">&times;</span>
                 <h2>Client Profile and Service Request Form</h2>
                 <form id="jobRequestForm" enctype="multipart/form-data" action="add-job_request-handler.php" method="POST">
+                    <h3>Personal Information</h3>
                     <div class="form-columns">
                         <div>
-                            <label>Request Title:</label>
-                            <input type="text" name="request_title" required>
+                            <label>Name:</label>
+                            <input type="text" name="name" required>
                         </div>
                         <div>
-                            <label>Request Date:</label>
-                            <input type="date" name="request_date" required>
+                            <label>Address:</label>
+                            <input type="text" name="address" required>
                         </div>
-                    </div>
-                    <div class="form-columns">
-                        <div>
-                            <label>Client Name:</label>
-                            <input type="text" name="client_name" required>
-                        </div>
-                        <div>
-                            <label>Contact Number:</label>
-                            <input type="text" name="contact_number" required>
-                        </div>
-                    </div>
-                    <div>
-                        <label>Client Profile:</label><br>
-                        <input type="radio" name="client_profile" value="STUDENT" required> STUDENT<br>
-                        <input type="radio" name="client_profile" value="MSME" required> MSME<br>
-                        <input type="radio" name="client_profile" value="OTHERS" required> OTHERS (Specify):
-                        <input type="text" name="client_profile_other">
-                    </div>
-                    <div>
-                        <label>Request Description:</label>
-                        <textarea name="request_description" placeholder="Provide detailed information about the service request..." required></textarea>
-                    </div>
-                    <div>
-                        <label>Equipment Needed:</label><br>
-                        <input type="checkbox" name="equipment[]" value="3D Printer"> 3D Printer<br>
-                        <input type="checkbox" name="equipment[]" value="3D Scanner"> 3D Scanner<br>
-                        <input type="checkbox" name="equipment[]" value="Laser Cutting Machine"> Laser Cutting Machine<br>
-                        <input type="checkbox" name="equipment[]" value="Print and Cut Machine"> Print and Cut Machine<br>
-                        <input type="checkbox" name="equipment[]" value="CNC Machine (Big)"> CNC Machine (Big)<br>
-                        <input type="checkbox" name="equipment[]" value="CNC Machine (Small)"> CNC Machine (Small)<br>
-                        <input type="checkbox" name="equipment[]" value="Vinyl Cutter"> Vinyl Cutter<br>
-                        <input type="checkbox" name="equipment[]" value="Embroidery Machine (One Head)"> Embroidery Machine (One Head)<br>
-                        <input type="checkbox" name="equipment[]" value="Embroidery Machine (Four Heads)"> Embroidery Machine (Four Heads)<br>
-                        <input type="checkbox" name="equipment[]" value="Flatbed Cutter"> Flatbed Cutter<br>
-                        <input type="checkbox" name="equipment[]" value="Vacuum Forming"> Vacuum Forming<br>
-                        <input type="checkbox" name="equipment[]" value="Water Jet Machine"> Water Jet Machine<br>
                     </div>
                     <div class="form-columns">
                         <div>
-                            <label>Priority Level:</label><br>
-                            <input type="radio" name="priority" value="Low" required> Low<br>
-                            <input type="radio" name="priority" value="Medium" required> Medium<br>
-                            <input type="radio" name="priority" value="High" required> High<br>
+                            <label>Contact No:</label>
+                            <input type="number" name="contact_no" required>
                         </div>
+                        <br>
                         <div>
-                            <label>Estimated Completion Date:</label>
-                            <input type="date" name="completion_date" required>
+                            <label>Gender:</label>
+                            <input type="radio" name="gender" value="Male" required> Male<br>
+                            <input type="radio" name="gender" value="Female" required> Female<br>
+                            <input type="radio" name="gender" value="Prefer not to say"> Prefer not to say<br>
+                            <input type="text" name="gender_optional" placeholder="Optional if 'Prefer not to say'" style="margin-top: 5px;">
                         </div>
                     </div>
+                    <br>
+                    <div class="form-columns">
+                        <div>
+                            <label>Age:</label>
+                            <input type="number" name="age" required>
+                        </div>
+                        <br>
+                        <div>
+                            <label>Work/Position/Designation:</label>
+                            <input type="radio" name="designation" value="Student" required> Student<br>
+                            <input type="radio" name="designation" value="MSME/Entrepreneur" required> MSME/Entrepreneur<br>
+                            <input type="radio" name="designation" value="Teacher" required> Teacher<br>
+                            <input type="radio" name="designation" value="Hobbyist" required> Hobbyist<br>
+                            <input type="radio" name="designation" value="Others"> Others (Please Specify):
+                            <input type="text" name="designation_other">
+                        </div>
+                    </div>
+                    <br>
                     <div>
-                        <label>Attach Reference Files:</label>
+                        <label>Company/Affiliated with:</label>
+                        <input type="text" name="company" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label>Service Requested:</label>
+                        <input type="checkbox" name="service_requested[]" value="Training/Tour/Orientation"> Training/Tour/Orientation<br>
+                        <input type="checkbox" name="service_requested[]" value="Product/Design/Consultation"> Product/Design/Consultation<br>
+                        <input type="checkbox" name="service_requested[]" value="Equipment"> Equipment<br>
+                        <div style="margin-left: 20px;">
+                            <input type="checkbox" name="equipment[]" value="3D Printer"> 3D Printer<br>
+                            <input type="checkbox" name="equipment[]" value="3D Scanner"> 3D Scanner<br>
+                            <input type="checkbox" name="equipment[]" value="Laser Cutting Machine"> Laser Cutting Machine<br>
+                            <input type="checkbox" name="equipment[]" value="Print and Cut Machine"> Print and Cut Machine<br>
+                            <input type="checkbox" name="equipment[]" value="CNC Machine (Big)"> CNC Machine (Big)<br>
+                            <input type="checkbox" name="equipment[]" value="CNC Machine (Small)"> CNC Machine (Small)<br>
+                            <input type="checkbox" name="equipment[]" value="Vinyl Cutter"> Vinyl Cutter<br>
+                            <input type="checkbox" name="equipment[]" value="Embroidery Machine (One Head)"> Embroidery Machine (One Head)<br>
+                            <input type="checkbox" name="equipment[]" value="Embroidery Machine (Four Heads)"> Embroidery Machine (Four Heads)<br>
+                            <input type="checkbox" name="equipment[]" value="Flatbed Cutter"> Flatbed Cutter<br>
+                            <input type="checkbox" name="equipment[]" value="Vacuum Forming"> Vacuum Forming<br>
+                            <input type="checkbox" name="equipment[]" value="Water Jet Machine"> Water Jet Machine<br>
+                            <input type="checkbox" name="equipment[]" value="Hand Tools"> Hand Tools (Please specify):
+                            <input type="text" name="hand_tools_other"><br>
+                            <input type="checkbox" name="equipment[]" value="Other"> Other (Please specify):
+                            <input type="text" name="equipment_other">
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <label>Other Details:</label>
+                        <label>If consultation, what mode of meeting do you prefer?</label>
+                        <input type="radio" name="consultation_mode" value="Virtual"> Virtual<br>
+                        <input type="radio" name="consultation_mode" value="Face to Face"> Face to Face<br>
+                        <input type="text" name="consultation_schedule" placeholder="Specify your schedule (date and time)">
+                    </div>
+                    <br>
+                    <div>
+                        <label>If equipment utilization, please specify your schedule:</label>
+                        <input class="datetime-local" type="datetime-local" name="equipment_schedule">
+                    </div>
+                    <br>
+                    <div>
+                        <label>Describe the work requested:</label>
+                        <textarea class="work_description" name="work_description" required></textarea>
+                    </div>
+                    <br>
+                    <div>
+                        <label>Date:</label>
+                        <input type="date" name="date" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label>Name of Client:</label>
+                        <input type="text" name="client_name" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label>Reference File:</label>
                         <input type="file" name="reference_file" accept=".pdf,.jpg,.jpeg,.png,.zip">
-                        <p class="text-sm text-primary">Accepted formats: PDF, JPG, PNG, ZIP (Max: 10MB)</p>
                     </div>
-                    <button type="submit">Submit Service Request</button>
+                    <br>
+                    <h3>For FAB LAB Personnel Only</h3>
+                    <div class="form-columns">
+                        <div>
+                            <label>Name of Personnel:</label>
+                            <input type="text" name="personnel_name">
+                        </div>
+                        <div>
+                            <label>Date:</label>
+                            <input type="date" name="personnel_date">
+                        </div>
+                    </div>
+                    <br>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         </div>
@@ -242,7 +297,7 @@ $chartData = [
                         <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
                         <td>
                             <?php if (!empty($request['reference_file'])): ?>
-                                <a href="requests/<?= htmlspecialchars($request['reference_file']) ?>" target="_blank">View File</a>
+                                <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" target="_blank">View File</a>
                             <?php else: ?>
                                 None
                             <?php endif; ?>
@@ -292,6 +347,15 @@ $chartData = [
                         position: 'bottom'
                     }
                 }
+            }
+        });
+
+        // Form validation for service requested
+        document.getElementById('jobRequestForm').addEventListener('submit', function(e) {
+            const serviceRequested = document.querySelectorAll('input[name="service_requested[]"]:checked');
+            if (serviceRequested.length === 0) {
+                e.preventDefault(); // Prevent form submission
+                alert('Please select at least one service requested.');
             }
         });
     </script>
