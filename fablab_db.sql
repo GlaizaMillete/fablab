@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2025 at 09:24 AM
+-- Generation Time: Apr 20, 2025 at 02:40 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,7 +38,7 @@ CREATE TABLE `adminfablab` (
 --
 
 INSERT INTO `adminfablab` (`adminID`, `adminUsername`, `adminPassword`) VALUES
-(1, 'admin', 'password123');
+(1, 'admin', '$2y$10$zJpQwu8hEW50DtgK5DPUuuk5Of5PY.WUq.ilImUr/rxYN8Mzzc1hS');
 
 -- --------------------------------------------------------
 

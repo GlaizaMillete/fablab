@@ -49,19 +49,19 @@ $chartData = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Request Records</title>
+    <title>Client Profile and Service Request Records</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style3.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>Job Request Records</h1>
+        <h1>Client Profile and Service Request Records</h1>
         <!-- The Modal -->
         <div id="jobRequestModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2>Job Request Form</h2>
+                <h2>Client Profile and Service Request Form</h2>
                 <form id="jobRequestForm" enctype="multipart/form-data" action="add-job_request-handler.php" method="POST">
                     <div class="form-columns">
                         <div>
@@ -92,7 +92,7 @@ $chartData = [
                     </div>
                     <div>
                         <label>Request Description:</label>
-                        <textarea name="request_description" placeholder="Provide detailed information about the job request..." required></textarea>
+                        <textarea name="request_description" placeholder="Provide detailed information about the service request..." required></textarea>
                     </div>
                     <div>
                         <label>Equipment Needed:</label><br>
@@ -126,7 +126,7 @@ $chartData = [
                         <input type="file" name="reference_file" accept=".pdf,.jpg,.jpeg,.png,.zip">
                         <p class="text-sm text-primary">Accepted formats: PDF, JPG, PNG, ZIP (Max: 10MB)</p>
                     </div>
-                    <button type="submit">Submit Job Request</button>
+                    <button type="submit">Submit Service Request</button>
                 </form>
             </div>
         </div>
@@ -135,7 +135,7 @@ $chartData = [
                 <canvas id="requestChart"></canvas>
             </div>
             <div class="totals-card">
-                <h3>Total Job Requests</h3>
+                <h3>Total Client Profile & Service Requests</h3>
                 <div class="total-amount"><?= $totalRequests ?></div>
                 <h4>By Status</h4>
                 <?php foreach ($statusCounts as $status => $count): ?>
@@ -146,7 +146,7 @@ $chartData = [
             </div>
         </div>
 
-        <h2>Filter Job Requests</h2>
+        <h2>Filter Client Profile and Service Requests</h2>
         <div class="filter-section">
             <form method="GET" class="filter-grid">
                 <div>
@@ -217,7 +217,7 @@ $chartData = [
             </form>
         </div>
 
-        <h2>Job Requests</h2>
+        <h2>Client Profile and Service Requests</h2>
         <button id="openFormBtn" style="margin-bottom: 15px; float: right;">Add New Request</button>
         <table>
             <thead>

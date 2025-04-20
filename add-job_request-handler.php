@@ -96,7 +96,7 @@ if ($conn->query($sql)) {
     if (isset($_SESSION['staff_name'])) {
         $staffName = $_SESSION['staff_name'];
         $logDate = date('Y-m-d H:i:s');
-        $action = "Added job request for client: $clientName";
+        $action = "Added client profile and service request for client: $clientName";
 
         $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
         $logStmt->bind_param('sss', $staffName, $action, $logDate);

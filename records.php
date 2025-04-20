@@ -64,7 +64,7 @@ while ($row = $result->fetch_assoc()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billing Records</title>
+    <title>Payment and Release Records</title>
     <link rel="icon" href="fablab.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style2.css">
@@ -72,7 +72,7 @@ while ($row = $result->fetch_assoc()) {
 
 <body>
     <div class="container">
-        <h1>Billing Records</h1>
+        <h1>Payment and Release Records</h1>
         <!-- The Modal -->
         <div id="billingModal" class="modal">
             <div class="modal-content">
@@ -142,7 +142,7 @@ while ($row = $result->fetch_assoc()) {
             </div>
         </div>
 
-        <h2>Filter Billing Records</h2>
+        <h2>Filter Payment and Release Records</h2>
         <div class="filter-section">
             <form method="GET" class="filter-grid">
                 <div>
@@ -217,8 +217,8 @@ while ($row = $result->fetch_assoc()) {
         </div>
 
         <div class="billing-table">
-            <h2>Billing Records</h2>
-            <button id="openFormBtn">Add New Billing</button>
+            <h2>Payment and Release Records</h2>
+            <button id="openFormBtn">Add New Payment and Release</button>
         </div>
         <table>
             <thead>

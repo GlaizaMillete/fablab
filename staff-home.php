@@ -43,11 +43,11 @@ include 'fetch-job_requests-handler.php';
             <!-- <div class="button" onclick="showTab('dashboard', 'Dashboard')">
                 <p>Dashboard</p>
             </div> -->
-            <div class="button" onclick="showTab('job-description', 'Job Requests')">
-                <p>Job Requests</p>
+            <div class="button" onclick="showTab('job-description', 'Client Profile and Service Requests')">
+                <p>Client Profile & Service Requests</p>
             </div>
-            <div class="button" onclick="showTab('billing', 'Billings')">
-                <p>Billings</p>
+            <div class="button" onclick="showTab('billing', 'Payment and Release')">
+                <p>Payment and Release</p>
             </div>
             <div class="button" onclick="showTab('feedback', 'Feedbacks')">
                 <p>Feedbacks</p>
@@ -61,7 +61,7 @@ include 'fetch-job_requests-handler.php';
         <div class="contents">
             <div class="contents-box">
                 <div class="job-request-content active" id="job-description">
-                    <h1 class="content-title">Job Request</h1>
+                    <h1 class="content-title">Client Profile & Service Requests</h1>
                     <table>
                         <thead>
                             <tr>
@@ -108,7 +108,7 @@ include 'fetch-job_requests-handler.php';
                     </table>
                 </div>
                 <div class="job-request-content" id="billing">
-                    <h1 class="content-title">Billing</h1>
+                    <h1 class="content-title">Payment and Release</h1>
                     <table>
                         <thead>
                             <tr>
@@ -194,7 +194,7 @@ include 'fetch-job_requests-handler.php';
 </div>
 
 <!-- Billing Form Modal -->
-<div id="billing-modal" class="modal">
+<!-- <div id="billing-modal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeBillingForm()">&times;</span>
         <h2 id="billing-modal-title">Add Billing</h2>
@@ -234,10 +234,10 @@ include 'fetch-job_requests-handler.php';
             <button type="submit">Submit</button>
         </form>
     </div>
-</div>
+</div> -->
 
 <!-- Feedback Form Modal -->
-<div id="feedback-modal" class="modal">
+<!-- <div id="feedback-modal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeFeedbackForm()">&times;</span>
         <h2>Add Feedback</h2>
@@ -251,7 +251,7 @@ include 'fetch-job_requests-handler.php';
             <button type="submit">Submit</button>
         </form>
     </div>
-</div>
+</div> -->
 
 <script>
     function renderSummaryChart() {
@@ -386,11 +386,11 @@ include 'fetch-job_requests-handler.php';
         const urlParams = new URLSearchParams(window.location.search);
         const activeTab = urlParams.get('tab') || 'job-description'; // Default to 'job-description' (Job Requests tab)
         const tabTitleMap = {
-            'job-description': 'Job Requests',
-            'billing': 'Billings',
+            'job-description': 'Client Profile and Service Requests',
+            'billing': 'Payment and Release',
             'feedback': 'Feedbacks'
         };
-        showTab(activeTab, tabTitleMap[activeTab] || 'Job Requests');
+        showTab(activeTab, tabTitleMap[activeTab] || 'Client Profile and Service Requests');
     });
 
 
