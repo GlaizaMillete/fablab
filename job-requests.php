@@ -78,6 +78,7 @@ $chartData = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Profile and Service Request Records</title>
+    <link rel="icon" href="fablab.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style3.css">
 </head>
@@ -446,7 +447,7 @@ $chartData = [
 
         // Initialize the chart with the default column
         updateChart('designation');
-        
+
         // Form validation for service requested
         document.getElementById('jobRequestForm').addEventListener('submit', function(e) {
             const serviceRequested = document.querySelectorAll('input[name="service_requested[]"]:checked');

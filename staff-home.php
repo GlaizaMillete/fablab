@@ -87,9 +87,14 @@ include 'fetch-job_requests-handler.php';
                                             $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
                                         }
 
-                                        // Append hand tools if available
+                                        // Append hand tools if available, ensuring no redundancy
                                         if (!empty($request['hand_tools_other'])) {
-                                            $serviceRequest .= ": Hand Tools: " . htmlspecialchars($request['hand_tools_other']);
+                                            $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
+                                        }
+
+                                        // Append hand tools if available, ensuring no redundancy
+                                        if (!empty($request['equipment_other'])) {
+                                            $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
                                         }
 
                                         echo $serviceRequest;
@@ -110,7 +115,7 @@ include 'fetch-job_requests-handler.php';
                                     </td>
                                     <td>
                                         <?php if (!empty($request['reference_file'])): ?>
-                                            <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" target="_blank">View File</a>
+                                            <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
                                         <?php else: ?>
                                             None
                                         <?php endif; ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2025 at 04:47 PM
+-- Generation Time: Apr 20, 2025 at 11:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -159,7 +159,7 @@ INSERT INTO `feedback` (`id`, `client_name`, `feedback_pdf`, `feedback_date`) VA
 
 CREATE TABLE `job_requests` (
   `id` int(11) NOT NULL,
-  `request_title` varchar(100) NOT NULL,
+  `personal_name` varchar(255) NOT NULL,
   `request_date` date NOT NULL,
   `client_name` varchar(100) NOT NULL,
   `address` varchar(255) NOT NULL,
@@ -171,9 +171,6 @@ CREATE TABLE `job_requests` (
   `company` varchar(255) NOT NULL,
   `service_requested` text NOT NULL,
   `contact_number` varchar(20) NOT NULL,
-  `client_profile` varchar(50) NOT NULL,
-  `client_profile_other` varchar(50) DEFAULT NULL,
-  `request_description` text NOT NULL,
   `equipment` text DEFAULT NULL,
   `hand_tools_other` varchar(255) DEFAULT NULL,
   `equipment_other` varchar(255) DEFAULT NULL,
@@ -183,10 +180,7 @@ CREATE TABLE `job_requests` (
   `work_description` text NOT NULL,
   `personnel_name` varchar(255) DEFAULT NULL,
   `personnel_date` date DEFAULT NULL,
-  `priority` enum('Low','Medium','High') NOT NULL,
-  `completion_date` date NOT NULL,
   `reference_file` varchar(255) DEFAULT NULL,
-  `status` enum('Pending','In Progress','Completed','Cancelled') DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -195,8 +189,12 @@ CREATE TABLE `job_requests` (
 -- Dumping data for table `job_requests`
 --
 
-INSERT INTO `job_requests` (`id`, `request_title`, `request_date`, `client_name`, `address`, `gender`, `gender_optional`, `age`, `designation`, `designation_other`, `company`, `service_requested`, `contact_number`, `client_profile`, `client_profile_other`, `request_description`, `equipment`, `hand_tools_other`, `equipment_other`, `consultation_mode`, `consultation_schedule`, `equipment_schedule`, `work_description`, `personnel_name`, `personnel_date`, `priority`, `completion_date`, `reference_file`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'asdsadsa', '2025-04-14', 'asa', '', '', NULL, 0, '', NULL, '', '', '09471918324', 'STUDENT', NULL, 'asdsadsadsadsads', '3D Printer, 3D Scanner, Laser Cutting Machine', NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, 'Medium', '2025-04-16', '67fcb14a3c161.pdf', 'Pending', '2025-04-14 06:55:06', '2025-04-14 06:55:06');
+INSERT INTO `job_requests` (`id`, `personal_name`, `request_date`, `client_name`, `address`, `gender`, `gender_optional`, `age`, `designation`, `designation_other`, `company`, `service_requested`, `contact_number`, `equipment`, `hand_tools_other`, `equipment_other`, `consultation_mode`, `consultation_schedule`, `equipment_schedule`, `work_description`, `personnel_name`, `personnel_date`, `reference_file`, `created_at`, `updated_at`) VALUES
+(2, '', '2026-04-20', 'Jaded Company', 'aasdasdsa', 'Male', '', 26, 'Student', '', 'N/A', 'Equipment', '09471918324', '3D Printer, Print and Cut Machine', '', '', '', '', '2025-04-29 11:26:00', 'asdasdasdasdas', 'Dionnie', '2025-04-20', '68051242b350c.jpg', '2025-04-20 15:26:58', '2025-04-20 19:24:00'),
+(3, '', '2025-01-20', 'Jaded', 'asdasdasd', 'Male', '', 28, 'Student', '', 'N/A', 'Product/Design/Consultation', '09471918324', '', '', '', '', '', '0000-00-00 00:00:00', 'asdsadasd', '', '0000-00-00', NULL, '2025-04-20 15:29:19', '2025-04-20 19:24:13'),
+(4, '', '2025-10-21', 'lala', 'asdasd', 'Female', '', 22, 'Others', 'Speedster', 'N/A', 'Training/Tour/Orientation', '9471918323', '', '', '', '', '', '2025-04-22 16:26:00', 'asadasd', 'Dionnie', '2025-04-21', '68052f2195bc4-inside01_BROCHURE.pdf', '2025-04-20 17:30:09', '2025-04-20 19:24:27'),
+(5, 'hermione', '2024-04-21', 'Lethal Company', 'asdsadsa', 'Prefer not to say', '', 35, 'Teacher', '', 'N/A', 'Equipment', '96564', 'Hand Tools', 'Hand Tool', '', '', '', '0000-00-00 00:00:00', 'asdasdasdasdaas', 'Dionnie', '2025-04-21', '680531d4c8d30-outside_BROCHURE.jpg', '2025-04-20 17:41:40', '2025-04-20 19:24:42'),
+(6, 'Tralala', '2025-04-21', 'Tralavero Tralala', 'adasdsa', 'Prefer not to say', 'Bisexual', 25, 'MSME/Entrepreneur', '', 'N/A', 'Equipment', '1165', 'Print and Cut Machine, CNC Machine (Big), Other', '', 'nice', '', '', '2025-04-22 18:30:00', 'asdadad', 'Dionnie', '2025-04-21', '68055955b5cd6-df41b9b2-d857-4db3-8626-5b197633d501.jpg', '2025-04-20 20:30:13', '2025-04-20 20:30:13');
 
 -- --------------------------------------------------------
 
@@ -220,7 +218,12 @@ INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 (2, 'alice_jones', 'Updated billing for client asadd\'s Client Name: \'asad\' -> \'asadd\'', '2025-04-10 11:50:10'),
 (3, 'alice_jones', 'Updated billing for client Glaiza Baba\'s Client Name: \'asadd\' -> \'Glaiza Baba\', Client Profile: \'MSME\' -> \'STUDENT\', Equipment: \'3D Scanner, CNC Machine (Big), CNC Machine (Small)\' -> \'3D Printer, 3D Scanner, Laser Cutting Machine, Print and Cut Machine, CNC Machine (Big), CNC Machine (Small), Vinyl Cutter, Embroidery Machine (One Head), Embroidery Machine (Four Heads), Flatbed Cutter, Vacuum Forming, Water Jet Machine\'', '2025-04-10 14:28:53'),
 (4, 'alice_jones', 'Added feedback for client: asad', '2025-04-14 15:59:47'),
-(5, 'alice_jones', 'Added feedback for client: aaaaaa', '2025-04-14 16:12:20');
+(5, 'alice_jones', 'Added feedback for client: aaaaaa', '2025-04-14 16:12:20'),
+(6, 'alice_jones', 'Added client profile and service request for client: Jaded Company', '2025-04-20 23:26:58'),
+(7, 'alice_jones', 'Added client profile and service request for client: Jaded', '2025-04-20 23:29:19'),
+(8, 'alice_jones', 'Added client profile and service request for client: lala', '2025-04-21 01:30:09'),
+(9, 'alice_jones', 'Added client profile and service request for client: Lethal Company', '2025-04-21 01:41:40'),
+(10, 'alice_jones', 'Added client profile and service request for client: Tralavero Tralala', '2025-04-21 04:30:13');
 
 -- --------------------------------------------------------
 
@@ -323,13 +326,13 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `job_requests`
 --
 ALTER TABLE `job_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`

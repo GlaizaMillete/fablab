@@ -110,7 +110,7 @@ h4 {
 /* Chart Container */
 .chart-container {
     background: white;
-    background-image: linear-gradient(to bottom right, #ffffff, #f0f7ff);
+    /* background-image: linear-gradient(to bottom right, #ffffff, #f0f7ff); */
     padding: 20px;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
@@ -141,7 +141,7 @@ h4 {
     overflow: hidden;
 }
 
-.totals-card::before {
+/* .totals-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -149,7 +149,7 @@ h4 {
     right: 0;
     height: 4px;
     background: linear-gradient(to right, var(--color-primary), var(--color-success));
-}
+} */
 
 .total-amount {
     font-size: 28px;
