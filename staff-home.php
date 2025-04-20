@@ -65,45 +65,58 @@ include 'fetch-job_requests-handler.php';
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Job Title</th>
-                                <th>Client</th>
-                                <th>Services/Equipment Availed</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Priority</th>
-                                <th>PDF</th>
-                                <th>Actions</th>
+                                <th>Request Date</th>
+                                <th>Client Name</th>
+                                <th>Service Request</th>
+                                <th>Client Profile</th>
+                                <th>Reference File</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($jobRequests)): ?>
-                                <?php foreach ($jobRequests as $job): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($job['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($job['request_title']); ?></td>
-                                        <td><?php echo htmlspecialchars($job['client_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($job['equipment']); ?></td>
-                                        <td><?php echo htmlspecialchars($job['status']); ?></td>
-                                        <td><?php echo htmlspecialchars($job['request_date']); ?></td>
-                                        <td><?php echo htmlspecialchars($job['priority']); ?></td>
-                                        <td>
-                                            <?php if (!empty($job['reference_file'])): ?>
-                                                <a href="uploads/job_requests/<?php echo htmlspecialchars($job['reference_file']); ?>" target="_blank">View PDF</a>
-                                            <?php else: ?>
-                                                <span class="no-pdf">None</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <button onclick="viewJobRequest(<?php echo $job['id']; ?>)">View</button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
+                            <?php foreach ($jobRequests as $request): ?>
                                 <tr>
-                                    <td colspan="9">No job requests found.</td>
+                                    <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
+                                    <td><?= htmlspecialchars($request['client_name']) ?></td>
+                                    <td>
+                                        <?php
+                                        // Start with the service requested
+                                        $serviceRequest = htmlspecialchars($request['service_requested']);
+
+                                        // Append equipment if available
+                                        if (!empty($request['equipment'])) {
+                                            $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
+                                        }
+
+                                        // Append hand tools if available
+                                        if (!empty($request['hand_tools_other'])) {
+                                            $serviceRequest .= ": Hand Tools: " . htmlspecialchars($request['hand_tools_other']);
+                                        }
+
+                                        echo $serviceRequest;
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        // Start with the designation
+                                        $designation = htmlspecialchars($request['designation']);
+
+                                        // Append designation details if "Others" is selected
+                                        if ($designation === "Others" && !empty($request['designation_other'])) {
+                                            $designation .= ": " . htmlspecialchars($request['designation_other']);
+                                        }
+
+                                        echo $designation;
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($request['reference_file'])): ?>
+                                            <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" target="_blank">View File</a>
+                                        <?php else: ?>
+                                            None
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

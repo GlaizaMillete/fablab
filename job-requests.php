@@ -217,15 +217,16 @@ $chartData = [
             <div class="chart-container">
                 <canvas id="requestChart"></canvas>
             </div>
-            <div class="totals-card">
-                <h3>Total Client Profile & Service Requests</h3>
-                <div class="total-amount"><?= $totalRequests ?></div>
-                <h4>By Status</h4>
-                <?php foreach ($statusCounts as $status => $count): ?>
-                    <div class="profile-total">
-                        <strong><?= $status ?>:</strong> <?= $count ?>
-                    </div>
-                <?php endforeach; ?>
+            <div class="chart-controls totals-card">
+                <label for="graphColumn">Select Column to Visualize:</label>
+                <select id="graphColumn">
+                    <option value="status">Status</option>
+                    <option value="designation">Designation</option>
+                    <option value="service_requested">Service Requested</option>
+                </select>
+                <div id="columnDetails" style="margin-top: 10px;">
+                    <!-- Column details will be displayed here -->
+                </div>
             </div>
         </div>
 
@@ -376,26 +377,68 @@ $chartData = [
 
         // Chart.js configuration
         const ctx = document.getElementById('requestChart').getContext('2d');
-        const requestChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: <?= json_encode($chartData['labels']) ?>,
-                datasets: [{
-                    data: <?= json_encode($chartData['data']) ?>,
-                    backgroundColor: <?= json_encode($chartData['colors']) ?>,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // Allow the chart to resize dynamically
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+        let requestChart;
+
+        // Function to fetch and update chart data
+        function updateChart(column) {
+            fetch(`fetch-graph-data.php?column=${column}`)
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.labels;
+                    const values = data.values;
+                    const total = data.total;
+
+                    // Display column details
+                    const columnDetails = document.getElementById('columnDetails');
+                    let detailsHtml = `<strong>Total Requests:</strong> ${total}<br>`;
+                    labels.forEach((label, index) => {
+                        detailsHtml += `<strong>${label}:</strong> ${values[index]}<br>`;
+                    });
+                    columnDetails.innerHTML = detailsHtml;
+
+                    // If the chart already exists, destroy it before creating a new one
+                    if (requestChart) {
+                        requestChart.destroy();
                     }
-                }
-            }
+
+                    // Create a new chart
+                    requestChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: values,
+                                backgroundColor: [
+                                    'rgba(245, 158, 11, 0.8)', // Example colors
+                                    'rgba(37, 99, 235, 0.8)',
+                                    'rgba(16, 185, 129, 0.8)',
+                                    'rgba(239, 68, 68, 0.8)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
+        }
+
+        // Event listener for dropdown change
+        document.getElementById('graphColumn').addEventListener('change', function() {
+            const selectedColumn = this.value;
+            updateChart(selectedColumn);
         });
+
+        // Initialize the chart with the default column
+        updateChart('status');
 
         // Form validation for service requested
         document.getElementById('jobRequestForm').addEventListener('submit', function(e) {
