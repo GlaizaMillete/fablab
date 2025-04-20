@@ -67,7 +67,7 @@ $chartData = [
                     <div class="form-columns">
                         <div>
                             <label>Name:</label>
-                            <input type="text" name="name" required>
+                            <input type="text" name="personal_name" required>
                         </div>
                         <div>
                             <label>Address:</label>
@@ -160,7 +160,7 @@ $chartData = [
                     </div>
                     <br>
                     <div>
-                        <label>Name of Client:</label>
+                        <label>Client Name:</label>
                         <input type="text" name="client_name" required>
                     </div>
                     <br>
@@ -243,16 +243,6 @@ $chartData = [
                     </select>
                 </div>
                 <div>
-                    <label>Status:</label>
-                    <select name="status">
-                        <option value="">All</option>
-                        <option value="Pending" <?= isset($_GET['status']) && $_GET['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
-                        <option value="In Progress" <?= isset($_GET['status']) && $_GET['status'] == 'In Progress' ? 'selected' : '' ?>>In Progress</option>
-                        <option value="Completed" <?= isset($_GET['status']) && $_GET['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
-                        <option value="Cancelled" <?= isset($_GET['status']) && $_GET['status'] == 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
-                    </select>
-                </div>
-                <div>
                     <label>Priority:</label>
                     <select name="priority">
                         <option value="">All</option>
@@ -273,28 +263,53 @@ $chartData = [
         </div>
 
         <h2>Client Profile and Service Requests</h2>
-        <button id="openFormBtn" style="margin-bottom: 15px; float: right;">Add New Request</button>
+        <button class="cpsc_button" id="openFormBtn">Add New Request</button>
         <table>
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Client</th>
-                    <th>Profile</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Files</th>
+                    <th>Request Date</th>
+                    <th>Client Name</th>
+                    <th>Service Request</th>
+                    <th>Client Profile</th>
+                    <th>Reference File</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($jobRequests as $request): ?>
                     <tr>
-                        <td><?= htmlspecialchars($request['request_title']) ?></td>
-                        <td><?= htmlspecialchars($request['client_name']) ?></td>
-                        <td><?= htmlspecialchars($request['client_profile']) ?></td>
-                        <td><?= htmlspecialchars($request['priority']) ?></td>
-                        <td><?= htmlspecialchars($request['status']) ?></td>
                         <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
+                        <td><?= htmlspecialchars($request['client_name']) ?></td>
+                        <td>
+                            <?php
+                            // Start with the service requested
+                            $serviceRequest = htmlspecialchars($request['service_requested']);
+
+                            // Append equipment if available
+                            if (!empty($request['equipment'])) {
+                                $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
+                            }
+
+                            // Append hand tools if available
+                            if (!empty($request['hand_tools_other'])) {
+                                $serviceRequest .= ": Hand Tools: " . htmlspecialchars($request['hand_tools_other']);
+                            }
+
+                            echo $serviceRequest;
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            // Start with the designation
+                            $designation = htmlspecialchars($request['designation']);
+
+                            // Append designation details if "Others" is selected
+                            if ($designation === "Others" && !empty($request['designation_other'])) {
+                                $designation .= ": " . htmlspecialchars($request['designation_other']);
+                            }
+
+                            echo $designation;
+                            ?>
+                        </td>
                         <td>
                             <?php if (!empty($request['reference_file'])): ?>
                                 <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" target="_blank">View File</a>

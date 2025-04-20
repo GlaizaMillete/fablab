@@ -783,3 +783,8 @@ a:hover {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.cpsc_button {
+    margin-bottom: 15px;
+    float: right;
+}

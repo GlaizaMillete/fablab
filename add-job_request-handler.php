@@ -23,30 +23,20 @@ if (isset($_FILES['reference_file']) && $_FILES['reference_file']['error'] == UP
     }
 
     $originalFileName = basename($_FILES["reference_file"]["name"]);
-    $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
-    $hashedFileName = uniqid() . '.' . $fileExtension;
+    $hashedFileName = uniqid() . '-' . $originalFileName; // Use a unique name to avoid conflicts
     $targetFile = $targetDir . $hashedFileName;
 
-    // Validate file type and size (10MB max)
-    $allowedTypes = ['pdf', 'jpg', 'jpeg', 'png', 'zip'];
-    $maxSize = 10 * 1024 * 1024; // 10MB
-
-    if (
-        in_array(strtolower($fileExtension), $allowedTypes) &&
-        $_FILES["reference_file"]["size"] <= $maxSize
-    ) {
-        if (move_uploaded_file($_FILES["reference_file"]["tmp_name"], $targetFile)) {
-            $filePath = $hashedFileName;
-        } else {
-            die('Error: Failed to upload the file.');
-        }
+    // Move the uploaded file to the target directory
+    if (move_uploaded_file($_FILES["reference_file"]["tmp_name"], $targetFile)) {
+        $filePath = $hashedFileName;
     } else {
-        die('Error: Invalid file type or size exceeds 10MB.');
+        die('Error: Failed to upload the file.');
     }
 }
 
 // Get form data and sanitize
-$clientName = $conn->real_escape_string($_POST['name']);
+$personalName = $conn->real_escape_string($_POST['personal_name']); // Personal Name
+$clientName = $conn->real_escape_string($_POST['client_name']); // Client Name
 $address = $conn->real_escape_string($_POST['address']);
 $contactNumber = $conn->real_escape_string($_POST['contact_no']);
 $gender = $conn->real_escape_string($_POST['gender']);
@@ -69,6 +59,7 @@ $personnelDate = isset($_POST['personnel_date']) ? $conn->real_escape_string($_P
 
 // Insert into database
 $sql = "INSERT INTO job_requests (
+            personal_name, 
             client_name, 
             address, 
             contact_number, 
@@ -91,6 +82,7 @@ $sql = "INSERT INTO job_requests (
             personnel_date, 
             reference_file
         ) VALUES (
+            '$personalName',
             '$clientName',
             '$address',
             '$contactNumber',
@@ -134,4 +126,3 @@ if ($conn->query($sql)) {
 } else {
     die('Error: ' . $conn->error);
 }
-?>
