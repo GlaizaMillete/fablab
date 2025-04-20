@@ -84,7 +84,7 @@ $chartData = [
 
 <body>
     <div class="container">
-        <h1>Client Profile and Service Request Records</h1>
+        <h1>Client Profile and Service Request</h1>
         <!-- The Modal -->
         <div id="jobRequestModal" class="modal">
             <div class="modal-content">
@@ -220,11 +220,11 @@ $chartData = [
             <div class="chart-controls totals-card">
                 <label for="graphColumn">Select Column to Visualize:</label>
                 <select id="graphColumn">
-                    <option value="status">Status</option>
-                    <option value="designation">Designation</option>
+                    <!-- <option value="status">Status</option> -->
+                    <option value="designation">Client Profile</option>
                     <option value="service_requested">Service Requested</option>
                 </select>
-                <div id="columnDetails" style="margin-top: 10px;">
+                <div id="columnDetails" style="margin-top: 1rem;">
                     <!-- Column details will be displayed here -->
                 </div>
             </div>
@@ -295,8 +295,10 @@ $chartData = [
             </form>
         </div>
 
-        <h2>Client Profile and Service Requests</h2>
-        <button class="cpsc_button" id="openFormBtn">Add New Request</button>
+        <div class="request-table">
+            <h2>Client Profile and Service Requests</h2>
+            <button class="cpsc_button" id="openFormBtn">Add New Request</button>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -322,9 +324,14 @@ $chartData = [
                                 $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
                             }
 
-                            // Append hand tools if available
+                            // Append hand tools if available, ensuring no redundancy
                             if (!empty($request['hand_tools_other'])) {
-                                $serviceRequest .= ": Hand Tools: " . htmlspecialchars($request['hand_tools_other']);
+                                $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
+                            }
+
+                            // Append hand tools if available, ensuring no redundancy
+                            if (!empty($request['equipment_other'])) {
+                                $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
                             }
 
                             echo $serviceRequest;
@@ -345,7 +352,7 @@ $chartData = [
                         </td>
                         <td>
                             <?php if (!empty($request['reference_file'])): ?>
-                                <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" target="_blank">View File</a>
+                                <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
                             <?php else: ?>
                                 None
                             <?php endif; ?>
@@ -390,7 +397,7 @@ $chartData = [
 
                     // Display column details
                     const columnDetails = document.getElementById('columnDetails');
-                    let detailsHtml = `<strong>Total Requests:</strong> ${total}<br>`;
+                    let detailsHtml = `<strong>Total :</strong> ${total}<br>`;
                     labels.forEach((label, index) => {
                         detailsHtml += `<strong>${label}:</strong> ${values[index]}<br>`;
                     });
@@ -438,8 +445,8 @@ $chartData = [
         });
 
         // Initialize the chart with the default column
-        updateChart('status');
-
+        updateChart('designation');
+        
         // Form validation for service requested
         document.getElementById('jobRequestForm').addEventListener('submit', function(e) {
             const serviceRequested = document.querySelectorAll('input[name="service_requested[]"]:checked');

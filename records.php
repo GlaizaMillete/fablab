@@ -72,7 +72,7 @@ while ($row = $result->fetch_assoc()) {
 
 <body>
     <div class="container">
-        <h1>Payment and Release Records</h1>
+        <h1>Payment and Release</h1>
         <!-- The Modal -->
         <div id="billingModal" class="modal">
             <div class="modal-content">
