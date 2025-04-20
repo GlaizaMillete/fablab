@@ -11,7 +11,35 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
     exit();
 }
 
-include "fetch-job_requests-handler.php";
+$whereClauses = [];
+if (!empty($_GET['from_month']) && !empty($_GET['to_month'])) {
+    $from_month = intval($_GET['from_month']);
+    $to_month = intval($_GET['to_month']);
+    $whereClauses[] = "MONTH(request_date) BETWEEN $from_month AND $to_month";
+}
+if (!empty($_GET['year'])) {
+    $year = intval($_GET['year']);
+    $whereClauses[] = "YEAR(request_date) = $year";
+}
+if (!empty($_GET['designation'])) {
+    $designation = $conn->real_escape_string($_GET['designation']);
+    $whereClauses[] = "designation = '$designation'";
+}
+if (!empty($_GET['service_requested'])) {
+    $service_requested = $conn->real_escape_string($_GET['service_requested']);
+    $whereClauses[] = "service_requested LIKE '%$service_requested%'";
+}
+
+$whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
+$sql = "SELECT * FROM job_requests $whereClause ORDER BY request_date DESC";
+$result = $conn->query($sql);
+
+$jobRequests = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $jobRequests[] = $row;
+    }
+}
 
 // Calculate totals for job requests
 $totalRequests = count($jobRequests);
@@ -234,31 +262,35 @@ $chartData = [
                     </select>
                 </div>
                 <div>
-                    <label>Client Profile:</label>
-                    <select name="client_profile">
+                    <label>Designation:</label>
+                    <select name="designation">
                         <option value="">All</option>
-                        <option value="STUDENT" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'STUDENT' ? 'selected' : '' ?>>STUDENT</option>
-                        <option value="MSME" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'MSME' ? 'selected' : '' ?>>MSME</option>
-                        <option value="OTHERS" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'OTHERS' ? 'selected' : '' ?>>OTHERS</option>
+                        <option value="Student" <?= isset($_GET['designation']) && $_GET['designation'] == 'Student' ? 'selected' : '' ?>>Student</option>
+                        <option value="MSME/Entrepreneur" <?= isset($_GET['designation']) && $_GET['designation'] == 'MSME/Entrepreneur' ? 'selected' : '' ?>>MSME/Entrepreneur</option>
+                        <option value="Teacher" <?= isset($_GET['designation']) && $_GET['designation'] == 'Teacher' ? 'selected' : '' ?>>Teacher</option>
+                        <option value="Hobbyist" <?= isset($_GET['designation']) && $_GET['designation'] == 'Hobbyist' ? 'selected' : '' ?>>Hobbyist</option>
+                        <option value="Others" <?= isset($_GET['designation']) && $_GET['designation'] == 'Others' ? 'selected' : '' ?>>Others</option>
                     </select>
                 </div>
                 <div>
-                    <label>Priority:</label>
-                    <select name="priority">
+                    <label>Service Request:</label>
+                    <select name="service_requested">
                         <option value="">All</option>
-                        <option value="Low" <?= isset($_GET['priority']) && $_GET['priority'] == 'Low' ? 'selected' : '' ?>>Low</option>
-                        <option value="Medium" <?= isset($_GET['priority']) && $_GET['priority'] == 'Medium' ? 'selected' : '' ?>>Medium</option>
-                        <option value="High" <?= isset($_GET['priority']) && $_GET['priority'] == 'High' ? 'selected' : '' ?>>High</option>
+                        <?php
+                        // Fetch distinct service_requested values from the database
+                        $serviceRequests = $conn->query("SELECT DISTINCT service_requested FROM job_requests");
+                        if ($serviceRequests->num_rows > 0) {
+                            while ($row = $serviceRequests->fetch_assoc()) {
+                                $selected = isset($_GET['service_requested']) && $_GET['service_requested'] == $row['service_requested'] ? 'selected' : '';
+                                echo "<option value='" . htmlspecialchars($row['service_requested']) . "' $selected>" . htmlspecialchars($row['service_requested']) . "</option>";
+                            }
+                        }
+                        ?>
                     </select>
                 </div>
                 <div>
                     <button type="submit">Filter</button>
                 </div>
-            </form>
-            <h2>Search Requests</h2>
-            <form method="GET" class="search-form">
-                <input type="text" name="search_term" placeholder="Search by title, client name, or description" value="<?= isset($_GET['search_term']) ? htmlspecialchars($_GET['search_term']) : '' ?>" style="flex-grow: 1;">
-                <button type="submit">Search</button>
             </form>
         </div>
 
