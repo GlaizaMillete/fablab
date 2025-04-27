@@ -77,46 +77,131 @@ while ($row = $result->fetch_assoc()) {
         <div id="billingModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2>Billing Form</h2>
+                <h2>Payment and Releasing Form</h2>
                 <form id="billingForm" enctype="multipart/form-data" action="add-billing-handler.php" method="POST">
+                    <!-- Section 1: Personal Information -->
+                    <h3>1. Personal Information</h3>
+                    <div>
+                        <label>No:</label>
+                        <input type="number" name="no" required>
+                    </div>
+                    <div>
+                        <label>Date:</label>
+                        <input type="date" name="date" required>
+                    </div>
                     <div>
                         <label>Client Name:</label>
                         <input type="text" name="client_name" required>
                     </div>
                     <div>
-                        <label>Billing Date:</label>
-                        <input type="date" name="billing_date" required>
+                        <label>Address:</label>
+                        <input type="text" name="address" required>
+                    </div>
+                    <div>
+                        <label>Contact No:</label>
+                        <input type="number" name="contact_no" required>
                     </div>
                     <div>
                         <label>Client Profile:</label><br>
-                        <input type="radio" name="client_profile" value="STUDENT" required>STUDENT<br>
-                        <input type="radio" name="client_profile" value="MSME" required>MSME<br>
-                        <input type="radio" name="client_profile" value="OTHERS" required>OTHERS (Specify):
+                        <input type="radio" name="client_profile" value="STUDENT" required> STUDENT<br>
+                        <input type="radio" name="client_profile" value="MSME" required> MSME<br>
+                        <input type="radio" name="client_profile" value="OTHERS" required> OTHERS (Specify):
                         <input type="text" name="client_profile_other">
                     </div>
                     <div>
-                        <label>Equipment Used:</label><br>
-                        <input type="checkbox" name="equipment[]" value="3D Printer"> 3D Printer<br>
-                        <input type="checkbox" name="equipment[]" value="3D Scanner"> 3D Scanner<br>
-                        <input type="checkbox" name="equipment[]" value="Laser Cutting Machine"> Laser Cutting Machine<br>
-                        <input type="checkbox" name="equipment[]" value="Print and Cut Machine"> Print and Cut Machine<br>
-                        <input type="checkbox" name="equipment[]" value="CNC MachineB"> CNC Machine(Big)<br>
-                        <input type="checkbox" name="equipment[]" value="CNC MachineS"> CNC Machine(Small)<br>
-                        <input type="checkbox" name="equipment[]" value="Vinyl Cutter"> Vinyl Cutter<br>
-                        <input type="checkbox" name="equipment[]" value="Embroidery Machine1"> Embroidery Machine(One Head)<br>
-                        <input type="checkbox" name="equipment[]" value="Embroidery Machine4"> Embroidery Machine(Four Heads)<br>
-                        <input type="checkbox" name="equipment[]" value="Flatbed Cutter"> Flatbed Cutter<br>
-                        <input type="checkbox" name="equipment[]" value="Vacuum Forming"> Vacuum Forming<br>
-                        <input type="checkbox" name="equipment[]" value="Water Jet Machine"> Water Jet Machine<br>
+                        <label>Description of the Project:</label>
+                        <textarea name="description" required></textarea>
+                    </div>
+
+                    <!-- Section 2: Details of the Service to be Rendered -->
+                    <h3>2. Details of the Service to be Rendered</h3>
+                    <table id="serviceTable">
+                        <thead>
+                            <tr>
+                                <th>Service Name</th>
+                                <th>Unit</th>
+                                <th>Rate</th>
+                                <th>Total Cost</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="service_name[]" required></td>
+                                <td><input type="text" name="unit[]" required></td>
+                                <td><input type="text" name="rate[]" required></td>
+                                <td><input type="number" name="total_cost[]" step="0.01" required></td>
+                                <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="addRowBtn">Add Row</button>
+                    <div>
+                        <label>Total:</label>
+                        <input type="number" id="totalCost" name="total" step="0.01" readonly>
+                    </div>
+
+                    <!-- Completion Information -->
+                    <div>
+                        <label>Completion Date:</label>
+                        <input type="date" name="completion_date" required>
                     </div>
                     <div>
-                        <label>Total Invoice:</label>
-                        <input type="number" name="total_invoice" step="0.01" required>
+                        <label>Prepared By:</label>
+                        <input type="text" name="prepared_by" value="<?= $_SESSION['staff_name'] ?>" readonly>
                     </div>
                     <div>
-                        <label>Attach PDF:</label>
-                        <input type="file" name="billing_pdf" accept="application/pdf">
+                        <label>Date:</label>
+                        <input type="date" name="prepared_date" value="<?= date('Y-m-d') ?>" readonly>
                     </div>
+
+                    <!-- Section 3: Order Payment -->
+                    <h3>3. Order Payment</h3>
+                    <div>
+                        <label>Please issue an Official Receipt in favor of:</label>
+                        <input type="text" name="or_favor" required>
+                    </div>
+                    <div>
+                        <label>For the amount of:</label>
+                        <input type="number" id="totalAmount" name="or_amount" step="0.01" readonly>
+                    </div>
+                    <div>
+                        <label>Approved by:</label>
+                        <input type="text" name="approved_by" required>
+                    </div>
+
+                    <!-- Section 4: Payment -->
+                    <h3>4. Payment</h3>
+                    <div>
+                        <label>OR No:</label>
+                        <input type="number" name="or_no" required>
+                    </div>
+                    <div>
+                        <label>Date:</label>
+                        <input type="date" name="payment_date" required>
+                    </div>
+                    <div>
+                        <label>Payment Received by:</label>
+                        <input type="text" name="payment_received_by" required>
+                    </div>
+
+                    <!-- Section 5: Receipt of Completed Work -->
+                    <h3>5. Receipt of Completed Work</h3>
+                    <div>
+                        <label>I, the client, acknowledge that I have received the above product.</label>
+                        <input type="text" name="receipt_acknowledged_by" required>
+                    </div>
+                    <div>
+                        <label>Date:</label>
+                        <input type="date" name="receipt_date" required>
+                    </div>
+
+                    <!-- Section 6: Reference File -->
+                    <div>
+                        <label>Upload Reference File (PDF, DOC, DOCX, JPG, PNG):</label>
+                        <input type="file" name="billing_pdf" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                    </div>
+
                     <button type="submit">Submit</button>
                 </form>
             </div>
@@ -225,7 +310,7 @@ while ($row = $result->fetch_assoc()) {
                 <tr>
                     <th>Profile</th>
                     <th>Client</th>
-                    <th>Equipment</th>
+                    <!-- <th>Equipment</th> -->
                     <th>Amount</th>
                     <th>Date</th>
                     <th>PDF</th>
@@ -238,7 +323,7 @@ while ($row = $result->fetch_assoc()) {
                     echo "<tr data-id='{$row['id']}'>";
                     echo "<td class='profile-cell'>" . htmlspecialchars(trim($row['client_profile'])) . "</td>"; // Trim whitespace
                     echo "<td>" . htmlspecialchars($row['client_name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['equipment']) . "</td>";
+                    // echo "<td>" . htmlspecialchars($row['equipment']) . "</td>";
                     echo "<td>&#8369;" . number_format($row['total_invoice'], 2) . "</td>";
                     echo "<td>$formattedDate</td>";
                     echo "<td>";
@@ -325,6 +410,25 @@ while ($row = $result->fetch_assoc()) {
                 cutout: '45%'
             }
         });
+
+        // Add new row to the service table
+        document.getElementById('addRowBtn').addEventListener('click', function() {
+            const table = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+            <td><input type="text" name="service_name[]" required></td>
+            <td><input type="text" name="unit[]" required></td>
+            <td><input type="text" name="rate[]" required></td>
+            <td><input type="number" name="total_cost[]" step="0.01" required></td>
+            <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+        `;
+        });
+
+        // Remove a row from the service table
+        function removeRow(button) {
+            const row = button.parentElement.parentElement;
+            row.parentElement.removeChild(row);
+        }
     </script>
 </body>
 

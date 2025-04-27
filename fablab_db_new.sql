@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2025 at 09:26 PM
+-- Generation Time: Apr 28, 2025 at 12:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,52 +50,28 @@ CREATE TABLE `billing` (
   `id` int(11) NOT NULL,
   `client_profile` varchar(255) NOT NULL,
   `client_name` varchar(255) NOT NULL,
-  `equipment` text NOT NULL,
   `billing_date` date NOT NULL,
   `total_invoice` decimal(10,2) NOT NULL,
-  `billing_pdf` varchar(255) NOT NULL
+  `billing_pdf` varchar(255) NOT NULL,
+  `no` int(11) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `contact_no` varchar(20) NOT NULL,
+  `description` text NOT NULL,
+  `completion_date` date DEFAULT NULL,
+  `prepared_by` varchar(255) NOT NULL,
+  `approved_by` varchar(255) NOT NULL,
+  `or_no` int(11) NOT NULL,
+  `payment_received_by` varchar(255) NOT NULL,
+  `receipt_acknowledged_by` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `billing`
 --
 
-INSERT INTO `billing` (`id`, `client_profile`, `client_name`, `equipment`, `billing_date`, `total_invoice`, `billing_pdf`) VALUES
-(342, 'STUDENT', 'John Doe', '3D Printer', '2024-01-15', 1500.00, ''),
-(343, 'MSME', 'Jane Smith', 'CNC Machine', '2024-01-20', 2500.00, ''),
-(344, 'OTHERS', 'Michael Johnson', 'Laser Engraver', '2024-01-25', 3200.00, ''),
-(345, 'STUDENT', 'Emily Davis', '3D Printer', '2024-01-28', 1800.00, ''),
-(346, 'MSME', 'David Wilson', '3D Printer', '2024-01-30', 2000.00, ''),
-(347, 'OTHERS', 'Sarah Brown', 'Laser Engraver', '2024-02-10', 3500.00, ''),
-(348, 'STUDENT', 'James Miller', 'CNC Machine', '2024-02-15', 2700.00, ''),
-(349, 'MSME', 'Emma Garcia', '3D Printer', '2024-02-20', 2100.00, ''),
-(350, 'OTHERS', 'Benjamin Lee', '3D Printer', '2024-02-25', 3300.00, ''),
-(351, 'STUDENT', 'Olivia Martinez', 'CNC Machine', '2024-02-28', 2900.00, ''),
-(352, 'MSME', 'William Anderson', '3D Printer', '2024-03-10', 2200.00, ''),
-(353, 'OTHERS', 'Sophia Thomas', 'Laser Engraver', '2024-03-15', 3100.00, ''),
-(354, 'STUDENT', 'Alexander Hernandez', 'CNC Machine', '2024-03-20', 2600.00, ''),
-(355, 'MSME', 'Ava Robinson', '3D Printer', '2024-03-25', 2700.00, ''),
-(356, 'OTHERS', 'Ethan Clark', '3D Printer', '2024-03-30', 2800.00, ''),
-(357, 'STUDENT', 'Daniel Young', 'Laser Engraver', '2025-01-12', 3100.00, ''),
-(358, 'MSME', 'Mia Scott', 'CNC Machine', '2025-01-18', 2900.00, ''),
-(359, 'OTHERS', 'Jacob Green', '3D Printer', '2025-01-22', 2400.00, ''),
-(360, 'STUDENT', 'Charlotte Adams', '3D Printer', '2025-01-27', 2200.00, ''),
-(361, 'MSME', 'Logan Baker', 'CNC Machine', '2025-01-31', 2600.00, ''),
-(362, 'OTHERS', 'Isabella Gonzalez', '3D Printer', '2025-02-10', 3200.00, ''),
-(363, 'STUDENT', 'Lucas Perez', 'Laser Engraver', '2025-02-15', 2800.00, ''),
-(364, 'MSME', 'Harper Nelson', '3D Printer', '2025-02-22', 2500.00, ''),
-(365, 'OTHERS', 'Michael Carter', 'CNC Machine', '2025-02-27', 3100.00, ''),
-(366, 'STUDENT', 'Amelia Mitchell', '3D Printer', '2025-02-28', 2700.00, ''),
-(367, 'MSME', 'Henry Ramirez', 'CNC Machine', '2025-03-10', 3300.00, ''),
-(368, 'OTHERS', 'Ella Campbell', '3D Printer', '2025-03-15', 2900.00, ''),
-(369, 'STUDENT', 'Samuel Rodriguez', '3D Printer', '2025-03-20', 2500.00, ''),
-(370, 'MSME', 'Lily Parker', 'Laser Engraver', '2025-03-25', 2700.00, ''),
-(371, 'OTHERS', 'Nathan Torres', '3D Printer', '2025-03-30', 2600.00, ''),
-(372, 'STUDENT', 'Gab', '3D Printer,CNC Machine', '2025-03-21', 56789.00, ''),
-(373, 'Personal', 'Rey', '3D Printer,Laser Cutting Machine', '2025-03-21', 678.83, ''),
-(374, 'VIP', 'qwerty', '3D Printer,Laser Cutting Machine,Print and Cut Machine,Vacuum Forming', '2024-06-20', 345.50, ''),
-(385, 'STUDENT', 'jade', '3D Printer, Laser Cutting Machine, Print and Cut Machine, CNC MachineB', '2024-03-09', 1.00, 'Class-Schedule.pdf'),
-(386, 'STUDENT', 'jade', '3D Printer, 3D Scanner', '2023-01-18', 123456.00, '67ee43883cb70_inside01_BROCHURE.pdf');
+INSERT INTO `billing` (`id`, `client_profile`, `client_name`, `billing_date`, `total_invoice`, `billing_pdf`, `no`, `address`, `contact_no`, `description`, `completion_date`, `prepared_by`, `approved_by`, `or_no`, `payment_received_by`, `receipt_acknowledged_by`) VALUES
+(388, 'STUDENT', 'lapa', '2025-04-28', 250.00, '680e996c2d719_hertalesdiary_3586003323029432749.jpg', 12, 'asdasdsadsa', '09471918324', 'Project Description 3D Print', NULL, 'alice_jones', 'aaaaaaaaaa', 12312321, 'jaded', 'asdasdsad'),
+(389, 'MSME', 'larvie', '2025-04-28', 19.00, '680ea06b551ff_INSIDE_BROCHURE02.jpg', 12, 'asdsadsa', '09471918324', 'asdasdsadsadada', NULL, 'alice_jones', 'aaaaaaaaaa', 12121212, 'Cashier', 'asdasdsad');
 
 -- --------------------------------------------------------
 
@@ -223,7 +199,32 @@ INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 (7, 'alice_jones', 'Added client profile and service request for client: Jaded', '2025-04-20 23:29:19'),
 (8, 'alice_jones', 'Added client profile and service request for client: lala', '2025-04-21 01:30:09'),
 (9, 'alice_jones', 'Added client profile and service request for client: Lethal Company', '2025-04-21 01:41:40'),
-(10, 'alice_jones', 'Added client profile and service request for client: Tralavero Tralala', '2025-04-21 04:30:13');
+(10, 'alice_jones', 'Added client profile and service request for client: Tralavero Tralala', '2025-04-21 04:30:13'),
+(11, 'alice_jones', 'Added billing for client: lapa', '2025-04-28 04:54:04'),
+(12, 'alice_jones', 'Added billing for client: larvie', '2025-04-28 05:23:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `service_details`
+--
+
+CREATE TABLE `service_details` (
+  `id` int(11) NOT NULL,
+  `billing_id` int(11) NOT NULL,
+  `service_name` varchar(255) NOT NULL,
+  `unit` varchar(50) NOT NULL,
+  `rate` varchar(50) NOT NULL,
+  `total_cost` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `service_details`
+--
+
+INSERT INTO `service_details` (`id`, `billing_id`, `service_name`, `unit`, `rate`, `total_cost`) VALUES
+(1, 389, 'Jade', '1', '1', 10.00),
+(2, 389, 'Raposa', '2', '2', 9.00);
 
 -- --------------------------------------------------------
 
@@ -289,6 +290,13 @@ ALTER TABLE `logs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `service_details`
+--
+ALTER TABLE `service_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `billing_id` (`billing_id`);
+
+--
 -- Indexes for table `stafffablab`
 --
 ALTER TABLE `stafffablab`
@@ -308,7 +316,7 @@ ALTER TABLE `adminfablab`
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=388;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=390;
 
 --
 -- AUTO_INCREMENT for table `equipment`
@@ -332,13 +340,29 @@ ALTER TABLE `job_requests`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `service_details`
+--
+ALTER TABLE `service_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`
 --
 ALTER TABLE `stafffablab`
   MODIFY `staffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `service_details`
+--
+ALTER TABLE `service_details`
+  ADD CONSTRAINT `service_details_ibfk_1` FOREIGN KEY (`billing_id`) REFERENCES `billing` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

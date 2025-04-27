@@ -13,29 +13,46 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
 date_default_timezone_set('Asia/Manila');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Personal Information
+    $no = intval($_POST['no']);
+    $billingDate = $_POST['date'];
     $clientName = $_POST['client_name'];
-    $billingDate = $_POST['billing_date'];
+    $address = $_POST['address'];
+    $contactNo = $_POST['contact_no'];
     $clientProfile = $_POST['client_profile'];
-    $totalInvoice = floatval($_POST['total_invoice']);
-    $equipment = isset($_POST['equipment']) ? implode(", ", $_POST['equipment']) : '';
-    $billingPdf = '';
+    $description = $_POST['description'];
 
     // Handle "OTHERS" profile
     if ($clientProfile === 'OTHERS' && isset($_POST['client_profile_other'])) {
         $clientProfile = $_POST['client_profile_other'];
     }
 
-    // Correct the upload directory path
+    // Completion Information
+    $completionDate = $_POST['completion_date'];
+    $preparedBy = $_SESSION['staff_name']; // Current staff name from session
+    $approvedBy = $_POST['approved_by'];
+
+    // Payment Information
+    $orNo = intval($_POST['or_no']);
+    $paymentDate = $_POST['payment_date'];
+    $paymentReceivedBy = $_POST['payment_received_by'];
+
+    // Receipt Information
+    $receiptAcknowledgedBy = $_POST['receipt_acknowledged_by'];
+    $receiptDate = $_POST['receipt_date'];
+
+    // Handle file upload for the reference file (stored as billing_pdf)
+    $billingPdf = '';
     $uploadDir = 'uploads/billing/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true); // Create the directory if it doesn't exist
     }
 
-    // Handle file upload
     if (isset($_FILES['billing_pdf']) && $_FILES['billing_pdf']['error'] === UPLOAD_ERR_OK) {
+        $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
         $fileType = mime_content_type($_FILES['billing_pdf']['tmp_name']);
-        if ($fileType !== 'application/pdf') {
-            die('Error: Only PDF files are allowed.');
+        if (!in_array($fileType, $allowedTypes)) {
+            die('Error: Invalid file type for reference file.');
         }
 
         $originalFileName = basename($_FILES['billing_pdf']['name']);
@@ -43,10 +60,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $targetFile = $uploadDir . $hashedFileName;
 
         if (!move_uploaded_file($_FILES['billing_pdf']['tmp_name'], $targetFile)) {
-            die('Error uploading file.');
+            die('Error uploading reference file.');
         }
 
         $billingPdf = $hashedFileName; // Store the hashed file name
+    }
+
+    // Calculate Total Cost
+    $totalCost = 0;
+    foreach ($_POST['total_cost'] as $cost) {
+        $totalCost += floatval($cost);
     }
 
     // Check if this is an update or a new record
@@ -64,11 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Prepare the update query
         if (!empty($billingPdf)) {
-            $stmt = $conn->prepare("UPDATE billing SET client_name = ?, billing_date = ?, client_profile = ?, equipment = ?, total_invoice = ?, billing_pdf = ? WHERE id = ?");
-            $stmt->bind_param('ssssdsi', $clientName, $billingDate, $clientProfile, $equipment, $totalInvoice, $billingPdf, $billingId);
+            $stmt = $conn->prepare("UPDATE billing SET no = ?, billing_date = ?, client_name = ?, address = ?, contact_no = ?, client_profile = ?, description = ?, completion_date = ?, prepared_by = ?, approved_by = ?, or_no = ?, payment_received_by = ?, receipt_acknowledged_by = ?, billing_pdf = ?, total_invoice = ? WHERE id = ?");
+            $stmt->bind_param('isssssssssssssd', $no, $billingDate, $clientName, $address, $contactNo, $clientProfile, $description, $completionDate, $preparedBy, $approvedBy, $orNo, $paymentReceivedBy, $receiptAcknowledgedBy, $billingPdf, $totalCost, $billingId);
         } else {
-            $stmt = $conn->prepare("UPDATE billing SET client_name = ?, billing_date = ?, client_profile = ?, equipment = ?, total_invoice = ? WHERE id = ?");
-            $stmt->bind_param('ssssdi', $clientName, $billingDate, $clientProfile, $equipment, $totalInvoice, $billingId);
+            $stmt = $conn->prepare("UPDATE billing SET no = ?, billing_date = ?, client_name = ?, address = ?, contact_no = ?, client_profile = ?, description = ?, completion_date = ?, prepared_by = ?, approved_by = ?, or_no = ?, payment_received_by = ?, receipt_acknowledged_by = ?, total_invoice = ? WHERE id = ?");
+            $stmt->bind_param('issssssssssssd', $no, $billingDate, $clientName, $address, $contactNo, $clientProfile, $description, $completionDate, $preparedBy, $approvedBy, $orNo, $paymentReceivedBy, $receiptAcknowledgedBy, $totalCost, $billingId);
         }
 
         // Execute the update query
@@ -89,19 +112,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($oldData['client_profile'] !== $clientProfile) {
                     $changes[] = "Client Profile: '{$oldData['client_profile']}' -> '{$clientProfile}'";
                 }
-                if ($oldData['equipment'] !== $equipment) {
-                    $changes[] = "Equipment: '{$oldData['equipment']}' -> '{$equipment}'";
-                }
-                if ($oldData['total_invoice'] != $totalInvoice) { // Use != for numeric comparison
-                    $changes[] = "Total Invoice: '{$oldData['total_invoice']}' -> '{$totalInvoice}'";
+                if ($oldData['total_invoice'] != $totalCost) { // Use != for numeric comparison
+                    $changes[] = "Total Invoice: '{$oldData['total_invoice']}' -> '{$totalCost}'";
                 }
                 if (!empty($billingPdf) && $oldData['billing_pdf'] !== $billingPdf) {
-                    $changes[] = "PDF was changed"; // Simplified log for PDF change
+                    $changes[] = "Reference File was updated";
                 }
 
                 // Create the log entry
                 if (!empty($changes)) {
-                    $action = "Updated billing for client {$clientName}'s " . implode(", ", $changes);
+                    $action = "Updated billing for client {$clientName}: " . implode(", ", $changes);
                     $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
                     $logStmt->bind_param('sss', $staffName, $action, $logDate);
                     $logStmt->execute();
@@ -112,36 +132,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die('Error: ' . $stmt->error);
         }
     } else {
-        // Insert new billing record
-        if (empty($billingPdf)) {
-            die('Error: A PDF file is required for billing.');
+        // Insert into billing table
+        $stmt = $conn->prepare("INSERT INTO billing (no, billing_date, client_name, address, contact_no, client_profile, description, completion_date, prepared_by, approved_by, or_no, payment_received_by, receipt_acknowledged_by, billing_pdf, total_invoice) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('isssssssssssssd', $no, $billingDate, $clientName, $address, $contactNo, $clientProfile, $description, $completionDate, $preparedBy, $approvedBy, $orNo, $paymentReceivedBy, $receiptAcknowledgedBy, $billingPdf, $totalCost);
+        $stmt->execute();
+        $billingId = $stmt->insert_id; // Get the ID of the inserted billing record
+
+        // Insert into service_details table
+        foreach ($_POST['service_name'] as $index => $serviceName) {
+            $unit = $_POST['unit'][$index];
+            $rate = $_POST['rate'][$index];
+            $totalCostRow = floatval($_POST['total_cost'][$index]);
+
+            $serviceStmt = $conn->prepare("INSERT INTO service_details (billing_id, service_name, unit, rate, total_cost) VALUES (?, ?, ?, ?, ?)");
+            $serviceStmt->bind_param('isssd', $billingId, $serviceName, $unit, $rate, $totalCostRow);
+            $serviceStmt->execute();
         }
 
-        $stmt = $conn->prepare("INSERT INTO billing (client_name, billing_date, client_profile, equipment, total_invoice, billing_pdf) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssds', $clientName, $billingDate, $clientProfile, $equipment, $totalInvoice, $billingPdf);
+        // Log the action
+        if (isset($_SESSION['staff_name'])) {
+            $staffName = $_SESSION['staff_name'];
+            $logDate = date('Y-m-d H:i:s');
+            $action = "Added billing for client: $clientName";
 
-        $action = "Added billing for client: $clientName";
-
-        // Execute the insert query
-        if ($stmt->execute()) {
-            // Log the action
-            if (isset($_SESSION['staff_name'])) {
-                $staffName = $_SESSION['staff_name'];
-                $logDate = date('Y-m-d H:i:s');
-
-                $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
-                $logStmt->bind_param('sss', $staffName, $action, $logDate);
-                $logStmt->execute();
-                $logStmt->close();
-            }
-        } else {
-            die('Error: ' . $stmt->error);
+            $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
+            $logStmt->bind_param('sss', $staffName, $action, $logDate);
+            $logStmt->execute();
+            $logStmt->close();
         }
     }
 
-    // Redirect to staff-home.php with the billing tab active
+    // Close statements and connection
     $stmt->close();
     $conn->close();
+
+    // Redirect to the previous page
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit();
 }
