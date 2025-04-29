@@ -115,7 +115,7 @@ h4 {
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     border: 1px solid var(--color-gray-200);
-    height: 400px;
+    /* height: 400px; */
     /* Set a fixed height for the chart container */
     display: flex;
     align-items: center;
@@ -123,22 +123,35 @@ h4 {
 }
 
 /* Chart Canvas */
-.chart-container canvas {
+/* .chart-container canvas {
     max-width: 100%;
     max-height: 100%;
     height: auto;
-    /* Ensure the chart scales properly */
     width: auto;
-}
+} */
 
 .totals-card {
-    background: white;
-    padding: 20px;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--color-gray-200);
-    position: relative;
-    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    /* margin-top: 16px; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 400px;
+    /* Fixed height for the card */
+}
+
+/* .totals-card h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: #333;
+} */
+
+.totals-card h4 {
+    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    color: #555;
 }
 
 /* .totals-card::before {
@@ -171,18 +184,44 @@ h4 {
 }
 
 .profile-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
     margin: 12px 0;
     padding: 10px 16px;
     border-radius: var(--radius);
     background-color: var(--color-gray-50);
-    border-left: 3px solid var(--color-primary);
+    border-left: 3px solid transparent;
+    /* Default to transparent */
     font-size: 14px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* .profile-total strong {
+    font-weight: bold;
+    color: #555;
+} */
+
 .profile-total:hover {
     transform: translateX(4px);
     box-shadow: var(--shadow-sm);
+}
+
+.profile-total:nth-child(1) {
+    border-left-color: var(--color-primary);
+    /* STUDENT */
+}
+
+.profile-total:nth-child(2) {
+    border-left-color: var(--color-success);
+    /* MSME */
+}
+
+.profile-total:nth-child(3) {
+    border-left-color: var(--color-warning);
+    /* OTHERS */
 }
 
 .profile-total:nth-child(4) {
@@ -817,3 +856,51 @@ a:hover {
         background-size: contain;
         background-repeat: no-repeat;
     }
+
+.search-section {
+    background-color: white;
+    padding: 24px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 28px;
+    border: 1px solid var(--color-gray-200);
+}
+
+.search-section h2 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: var(--color-gray-700);
+}
+
+.search-form {
+    display: flex;
+    gap: 16px;
+}
+
+.search-form input[type="text"] {
+    flex-grow: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius);
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    color: var(--color-gray-800);
+    background-color: white;
+}
+
+.search-form button {
+    padding: 10px 18px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.search-form button:hover {
+    background-color: var(--color-primary-dark);
+}
+    

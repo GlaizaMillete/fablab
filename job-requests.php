@@ -29,6 +29,10 @@ if (!empty($_GET['service_requested'])) {
     $service_requested = $conn->real_escape_string($_GET['service_requested']);
     $whereClauses[] = "service_requested LIKE '%$service_requested%'";
 }
+if (!empty($_GET['search_name'])) {
+    $search_name = $conn->real_escape_string(trim($_GET['search_name']));
+    $whereClauses[] = "LOWER(client_name) LIKE LOWER('%$search_name%')";
+}
 
 $whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
 $sql = "SELECT * FROM job_requests $whereClause ORDER BY request_date DESC";
@@ -218,14 +222,17 @@ $chartData = [
             <div class="chart-container">
                 <canvas id="requestChart"></canvas>
             </div>
-            <div class="chart-controls totals-card">
-                <label for="graphColumn">Select Column to Visualize:</label>
-                <select id="graphColumn">
-                    <!-- <option value="status">Status</option> -->
-                    <option value="designation">Client Profile</option>
-                    <option value="service_requested">Service Requested</option>
-                </select>
-                <div id="columnDetails" style="margin-top: 1rem;">
+            <div class="totals-card">
+                <h3>Data Visualization</h3>
+                <div style="margin-bottom: 12px;">
+                    <label for="graphColumn">Column:</label>
+                    <select id="graphColumn">
+                        <option value="designation">Client Profile</option>
+                        <option value="service_requested">Service Requested</option>
+                    </select>
+                </div>
+                <label>Column Details:</label>
+                <div id="columnDetails">
                     <!-- Column details will be displayed here -->
                 </div>
             </div>
@@ -293,6 +300,16 @@ $chartData = [
                 <div>
                     <button type="submit">Filter</button>
                 </div>
+            </form>
+        </div>
+
+        <div class="search-section">
+            <h2>Search Client Name</h2>
+            <form method="GET" class="search-form">
+                <input type="text" name="search_name" placeholder="Enter client name"
+                    value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : '' ?>"
+                    style="flex-grow: 1;">
+                <button type="submit">Search</button>
             </form>
         </div>
 
@@ -394,15 +411,26 @@ $chartData = [
                 .then(data => {
                     const labels = data.labels;
                     const values = data.values;
-                    const total = data.total;
+                    const colors = [
+                        'rgba(245, 158, 11, 0.8)', // Example colors
+                        'rgba(37, 99, 235, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ];
 
                     // Display column details
                     const columnDetails = document.getElementById('columnDetails');
-                    let detailsHtml = `<strong>Total :</strong> ${total}<br>`;
+                    columnDetails.innerHTML = ''; // Clear existing details
+
                     labels.forEach((label, index) => {
-                        detailsHtml += `<strong>${label}:</strong> ${values[index]}<br>`;
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = 'profile-total';
+                        detailDiv.style.borderLeftColor = colors[index]; // Assign color dynamically
+                        detailDiv.innerHTML = `<strong>${label}:</strong> &#8369;${parseFloat(values[index]).toLocaleString('en-PH', {
+                    minimumFractionDigits: 2
+                })}`;
+                        columnDetails.appendChild(detailDiv);
                     });
-                    columnDetails.innerHTML = detailsHtml;
 
                     // If the chart already exists, destroy it before creating a new one
                     if (requestChart) {
@@ -416,12 +444,7 @@ $chartData = [
                             labels: labels,
                             datasets: [{
                                 data: values,
-                                backgroundColor: [
-                                    'rgba(245, 158, 11, 0.8)', // Example colors
-                                    'rgba(37, 99, 235, 0.8)',
-                                    'rgba(16, 185, 129, 0.8)',
-                                    'rgba(239, 68, 68, 0.8)'
-                                ],
+                                backgroundColor: colors, // Use the same colors for the chart
                                 borderWidth: 1
                             }]
                         },

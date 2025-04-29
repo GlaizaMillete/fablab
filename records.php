@@ -225,20 +225,23 @@ while ($row = $result->fetch_assoc()) {
 
         <div class="dashboard">
             <div class="chart-container">
-                <canvas id="profileChart"></canvas>
+                <canvas id="paymentChart"></canvas>
             </div>
             <div class="totals-card">
-                <h3>Total Revenue</h3>
-                <div class="total-amount">&#8369;<?php echo number_format($ovaTotal, 2); ?></div>
-                <h4>By Client Profile</h4>
-                <div class="profile-total">
-                    <strong>STUDENT:</strong> &#8369;<?php echo number_format($totalsByProfile['STUDENT'], 2); ?>
+                <h3>Data Visualization</h3>
+                <div style="margin-bottom: 12px;">
+                    <label for="paymentColumn">Column:</label>
+                    <select id="paymentColumn">
+                        <option value="client_profile">Client Profile</option>
+                        <option value="prepared_by">Prepared By</option>
+                        <option value="approved_by">Approved By</option>
+                        <option value="payment_received_by">Payment Received By</option>
+                        <option value="receipt_acknowledged_by">Receipt Acknowledged By</option>
+                    </select>
                 </div>
-                <div class="profile-total">
-                    <strong>MSME:</strong> &#8369;<?php echo number_format($totalsByProfile['MSME'], 2); ?>
-                </div>
-                <div class="profile-total">
-                    <strong>OTHERS:</strong> &#8369;<?php echo number_format($totalsByProfile['OTHERS'], 2); ?>
+                <label>Column Details:</label>
+                <div id="paymentColumnDetails">
+                    <!-- Column details will be displayed here -->
                 </div>
             </div>
         </div>
@@ -376,55 +379,75 @@ while ($row = $result->fetch_assoc()) {
         }
 
         // Chart.js configuration
-        const ctx = document.getElementById('profileChart').getContext('2d');
-        const profileChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['STUDENT', 'MSME', 'OTHERS'],
-                datasets: [{
-                    data: [
-                        <?php echo $totalsByProfile['STUDENT']; ?>,
-                        <?php echo $totalsByProfile['MSME']; ?>,
-                        <?php echo $totalsByProfile['OTHERS']; ?>
-                    ],
-                    backgroundColor: [
-                        '#3498db',
-                        '#2ecc71',
-                        '#e74c3c'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 20,
-                            padding: 10,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ₱' + context.raw.toLocaleString('en-PH', {
-                                    minimumFractionDigits: 2
-                                });
-                            }
-                        },
-                        bodyFont: {
-                            size: 15
-                        }
+        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+        let paymentChart;
+
+        // Function to fetch and update chart data
+        function updatePaymentChart(column) {
+            fetch(`fetch-payment-data.php?column=${column}`)
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.labels;
+                    const values = data.values;
+                    const colors = [
+                        'rgba(245, 158, 11, 0.8)', // Example colors
+                        'rgba(37, 99, 235, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ];
+
+                    // Display column details
+                    const columnDetails = document.getElementById('paymentColumnDetails');
+                    columnDetails.innerHTML = ''; // Clear existing details
+
+                    labels.forEach((label, index) => {
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = 'profile-total';
+                        detailDiv.style.borderLeftColor = colors[index]; // Assign color dynamically
+                        detailDiv.innerHTML = `<strong>${label}:</strong> &#8369;${parseFloat(values[index]).toLocaleString('en-PH', {
+                    minimumFractionDigits: 2
+                })}`;
+                        columnDetails.appendChild(detailDiv);
+                    });
+
+                    // If the chart already exists, destroy it before creating a new one
+                    if (paymentChart) {
+                        paymentChart.destroy();
                     }
-                },
-                cutout: '45%'
-            }
+
+                    // Create a new chart
+                    paymentChart = new Chart(paymentCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: values,
+                                backgroundColor: colors, // Use the same colors for the chart
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
+        }
+
+        // Event listener for dropdown change
+        document.getElementById('paymentColumn').addEventListener('change', function() {
+            const selectedColumn = this.value;
+            updatePaymentChart(selectedColumn);
         });
+
+        // Initialize the chart with the default column
+        updatePaymentChart('client_profile');
 
         // Add new row to the service table
         document.getElementById('addRowBtn').addEventListener('click', function() {

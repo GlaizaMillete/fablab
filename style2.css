@@ -107,26 +107,33 @@ h4 {
     margin-bottom: 28px;
 }
 
+/* Chart Container */
 .chart-container {
     background: white;
-    background-image: linear-gradient(to bottom right, #ffffff, #f0f7ff);
+    /* background-image: linear-gradient(to bottom right, #ffffff, #f0f7ff); */
     padding: 20px;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     border: 1px solid var(--color-gray-200);
+    /* height: 400px; */
+    /* Set a fixed height for the chart container */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .totals-card {
-    background: white;
-    padding: 20px;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--color-gray-200);
-    position: relative;
-    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    /* margin-top: 16px; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 400px;
+    /* Fixed height for the card */
 }
 
-.totals-card::before {
+/* .totals-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -134,7 +141,7 @@ h4 {
     right: 0;
     height: 4px;
     background: linear-gradient(to right, var(--color-primary), var(--color-success));
-}
+} */
 
 .total-amount {
     font-size: 28px;
@@ -156,11 +163,17 @@ h4 {
 }
 
 .profile-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
     margin: 12px 0;
     padding: 10px 16px;
     border-radius: var(--radius);
     background-color: var(--color-gray-50);
-    border-left: 3px solid var(--color-primary);
+    border-left: 3px solid transparent;
+    /* Default to transparent */
     font-size: 14px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
