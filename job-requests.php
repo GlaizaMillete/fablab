@@ -423,12 +423,18 @@ $chartData = [
                     columnDetails.innerHTML = ''; // Clear existing details
 
                     labels.forEach((label, index) => {
+                        const value = parseFloat(values[index]);
+                        const formattedValue = Number.isInteger(value) ?
+                            value.toLocaleString('en-PH') // No decimals for whole numbers
+                            :
+                            value.toLocaleString('en-PH', {
+                                minimumFractionDigits: 2
+                            }); // Two decimals for non-whole numbers
+
                         const detailDiv = document.createElement('div');
                         detailDiv.className = 'profile-total';
                         detailDiv.style.borderLeftColor = colors[index]; // Assign color dynamically
-                        detailDiv.innerHTML = `<strong>${label}:</strong> &#8369;${parseFloat(values[index]).toLocaleString('en-PH', {
-                    minimumFractionDigits: 2
-                })}`;
+                        detailDiv.innerHTML = `<strong>${label}:</strong> ${formattedValue}`;
                         columnDetails.appendChild(detailDiv);
                     });
 
