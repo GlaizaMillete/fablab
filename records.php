@@ -30,19 +30,35 @@ if (!empty($_GET['client_profile'])) {
         $whereClauses[] = "client_profile = '$client_profile'";
     }
 }
-if (!empty($_GET['equipment'])) {
-    $equipment = $conn->real_escape_string($_GET['equipment']);
-    $whereClauses[] = "FIND_IN_SET('$equipment', equipment) > 0";
+if (!empty($_GET['prepared_by'])) {
+    $prepared_by = $conn->real_escape_string(trim($_GET['prepared_by']));
+    $whereClauses[] = "LOWER(prepared_by) LIKE LOWER('%$prepared_by%')";
+}
+if (!empty($_GET['approved_by'])) {
+    $approved_by = $conn->real_escape_string(trim($_GET['approved_by']));
+    $whereClauses[] = "LOWER(approved_by) LIKE LOWER('%$approved_by%')";
+}
+if (!empty($_GET['payment_received_by'])) {
+    $payment_received_by = $conn->real_escape_string(trim($_GET['payment_received_by']));
+    $whereClauses[] = "LOWER(payment_received_by) LIKE LOWER('%$payment_received_by%')";
+}
+if (!empty($_GET['receipt_acknowledged_by'])) {
+    $receipt_acknowledged_by = $conn->real_escape_string(trim($_GET['receipt_acknowledged_by']));
+    $whereClauses[] = "LOWER(receipt_acknowledged_by) LIKE LOWER('%$receipt_acknowledged_by%')";
 }
 if (!empty($_GET['search_name'])) {
-    $search_name = $conn->real_escape_string($_GET['search_name']);
-    $whereClauses[] = "client_name LIKE '%$search_name%'";
+    $search_name = $conn->real_escape_string(trim($_GET['search_name']));
+    $whereClauses[] = "LOWER(client_name) LIKE LOWER('%$search_name%')";
 }
 
 $whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
+$query = "SELECT * FROM billing $whereClause ORDER BY id DESC";
+$result = $conn->query($query);
 
-// Fetch billing records
-$result = $conn->query("SELECT * FROM billing $whereClause ORDER BY id DESC");
+if (!$result) {
+    die("Error executing query: " . $conn->error);
+}
+
 $ovaTotal = 0;
 $totalsByProfile = ['STUDENT' => 0, 'MSME' => 0, 'OTHERS' => 0];
 $rows = [];
@@ -269,25 +285,22 @@ while ($row = $result->fetch_assoc()) {
                     </select>
                 </div>
                 <div>
-                    <label>Equipment:</label>
-                    <select name="equipment">
-                        <option value="">All</option>
-                        <option value="3D Printer" <?= isset($_GET['equipment']) && $_GET['equipment'] == '3D Printer' ? 'selected' : '' ?>>3D Printer</option>
-                        <option value="3D Scanner" <?= isset($_GET['equipment']) && $_GET['equipment'] == '3D Scanner' ? 'selected' : '' ?>>3D Scanner</option>
-                        <option value="Laser Cutting Machine" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Laser Cutting Machine' ? 'selected' : '' ?>>Laser Cutting Machine</option>
-                        <option value="Print and Cut Machine" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Print and Cut Machine' ? 'selected' : '' ?>>Print and Cut Machine</option>
-                        <option value="CNC Machine (Big)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'CNC Machine (Big)' ? 'selected' : '' ?>>CNC Machine (Big)</option>
-                        <option value="CNC Machine (Small)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'CNC Machine (Small)' ? 'selected' : '' ?>>CNC Machine (Small)</option>
-                        <option value="Vinyl Cutter" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Vinyl Cutter' ? 'selected' : '' ?>>Vinyl Cutter</option>
-                        <option value="Embroidery Machine (One Head)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Embroidery Machine (One Head)' ? 'selected' : '' ?>>Embroidery Machine (One Head)</option>
-                        <option value="Embroidery Machine (Four Heads)" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Embroidery Machine (Four Heads)' ? 'selected' : '' ?>>Embroidery Machine (Four Heads)</option>
-                        <option value="Flatbed Cutter" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Flatbed Cutter' ? 'selected' : '' ?>>Flatbed Cutter</option>
-                        <option value="Vacuum Forming" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Vacuum Forming' ? 'selected' : '' ?>>Vacuum Forming</option>
-                        <option value="Water Jet Machine" <?= isset($_GET['equipment']) && $_GET['equipment'] == 'Water Jet Machine' ? 'selected' : '' ?>>Water Jet Machine</option>
-                    </select>
+                    <label>Prepared By:</label>
+                    <input type="text" name="prepared_by" value="<?= isset($_GET['prepared_by']) ? htmlspecialchars($_GET['prepared_by']) : '' ?>">
                 </div>
                 <div>
-                    <!-- <label for=""></label> -->
+                    <label>Approved By:</label>
+                    <input type="text" name="approved_by" value="<?= isset($_GET['approved_by']) ? htmlspecialchars($_GET['approved_by']) : '' ?>">
+                </div>
+                <div>
+                    <label>Payment Received By:</label>
+                    <input type="text" name="payment_received_by" value="<?= isset($_GET['payment_received_by']) ? htmlspecialchars($_GET['payment_received_by']) : '' ?>">
+                </div>
+                <div>
+                    <label>Receipt Acknowledged By:</label>
+                    <input type="text" name="receipt_acknowledged_by" value="<?= isset($_GET['receipt_acknowledged_by']) ? htmlspecialchars($_GET['receipt_acknowledged_by']) : '' ?>">
+                </div>
+                <div>
                     <button type="submit">Filter</button>
                 </div>
             </form>
@@ -296,7 +309,9 @@ while ($row = $result->fetch_assoc()) {
         <div class="search-section">
             <h2>Search Client Name</h2>
             <form method="GET" class="search-form">
-                <input type="text" name="search_name" placeholder="Enter client name" value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : '' ?>" style="flex-grow: 1;">
+                <input type="text" name="search_name" placeholder="Enter client name"
+                    value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : '' ?>"
+                    style="flex-grow: 1;">
                 <button type="submit">Search</button>
             </form>
         </div>

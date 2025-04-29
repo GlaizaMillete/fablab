@@ -25,7 +25,13 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
     echo '<script>alert("You have successfully logged in.");</script>';
 }
 
-include 'fetch-billing-handler.php';
+// Fetch billing records directly in staff-home.php
+$result = $conn->query("SELECT * FROM billing ORDER BY billing_date ASC");
+$billingRows = [];
+while ($row = $result->fetch_assoc()) {
+    $billingRows[] = $row;
+}
+// include 'fetch-billing-handler.php';
 include 'fetch-feedback-handler.php';
 include 'fetch-job_requests-handler.php';
 ?>
