@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2025 at 07:17 PM
+-- Generation Time: May 01, 2025 at 03:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -104,33 +104,6 @@ INSERT INTO `equipment` (`id`, `name`, `type`, `status`, `last_maintenance_date`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `feedback`
---
-
-CREATE TABLE `feedback` (
-  `id` int(11) NOT NULL,
-  `client_name` varchar(255) NOT NULL,
-  `feedback_pdf` varchar(255) NOT NULL,
-  `feedback_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `feedback`
---
-
-INSERT INTO `feedback` (`id`, `client_name`, `feedback_pdf`, `feedback_date`) VALUES
-(1, 'John Doe', '', '2025-03-02'),
-(2, 'Jane Smith', '', '2025-03-06'),
-(3, 'Michael Johnson', 'feedback_report.pdf', '2025-03-10'),
-(5, 'David Wilson', 'client_feedback.pdf', '2025-03-20'),
-(10, 'Jaded', 'inside01_BROCHURE.pdf', '2025-03-10'),
-(11, 'larvie', 'outside_01BROCHURE.pdf', '2025-04-06'),
-(12, 'asad', 'student-paper-setup-guide.pdf', '2025-04-14'),
-(13, 'aaaaaa', 'Millete_andrea_03 eLMS Activity 1 - ARG.pdf', '2025-04-14');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `job_requests`
 --
 
@@ -208,6 +181,27 @@ INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `repository`
+--
+
+CREATE TABLE `repository` (
+  `id` int(11) NOT NULL,
+  `listing_name` varchar(255) NOT NULL,
+  `listing_type` varchar(100) NOT NULL,
+  `reference_file` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `repository`
+--
+
+INSERT INTO `repository` (`id`, `listing_name`, `listing_type`, `reference_file`) VALUES
+(1, 'Event Photos - Workshop 2025', 'Google Drive', 'https://drive.google.com/folder/example'),
+(2, 'Project Files - CNC Designs', 'Local Directory', 'C:/Projects/CNC_Designs/');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `service_details`
 --
 
@@ -276,12 +270,6 @@ ALTER TABLE `equipment`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `feedback`
---
-ALTER TABLE `feedback`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `job_requests`
 --
 ALTER TABLE `job_requests`
@@ -291,6 +279,12 @@ ALTER TABLE `job_requests`
 -- Indexes for table `logs`
 --
 ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `repository`
+--
+ALTER TABLE `repository`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -329,12 +323,6 @@ ALTER TABLE `equipment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `feedback`
---
-ALTER TABLE `feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
 -- AUTO_INCREMENT for table `job_requests`
 --
 ALTER TABLE `job_requests`
@@ -344,6 +332,12 @@ ALTER TABLE `job_requests`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `repository`
+--
+ALTER TABLE `repository`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --

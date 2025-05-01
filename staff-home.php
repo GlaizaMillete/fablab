@@ -32,7 +32,7 @@ while ($row = $result->fetch_assoc()) {
     $billingRows[] = $row;
 }
 // include 'fetch-billing-handler.php';
-include 'fetch-feedback-handler.php';
+include 'fetch-repository-handler.php';
 include 'fetch-job_requests-handler.php';
 ?>
 
@@ -55,8 +55,8 @@ include 'fetch-job_requests-handler.php';
             <div class="button" onclick="showTab('billing', 'Payment and Release')">
                 <p>Payment and Release</p>
             </div>
-            <div class="button" onclick="showTab('feedback', 'Feedbacks')">
-                <p>Feedbacks</p>
+            <div class="button" onclick="showTab('repository', 'Repository')">
+                <p>Repository</p>
             </div>
         </div>
         <div class="button" onclick="location.href='logout.php'">
@@ -168,38 +168,46 @@ include 'fetch-job_requests-handler.php';
                         </tbody>
                     </table>
                 </div>
-                <div class="job-request-content" id="feedback">
-                    <h1 class="content-title">Feedback</h1>
+                <div class="job-request-content" id="repository">
+                    <h1 class="content-title">Repository</h1>
                     <table>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Client</th>
-                                <th>Comments</th>
-                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Reference</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($feedbackRows)): ?>
-                                <?php foreach ($feedbackRows as $row): ?>
+                            <?php if (!empty($repositoryRows)): ?>
+                                <?php foreach ($repositoryRows as $row): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($row['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['listing_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['listing_type']); ?></td>
                                         <td>
-                                            <?php if (!empty($row['feedback_pdf'])): ?>
-                                                <a href="uploads/feedback/<?php echo htmlspecialchars($row['feedback_pdf']); ?>" target="_blank">View PDF</a>
+                                            <?php if (filter_var($row['reference_file'], FILTER_VALIDATE_URL)): ?>
+                                                <!-- If it's a URL, make it clickable -->
+                                                <a href="<?php echo htmlspecialchars($row['reference_file']); ?>" target="_blank">
+                                                    <?php echo htmlspecialchars($row['reference_file']); ?>
+                                                </a>
                                             <?php else: ?>
-                                                <span class="no-pdf">No Comments</span>
+                                                <!-- If it's a file directory, use a custom handler -->
+                                                <a href="#" onclick="openDirectory('<?php echo addslashes($row['reference_file']); ?>')">
+                                                    <?php echo htmlspecialchars($row['reference_file']); ?>
+                                                </a>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?php echo htmlspecialchars($row['feedback_date']); ?></td>
-                                        <td><button onclick="editFeedback(<?php echo htmlspecialchars($row['id']); ?>)">Edit</button></td>
+                                        <td>
+                                            <button onclick="editRepository(<?php echo htmlspecialchars($row['id']); ?>)">Edit</button>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="5">No feedback available</td>
+                                    <td colspan="5">No repository listings available</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -277,6 +285,30 @@ include 'fetch-job_requests-handler.php';
     </div>
 </div> -->
 
+<!-- Repository Form Modal -->
+<div id="repository-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRepositoryForm()">&times;</span>
+        <h2>Add Repository Listing</h2>
+        <form action="add-repository-handler.php" method="POST">
+            <label for="listing_name">Listing Name:</label>
+            <input type="text" id="listing_name" name="listing_name" required>
+
+            <label for="listing_type">Type:</label>
+            <select id="listing_type" name="listing_type" required>
+                <option value="Google Drive">Google Drive</option>
+                <option value="Local Directory">Local Directory</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="reference_file">Reference File/URL:</label>
+            <input type="text" id="reference_file" name="reference_file" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
 <script>
     function renderSummaryChart() {
         var ctx = document.getElementById('summaryChart').getContext('2d');
@@ -319,9 +351,9 @@ include 'fetch-job_requests-handler.php';
         } else if (activeTab === 'billing') {
             // Show the Add Billing modal
             showBillingForm();
-        } else if (activeTab === 'feedback') {
-            // Show the Add Feedback modal
-            showFeedbackForm();
+        } else if (activeTab === 'repository') {
+            // Show the Add Repository modal
+            showRepositoryForm();
         }
     }
 
@@ -368,14 +400,6 @@ include 'fetch-job_requests-handler.php';
         activeTab.style.display = 'block';
         activeTab.classList.add('active');
 
-        // // Update the title inside the active tab
-        // const contentTitle = activeTab.querySelector('.content-title');
-        // if (contentTitle) {
-        //     contentTitle.innerText = title;
-        // } else {
-        //     console.warn('Content title element not found in the active tab.');
-        // }
-
         // Remove active class from all buttons
         document.querySelectorAll('.user-content .button').forEach(function(button) {
             button.classList.remove('active');
@@ -391,8 +415,8 @@ include 'fetch-job_requests-handler.php';
                 addButton.innerText = 'Add Job Request';
             } else if (tabId === 'billing') {
                 addButton.innerText = 'Add Billing';
-            } else if (tabId === 'feedback') {
-                addButton.innerText = 'Add Feedback';
+            } else if (tabId === 'repository') {
+                addButton.innerText = 'Add Repository';
             } else {
                 addButton.innerText = 'Add';
             }
@@ -412,124 +436,155 @@ include 'fetch-job_requests-handler.php';
         const tabTitleMap = {
             'job-description': 'Client Profile and Service Requests',
             'billing': 'Payment and Release',
-            'feedback': 'Feedbacks'
+            'repository': 'Repository'
         };
         showTab(activeTab, tabTitleMap[activeTab] || 'Client Profile and Service Requests');
     });
 
-
-    // Show the feedback form modal
-    function showFeedbackForm() {
-        document.getElementById('feedback-modal').style.display = 'block';
+    function showRepositoryForm() {
+        document.getElementById('repository-modal').style.display = 'block';
     }
 
-    // Close the feedback form modal
-    function closeFeedbackForm() {
-        document.getElementById('feedback-modal').style.display = 'none';
+    function closeRepositoryForm() {
+        document.getElementById('repository-modal').style.display = 'none';
     }
 
-    // Close the modal if the user clicks outside of it
-    window.onclick = function(event) {
-        const modal = document.getElementById('feedback-modal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-
-    // Show the billing form modal
-    function showBillingForm() {
-        document.getElementById('billing-modal').style.display = 'block';
-    }
-
-    function editBilling(id) {
-        // Fetch the billing data using AJAX
-        fetch(`fetch-billing-handler.php?id=${id}`)
+    function openDirectory(directoryPath) {
+        fetch('open-directory-handler.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    path: directoryPath
+                }),
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Populate the modal fields with the fetched data
-                    document.getElementById('client_name').value = data.billing.client_name;
-                    document.getElementById('billing_date').value = data.billing.billing_date;
-                    document.querySelector(`input[name="client_profile"][value="${data.billing.client_profile}"]`).checked = true;
-
-                    // Populate equipment checkboxes
-                    const equipment = data.billing.equipment.split(', ');
-                    document.querySelectorAll('input[name="equipment[]"]').forEach(checkbox => {
-                        checkbox.checked = equipment.includes(checkbox.value);
-                    });
-
-                    document.getElementById('total_invoice').value = data.billing.total_invoice;
-
-                    // Show the modal
-                    document.getElementById('billing-modal').style.display = 'block';
-
-                    // Add a hidden input for the billing ID
-                    let billingIdInput = document.getElementById('billing_id');
-                    if (!billingIdInput) {
-                        billingIdInput = document.createElement('input');
-                        billingIdInput.type = 'hidden';
-                        billingIdInput.id = 'billing_id';
-                        billingIdInput.name = 'billing_id';
-                        document.getElementById('billing-form').appendChild(billingIdInput);
-                    }
-                    billingIdInput.value = data.billing.id;
-
-                    // Update the modal title to indicate editing
-                    document.getElementById('billing-modal-title').innerText = 'Edit Billing';
+                    console.log('Directory opened successfully');
                 } else {
-                    alert('Error fetching billing data: ' + data.message);
+                    alert('Failed to open directory: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while fetching the billing data.');
+                alert('An error occurred while trying to open the directory.');
             });
     }
 
-    // Close the billing form modal
-    function closeBillingForm() {
-        document.getElementById('billing-modal').style.display = 'none';
-    }
+    // Show the feedback form modal
+    // function showFeedbackForm() {
+    //     document.getElementById('feedback-modal').style.display = 'block';
+    // }
+
+    // Close the feedback form modal
+    // function closeFeedbackForm() {
+    //     document.getElementById('feedback-modal').style.display = 'none';
+    // }
 
     // Close the modal if the user clicks outside of it
-    window.onclick = function(event) {
-        const modal = document.getElementById('billing-modal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
+    // window.onclick = function(event) {
+    //     const modal = document.getElementById('feedback-modal');
+    //     if (event.target === modal) {
+    //         modal.style.display = 'none';
+    //     }
+    // };
+
+    // Show the billing form modal
+    // function showBillingForm() {
+    //     document.getElementById('billing-modal').style.display = 'block';
+    // }
+
+    // function editBilling(id) {
+    //     // Fetch the billing data using AJAX
+    //     fetch(`fetch-billing-handler.php?id=${id}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.success) {
+    //                 // Populate the modal fields with the fetched data
+    //                 document.getElementById('client_name').value = data.billing.client_name;
+    //                 document.getElementById('billing_date').value = data.billing.billing_date;
+    //                 document.querySelector(`input[name="client_profile"][value="${data.billing.client_profile}"]`).checked = true;
+
+    //                 // Populate equipment checkboxes
+    //                 const equipment = data.billing.equipment.split(', ');
+    //                 document.querySelectorAll('input[name="equipment[]"]').forEach(checkbox => {
+    //                     checkbox.checked = equipment.includes(checkbox.value);
+    //                 });
+
+    //                 document.getElementById('total_invoice').value = data.billing.total_invoice;
+
+    //                 // Show the modal
+    //                 document.getElementById('billing-modal').style.display = 'block';
+
+    //                 // Add a hidden input for the billing ID
+    //                 let billingIdInput = document.getElementById('billing_id');
+    //                 if (!billingIdInput) {
+    //                     billingIdInput = document.createElement('input');
+    //                     billingIdInput.type = 'hidden';
+    //                     billingIdInput.id = 'billing_id';
+    //                     billingIdInput.name = 'billing_id';
+    //                     document.getElementById('billing-form').appendChild(billingIdInput);
+    //                 }
+    //                 billingIdInput.value = data.billing.id;
+
+    //                 // Update the modal title to indicate editing
+    //                 document.getElementById('billing-modal-title').innerText = 'Edit Billing';
+    //             } else {
+    //                 alert('Error fetching billing data: ' + data.message);
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //             alert('An error occurred while fetching the billing data.');
+    //         });
+    // }
+
+    // Close the billing form modal
+    // function closeBillingForm() {
+    //     document.getElementById('billing-modal').style.display = 'none';
+    // }
+
+    // Close the modal if the user clicks outside of it
+    // window.onclick = function(event) {
+    //     const modal = document.getElementById('billing-modal');
+    //     if (event.target === modal) {
+    //         modal.style.display = 'none';
+    //     }
+    // };
 
     // Confirmation dialog for billing form submission
-    document.getElementById('billing-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+    // document.getElementById('billing-form').addEventListener('submit', function(e) {
+    //     e.preventDefault(); // Prevent the default form submission
 
-        // Show confirmation dialog
-        const confirmation = confirm('Are you sure you want to submit these billing details?');
-        if (confirmation) {
-            // If the user clicks "Yes", submit the form
-            this.submit();
-            alert('Billing details submitted successfully!');
-        } else {
-            // If the user clicks "No", do nothing
-            alert('Submission canceled.');
-        }
-    });
+    //     // Show confirmation dialog
+    //     const confirmation = confirm('Are you sure you want to submit these billing details?');
+    //     if (confirmation) {
+    //         // If the user clicks "Yes", submit the form
+    //         this.submit();
+    //         alert('Billing details submitted successfully!');
+    //     } else {
+    //         // If the user clicks "No", do nothing
+    //         alert('Submission canceled.');
+    //     }
+    // });
 
     // Confirmation dialog for feedback form submission
-    document.getElementById('feedback-modal').querySelector('form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+    // document.getElementById('feedback-modal').querySelector('form').addEventListener('submit', function(e) {
+    //     e.preventDefault(); // Prevent the default form submission
 
-        // Show confirmation dialog
-        const confirmation = confirm('Are you sure you want to submit this feedback?');
-        if (confirmation) {
-            // If the user clicks "Yes", submit the form
-            this.submit();
-            alert('Feedback submitted successfully!');
-        } else {
-            // If the user clicks "No", do nothing
-            alert('Submission canceled.');
-        }
-    });
+    //     // Show confirmation dialog
+    //     const confirmation = confirm('Are you sure you want to submit this feedback?');
+    //     if (confirmation) {
+    //         // If the user clicks "Yes", submit the form
+    //         this.submit();
+    //         alert('Feedback submitted successfully!');
+    //     } else {
+    //         // If the user clicks "No", do nothing
+    //         alert('Submission canceled.');
+    //     }
+    // });
 
     // Handle form submission via AJAX
     // document.getElementById('billing-form').addEventListener('submit', function(e) {
