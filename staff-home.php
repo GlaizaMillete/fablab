@@ -301,7 +301,7 @@ include 'fetch-job_requests-handler.php';
         <span class="close" onclick="closeRepositoryForm()">&times;</span>
         <h2>Add/Edit Repository Listing</h2>
         <form action="add-repository-handler.php" method="POST">
-            <input type="hidden" id="repository_id" name="repository_id">
+            <input type="hidden" id="repository_id" name="repository_id"> <!-- Hidden input for ID -->
             <label for="listing_name">Listing Name:</label>
             <input type="text" id="listing_name" name="listing_name" required>
 

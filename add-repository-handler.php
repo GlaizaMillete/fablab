@@ -12,6 +12,7 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
 date_default_timezone_set('Asia/Manila');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $repository_id = isset($_POST['repository_id']) ? intval($_POST['repository_id']) : null; // Check if editing
     $listing_name = trim($_POST['listing_name']);
     $listing_type = trim($_POST['listing_type']);
     $reference_file = trim($_POST['reference_file']);
@@ -22,15 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Error: The reference file must be a valid URL or an existing directory.');
     }
 
-    // Insert repository listing into the database
-    $stmt = $conn->prepare("INSERT INTO repository (listing_name, listing_type, reference_file, note) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param('ssss', $listing_name, $listing_type, $reference_file, $note);
+    if ($repository_id) {
+        // Update existing repository
+        $stmt = $conn->prepare("UPDATE repository SET listing_name = ?, listing_type = ?, reference_file = ?, note = ? WHERE id = ?");
+        $stmt->bind_param('ssssi', $listing_name, $listing_type, $reference_file, $note, $repository_id);
+    } else {
+        // Insert new repository
+        $stmt = $conn->prepare("INSERT INTO repository (listing_name, listing_type, reference_file, note) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param('ssss', $listing_name, $listing_type, $reference_file, $note);
+    }
 
     if ($stmt->execute()) {
         // Log the action
         if (isset($_SESSION['staff_name'])) {
             $staff_name = $_SESSION['staff_name'];
-            $action = "Added repository listing: $listing_name";
+            $action = $repository_id ? "Edited repository listing: $listing_name" : "Added repository listing: $listing_name";
             $log_date = date('Y-m-d H:i:s');
 
             $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
