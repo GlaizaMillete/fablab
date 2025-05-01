@@ -207,9 +207,9 @@ include 'fetch-job_requests-handler.php';
                                         <td><?php echo htmlspecialchars($row['listing_type']); ?></td>
                                         <td style="text-align: center;">
                                             <?php if (filter_var($row['reference_file'], FILTER_VALIDATE_URL)): ?>
-                                                <button class="btn-blue" onclick="window.open('<?php echo htmlspecialchars($row['reference_file']); ?>', '_blank')">Open</button>
+                                                <button onclick="window.open('<?php echo htmlspecialchars($row['reference_file']); ?>', '_blank')">Open</button>
                                             <?php else: ?>
-                                                <button class="btn-blue" onclick="openDirectory('<?php echo addslashes($row['reference_file']); ?>')">Open</button>
+                                                <button onclick="openDirectory('<?php echo addslashes($row['reference_file']); ?>')">Open</button>
                                             <?php endif; ?>
                                         </td>
                                         <td><?php echo htmlspecialchars($row['note']); ?></td>

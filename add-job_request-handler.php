@@ -35,8 +35,8 @@ if (isset($_FILES['reference_file']) && $_FILES['reference_file']['error'] == UP
 }
 
 // Get form data and sanitize
-$personalName = $conn->real_escape_string($_POST['personal_name']); // Personal Name
-$clientName = $conn->real_escape_string($_POST['client_name']); // Client Name
+$personalName = $conn->real_escape_string($_POST['personal_name']);
+$clientName = $conn->real_escape_string($_POST['client_name']);
 $address = $conn->real_escape_string($_POST['address']);
 $contactNumber = $conn->real_escape_string($_POST['contact_no']);
 $gender = $conn->real_escape_string($_POST['gender']);
@@ -57,61 +57,179 @@ $requestDate = $conn->real_escape_string($_POST['date']);
 $personnelName = isset($_POST['personnel_name']) ? $conn->real_escape_string($_POST['personnel_name']) : null;
 $personnelDate = isset($_POST['personnel_date']) ? $conn->real_escape_string($_POST['personnel_date']) : null;
 
-// Insert into database
-$sql = "INSERT INTO job_requests (
-            personal_name, 
-            client_name, 
-            address, 
-            contact_number, 
-            gender, 
-            gender_optional, 
-            age, 
-            designation, 
-            designation_other, 
-            company, 
-            service_requested, 
-            equipment, 
-            hand_tools_other, 
-            equipment_other, 
-            consultation_mode, 
-            consultation_schedule, 
-            equipment_schedule, 
-            work_description, 
-            request_date, 
-            personnel_name, 
-            personnel_date, 
-            reference_file
-        ) VALUES (
-            '$personalName',
-            '$clientName',
-            '$address',
-            '$contactNumber',
-            '$gender',
-            '$genderOptional',
+// Check if this is an update or a new insert
+if (isset($_POST['id']) && !empty($_POST['id'])) {
+    // Update existing job request
+    $id = intval($_POST['id']);
+    if (empty($filePath)) {
+        $sql = "UPDATE job_requests SET 
+                    personal_name = ?, 
+                    client_name = ?, 
+                    address = ?, 
+                    contact_number = ?, 
+                    gender = ?, 
+                    gender_optional = ?, 
+                    age = ?, 
+                    designation = ?, 
+                    designation_other = ?, 
+                    company = ?, 
+                    service_requested = ?, 
+                    equipment = ?, 
+                    hand_tools_other = ?, 
+                    equipment_other = ?, 
+                    consultation_mode = ?, 
+                    consultation_schedule = ?, 
+                    equipment_schedule = ?, 
+                    work_description = ?, 
+                    request_date = ?, 
+                    personnel_name = ?, 
+                    personnel_date = ?, 
+                    reference_file = reference_file
+                WHERE id = ?";
+    } else {
+        $sql = "UPDATE job_requests SET 
+                    personal_name = ?, 
+                    client_name = ?, 
+                    address = ?, 
+                    contact_number = ?, 
+                    gender = ?, 
+                    gender_optional = ?, 
+                    age = ?, 
+                    designation = ?, 
+                    designation_other = ?, 
+                    company = ?, 
+                    service_requested = ?, 
+                    equipment = ?, 
+                    hand_tools_other = ?, 
+                    equipment_other = ?, 
+                    consultation_mode = ?, 
+                    consultation_schedule = ?, 
+                    equipment_schedule = ?, 
+                    work_description = ?, 
+                    request_date = ?, 
+                    personnel_name = ?, 
+                    personnel_date = ?, 
+                    reference_file = ?
+                WHERE id = ?";
+    }
+    $stmt = $conn->prepare($sql);
+    if (empty($filePath)) {
+        $stmt->bind_param(
+            "ssssssisissssssssssssi",
+            $personalName,
+            $clientName,
+            $address,
+            $contactNumber,
+            $gender,
+            $genderOptional,
             $age,
-            '$designation',
-            '$designationOther',
-            '$company',
-            '$serviceRequested',
-            '$equipment',
-            '$handToolsOther',
-            '$equipmentOther',
-            '$consultationMode',
-            '$consultationSchedule',
-            '$equipmentSchedule',
-            '$workDescription',
-            '$requestDate',
-            '$personnelName',
-            '$personnelDate',
-            " . ($filePath ? "'$filePath'" : "NULL") . "
-        )";
+            $designation,
+            $designationOther,
+            $company,
+            $serviceRequested,
+            $equipment,
+            $handToolsOther,
+            $equipmentOther,
+            $consultationMode,
+            $consultationSchedule,
+            $equipmentSchedule,
+            $workDescription,
+            $requestDate,
+            $personnelName,
+            $personnelDate,
+            $id
+        );
+    } else {
+        $stmt->bind_param(
+            "ssssssisisssssssssssssi",
+            $personalName,
+            $clientName,
+            $address,
+            $contactNumber,
+            $gender,
+            $genderOptional,
+            $age,
+            $designation,
+            $designationOther,
+            $company,
+            $serviceRequested,
+            $equipment,
+            $handToolsOther,
+            $equipmentOther,
+            $consultationMode,
+            $consultationSchedule,
+            $equipmentSchedule,
+            $workDescription,
+            $requestDate,
+            $personnelName,
+            $personnelDate,
+            $filePath,
+            $id
+        );
+    }
+} else {
+    // Insert new job request
+    $sql = "INSERT INTO job_requests (
+                personal_name, 
+                client_name, 
+                address, 
+                contact_number, 
+                gender, 
+                gender_optional, 
+                age, 
+                designation, 
+                designation_other, 
+                company, 
+                service_requested, 
+                equipment, 
+                hand_tools_other, 
+                equipment_other, 
+                consultation_mode, 
+                consultation_schedule, 
+                equipment_schedule, 
+                work_description, 
+                request_date, 
+                personnel_name, 
+                personnel_date, 
+                reference_file
+            ) VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            )";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "ssssssisisssssssssssss",
+        $personalName,
+        $clientName,
+        $address,
+        $contactNumber,
+        $gender,
+        $genderOptional,
+        $age,
+        $designation,
+        $designationOther,
+        $company,
+        $serviceRequested,
+        $equipment,
+        $handToolsOther,
+        $equipmentOther,
+        $consultationMode,
+        $consultationSchedule,
+        $equipmentSchedule,
+        $workDescription,
+        $requestDate,
+        $personnelName,
+        $personnelDate,
+        $filePath
+    );
+}
 
-if ($conn->query($sql)) {
+// Execute the query
+if ($stmt->execute()) {
     // Log the action
     if (isset($_SESSION['staff_name'])) {
         $staffName = $_SESSION['staff_name'];
         $logDate = date('Y-m-d H:i:s');
-        $action = "Added client profile and service request for client: $clientName";
+        $action = isset($id) ? "Updated client profile and service request for client: $clientName" : "Added client profile and service request for client: $clientName";
 
         $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
         $logStmt->bind_param('sss', $staffName, $action, $logDate);
@@ -120,9 +238,11 @@ if ($conn->query($sql)) {
     }
 
     // Redirect back to the referring page
+    $stmt->close();
     $conn->close();
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit();
 } else {
-    die('Error: ' . $conn->error);
+    die('Error: ' . $stmt->error);
 }
+?>

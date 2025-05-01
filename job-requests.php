@@ -96,6 +96,7 @@ $chartData = [
                 <span class="close">&times;</span>
                 <h2>Client Profile and Service Request Form</h2>
                 <form id="jobRequestForm" enctype="multipart/form-data" action="add-job_request-handler.php" method="POST">
+                    <input type="hidden" name="id"> <!-- Hidden input for ID -->
                     <h3>Personal Information</h3>
                     <div class="form-columns">
                         <div>
@@ -325,11 +326,12 @@ $chartData = [
                     <th>Service Request</th>
                     <th>Client Profile</th>
                     <th>Reference File</th>
+                    <th>Action</th> <!-- Add Action Column -->
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($jobRequests as $request): ?>
-                    <tr>
+                    <tr data-id="<?= $request['id'] ?>">
                         <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
                         <td><?= htmlspecialchars($request['client_name']) ?></td>
                         <td>
@@ -347,7 +349,7 @@ $chartData = [
                                 $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
                             }
 
-                            // Append hand tools if available, ensuring no redundancy
+                            // Append other equipment if available
                             if (!empty($request['equipment_other'])) {
                                 $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
                             }
@@ -374,6 +376,11 @@ $chartData = [
                             <?php else: ?>
                                 None
                             <?php endif; ?>
+                        </td>
+                        <td>
+                            <!-- Action Buttons -->
+                            <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
+                            <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -484,6 +491,69 @@ $chartData = [
                 e.preventDefault(); // Prevent form submission
                 alert('Please select at least one service requested.');
             }
+        });
+
+        // Edit Button Click
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                fetch(`fetch-job_requests-handler.php?id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the form with the fetched data
+                        document.querySelector('[name="personal_name"]').value = data.personal_name;
+                        document.querySelector('[name="client_name"]').value = data.client_name;
+                        document.querySelector('[name="address"]').value = data.address;
+                        document.querySelector('[name="contact_no"]').value = data.contact_number;
+                        document.querySelector(`[name="gender"][value="${data.gender}"]`).checked = true;
+                        document.querySelector('[name="age"]').value = data.age;
+                        document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
+                        document.querySelector('[name="work_description"]').value = data.work_description;
+                        document.querySelector('[name="date"]').value = data.request_date;
+
+                        // Add the ID to a hidden input field
+                        const hiddenIdField = document.querySelector('[name="id"]');
+                        if (!hiddenIdField) {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'id';
+                            input.value = data.id;
+                            document.getElementById('jobRequestForm').appendChild(input);
+                        } else {
+                            hiddenIdField.value = data.id;
+                        }
+
+                        // Show the modal
+                        document.getElementById("jobRequestModal").style.display = "block";
+                    });
+            });
+        });
+
+        // Delete Button Click
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this job request?')) {
+                    fetch(`delete-job_request-handler.php`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                id
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Job request deleted successfully!');
+                                document.querySelector(`tr[data-id="${id}"]`).remove();
+                            } else {
+                                alert('Error deleting job request: ' + data.message);
+                            }
+                        });
+                }
+            });
         });
     </script>
 </body>
