@@ -67,7 +67,11 @@ include 'fetch-job_requests-handler.php';
         <div class="contents">
             <div class="contents-box">
                 <div class="job-request-content active" id="job-description">
-                    <h1 class="content-title">Client Profile & Service Requests</h1>
+                    <div class="section-title">
+                        <h1>Client Profile & Service Requests</h1>
+                        <!-- add the "go to page" button here instead -->
+                        <button class="btn-blue" onclick="redirectToPage()">Go to Page</button>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -119,9 +123,12 @@ include 'fetch-job_requests-handler.php';
                                         echo $designation;
                                         ?>
                                     </td>
-                                    <td>
+                                    <td style="text-align: center;">
                                         <?php if (!empty($request['reference_file'])): ?>
-                                            <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
+                                            <!-- Render the reference file as a button -->
+                                            <button onclick="window.open('uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>', '_blank')">
+                                                View
+                                            </button>
                                         <?php else: ?>
                                             None
                                         <?php endif; ?>
@@ -132,7 +139,11 @@ include 'fetch-job_requests-handler.php';
                     </table>
                 </div>
                 <div class="job-request-content" id="billing">
-                    <h1 class="content-title">Payment and Release</h1>
+                    <div class="section-title">
+                        <h1>Payment and Release</h1>
+                        <!-- add the "go to page" button here instead -->
+                        <button class="btn-blue" onclick="redirectToPage()">Go to Page</button>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -155,7 +166,10 @@ include 'fetch-job_requests-handler.php';
                                     <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
                                     <td>
                                         <?php if (!empty($row['billing_pdf'])): ?>
-                                            <a href="uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>" target="_blank">View PDF</a>
+                                            <!-- Render the PDF link as a button -->
+                                            <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
+                                                View
+                                            </button>
                                         <?php else: ?>
                                             <span class="no-pdf">None</span>
                                         <?php endif; ?>
@@ -169,14 +183,18 @@ include 'fetch-job_requests-handler.php';
                     </table>
                 </div>
                 <div class="job-request-content" id="repository">
-                    <h1 class="content-title">Repository</h1>
+                    <div class="section-title">
+                        <h1>Repository</h1>
+                        <button class="btn-green" onclick="showRepositoryForm()">Add</button>
+                    </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Date</th>
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Reference</th>
+                                <th>Note</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -184,30 +202,26 @@ include 'fetch-job_requests-handler.php';
                             <?php if (!empty($repositoryRows)): ?>
                                 <?php foreach ($repositoryRows as $row): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                        <td><?php echo date("F d, Y", strtotime($row['date'])); ?></td>
                                         <td><?php echo htmlspecialchars($row['listing_name']); ?></td>
                                         <td><?php echo htmlspecialchars($row['listing_type']); ?></td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             <?php if (filter_var($row['reference_file'], FILTER_VALIDATE_URL)): ?>
-                                                <!-- If it's a URL, make it clickable -->
-                                                <a href="<?php echo htmlspecialchars($row['reference_file']); ?>" target="_blank">
-                                                    <?php echo htmlspecialchars($row['reference_file']); ?>
-                                                </a>
+                                                <button class="btn-blue" onclick="window.open('<?php echo htmlspecialchars($row['reference_file']); ?>', '_blank')">Open</button>
                                             <?php else: ?>
-                                                <!-- If it's a file directory, use a custom handler -->
-                                                <a href="#" onclick="openDirectory('<?php echo addslashes($row['reference_file']); ?>')">
-                                                    <?php echo htmlspecialchars($row['reference_file']); ?>
-                                                </a>
+                                                <button class="btn-blue" onclick="openDirectory('<?php echo addslashes($row['reference_file']); ?>')">Open</button>
                                             <?php endif; ?>
                                         </td>
+                                        <td><?php echo htmlspecialchars($row['note']); ?></td>
                                         <td>
-                                            <button onclick="editRepository(<?php echo htmlspecialchars($row['id']); ?>)">Edit</button>
+                                            <button class="btn-yellow" onclick="editRepository(<?php echo $row['id']; ?>)">Edit</button>
+                                            <button class="btn-red" onclick="deleteRepository(<?php echo $row['id']; ?>)">Delete</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="5">No repository listings available</td>
+                                    <td colspan="6">No repository listings available</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -216,10 +230,6 @@ include 'fetch-job_requests-handler.php';
                 <div class="job-request-content active" id="dashboard">
                     <canvas id="summaryChart"></canvas>
                 </div>
-            </div>
-            <div class="floating-buttons">
-                <div class="floating-add-button" onclick="handleAddButton()">Add</div>
-                <div class="floating-redirect-button" onclick="redirectToPage()">Go to Page</div>
             </div>
         </div>
     </div>
@@ -287,24 +297,24 @@ include 'fetch-job_requests-handler.php';
 
 <!-- Repository Form Modal -->
 <div id="repository-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content repository-form">
         <span class="close" onclick="closeRepositoryForm()">&times;</span>
-        <h2>Add Repository Listing</h2>
+        <h2>Add/Edit Repository Listing</h2>
         <form action="add-repository-handler.php" method="POST">
+            <input type="hidden" id="repository_id" name="repository_id">
             <label for="listing_name">Listing Name:</label>
             <input type="text" id="listing_name" name="listing_name" required>
 
             <label for="listing_type">Type:</label>
-            <select id="listing_type" name="listing_type" required>
-                <option value="Google Drive">Google Drive</option>
-                <option value="Local Directory">Local Directory</option>
-                <option value="Other">Other</option>
-            </select>
+            <input type="text" id="listing_type" name="listing_type" required>
 
             <label for="reference_file">Reference File/URL:</label>
             <input type="text" id="reference_file" name="reference_file" required>
 
-            <button type="submit">Submit</button>
+            <label for="note">Note:</label>
+            <textarea id="note" name="note" rows="4"></textarea>
+
+            <button type="submit" class="btn-green">Submit</button>
         </form>
     </div>
 </div>
@@ -471,6 +481,63 @@ include 'fetch-job_requests-handler.php';
                 console.error('Error:', error);
                 alert('An error occurred while trying to open the directory.');
             });
+    }
+
+    function editRepository(id) {
+        // Fetch the repository data using AJAX
+        fetch(`fetch-repository-handler.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Populate the modal fields with the fetched data
+                    document.getElementById('listing_name').value = data.repository.listing_name;
+                    document.getElementById('listing_type').value = data.repository.listing_type;
+                    document.getElementById('reference_file').value = data.repository.reference_file;
+                    document.getElementById('note').value = data.repository.note;
+
+                    // Add a hidden input for the repository ID
+                    let repositoryIdInput = document.getElementById('repository_id');
+                    if (!repositoryIdInput) {
+                        repositoryIdInput = document.createElement('input');
+                        repositoryIdInput.type = 'hidden';
+                        repositoryIdInput.id = 'repository_id';
+                        repositoryIdInput.name = 'repository_id';
+                        document.querySelector('#repository-modal form').appendChild(repositoryIdInput);
+                    }
+                    repositoryIdInput.value = id;
+
+                    // Show the modal
+                    document.getElementById('repository-modal').style.display = 'block';
+                } else {
+                    alert('Error fetching repository data: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while fetching the repository data.');
+            });
+    }
+
+    function deleteRepository(id) {
+        if (confirm('Are you sure you want to delete this repository entry?')) {
+            // Send a request to delete the repository entry
+            fetch(`delete-repository-handler.php?id=${id}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Repository entry deleted successfully!');
+                        location.reload(); // Reload the page to update the table
+                    } else {
+                        alert('Error deleting repository entry: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the repository entry.');
+                });
+        }
     }
 
     // Show the feedback form modal

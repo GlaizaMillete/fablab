@@ -69,10 +69,10 @@ include 'config.php';
                                 echo "<td>" . $row["staffID"] . "</td>";
                                 echo "<td>" . $row["staffUsername"] . "</td>";
                                 echo "<td>" . $row["status"] . "</td>";
-                                echo "<td>
-                    <button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>
-                    <button onclick=\"toggleStatus('" . $row["staffID"] . "', '" . $row["status"] . "')\">" . ($row["status"] === "Active" ? "Deactivate" : "Activate") . "</button>
-                  </td>";
+                                echo "<td style='justify-content: center; display: flex; gap: 10px;'>";
+                echo "<button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>";
+                echo "<button onclick=\"toggleStatus('" . $row["staffID"] . "', '" . $row["status"] . "')\">" . ($row["status"] === "Active" ? "Deactivate" : "Activate") . "</button>";
+                echo "</td>";
                                 echo "</tr>";
                             }
                         } else {

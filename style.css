@@ -345,8 +345,8 @@ th {
 .user-content .button {
     text-align: center;
     background-color: #627BCE;
-    padding: 10px;
-    font-size: 1.5rem;
+    padding: 1rem;
+    font-size: 1.2rem;
     border-radius: 11px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -597,4 +597,157 @@ th {
 .floating-add-button:hover,
 .floating-redirect-button:hover {
     background-color: #0056b3;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 3rem;
+    margin-bottom: 1rem;
+}
+
+button {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Green Button for "Add" */
+.btn-green {
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: #45a049;
+    /* Darker Green */
+    transform: scale(1.05);
+    /* Slightly enlarge on hover */
+}
+
+/* Blue Button for "Go To Page" */
+.btn-blue {
+    background-color: #007BFF;
+    /* Blue */
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #0056b3;
+    /* Darker Blue */
+    transform: scale(1.05);
+    /* Slightly enlarge on hover */
+}
+
+/* Modal Styling */
+#repository-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Dark overlay */
+}
+
+/* Modal Content Styling */
+.repository-form {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close Button Styling */
+.repository-form .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.repository-form .close:hover {
+    color: #000;
+}
+
+/* Form Title Styling */
+.repository-form h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+}
+
+/* Form Label Styling */
+.repository-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Input and Textarea Styling */
+.repository-form input,
+.repository-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.repository-form input:focus,
+.repository-form textarea:focus {
+    border-color: #4CAF50;
+    /* Green border on focus */
+    outline: none;
+}
+
+/* Submit Button Styling */
+.repository-form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 1rem 0;
+}
+
+.repository-form button:hover {
+    background-color: #45a049;
+    /* Darker green on hover */
+    transform: scale(1.05);
+    /* Slightly enlarge on hover */
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
