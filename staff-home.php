@@ -31,9 +31,21 @@ $billingRows = [];
 while ($row = $result->fetch_assoc()) {
     $billingRows[] = $row;
 }
+
+// Fetch Job Requests
+$jobRequests = [];
+$sql = "SELECT * FROM job_requests ORDER BY request_date DESC";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $jobRequests[] = $row;
+    }
+}
+
 // include 'fetch-billing-handler.php';
 include 'fetch-repository-handler.php';
-include 'fetch-job_requests-handler.php';
+// include 'fetch-job_requests-handler.php';
 ?>
 
 <div class="container">

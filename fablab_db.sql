@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2025 at 03:15 PM
+-- Generation Time: May 01, 2025 at 09:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -140,11 +140,14 @@ CREATE TABLE `job_requests` (
 --
 
 INSERT INTO `job_requests` (`id`, `personal_name`, `request_date`, `client_name`, `address`, `gender`, `gender_optional`, `age`, `designation`, `designation_other`, `company`, `service_requested`, `contact_number`, `equipment`, `hand_tools_other`, `equipment_other`, `consultation_mode`, `consultation_schedule`, `equipment_schedule`, `work_description`, `personnel_name`, `personnel_date`, `reference_file`, `created_at`, `updated_at`) VALUES
-(2, '', '2026-04-20', 'Jaded Company', 'aasdasdsa', 'Male', '', 26, 'Student', '', 'N/A', 'Equipment', '09471918324', '3D Printer, Print and Cut Machine', '', '', '', '', '2025-04-29 11:26:00', 'asdasdasdasdas', 'Dionnie', '2025-04-20', '68051242b350c.jpg', '2025-04-20 15:26:58', '2025-04-20 19:24:00'),
-(3, '', '2025-01-20', 'Jaded', 'asdasdasd', 'Male', '', 28, 'Student', '', 'N/A', 'Product/Design/Consultation', '09471918324', '', '', '', '', '', '0000-00-00 00:00:00', 'asdsadasd', '', '0000-00-00', NULL, '2025-04-20 15:29:19', '2025-04-20 19:24:13'),
-(4, '', '2025-10-21', 'lala', 'asdasd', 'Female', '', 22, 'Others', 'Speedster', 'N/A', 'Training/Tour/Orientation', '9471918323', '', '', '', '', '', '2025-04-22 16:26:00', 'asadasd', 'Dionnie', '2025-04-21', '68052f2195bc4-inside01_BROCHURE.pdf', '2025-04-20 17:30:09', '2025-04-20 19:24:27'),
-(5, 'hermione', '2024-04-21', 'Lethal Company', 'asdsadsa', 'Prefer not to say', '', 35, 'Teacher', '', 'N/A', 'Equipment', '96564', 'Hand Tools', 'Hand Tool', '', '', '', '0000-00-00 00:00:00', 'asdasdasdasdaas', 'Dionnie', '2025-04-21', '680531d4c8d30-outside_BROCHURE.jpg', '2025-04-20 17:41:40', '2025-04-20 19:24:42'),
-(6, 'Tralala', '2025-04-21', 'Tralavero Tralala', 'adasdsa', 'Prefer not to say', 'Bisexual', 25, 'MSME/Entrepreneur', '', 'N/A', 'Equipment', '1165', 'Print and Cut Machine, CNC Machine (Big), Other', '', 'nice', '', '', '2025-04-22 18:30:00', 'asdadad', 'Dionnie', '2025-04-21', '68055955b5cd6-df41b9b2-d857-4db3-8626-5b197633d501.jpg', '2025-04-20 20:30:13', '2025-04-20 20:30:13');
+(3, '', '2025-01-20', 'Jaded', 'asdasdasd', 'Male', '', 28, 'Others', 'Jaded', 'N/A', 'Product/Design/Consultation', '09471918324', '', '', '', '', '', '0000-00-00 00:00:00', 'asdsadasd', '', '0000-00-00', NULL, '2025-04-20 15:29:19', '2025-05-01 19:25:17'),
+(5, 'hermione', '2024-04-21', 'Lethal Companya', 'asdsadsa', 'Prefer not to say', '', 35, 'Teacher', '0', 'N/A', 'Product/Design/Consultation', '96564', NULL, '', '', NULL, '', '0000-00-00 00:00:00', 'asdasdasdasdaas', '', '0000-00-00', '680531d4c8d30-outside_BROCHURE.jpg', '2025-04-20 17:41:40', '2025-05-01 17:34:08'),
+(6, 'Tralala', '2025-04-21', 'Tralavero Tralala', 'adasdsa', 'Prefer not to say', 'Bisexual', 25, 'MSME/Entrepreneur', '', 'N/A', 'Equipment', '1165', 'Print and Cut Machine, CNC Machine (Big), Other', '', 'nice', '', '', '2025-04-22 18:30:00', 'asdadad', 'Dionnie', '2025-04-21', '68055955b5cd6-df41b9b2-d857-4db3-8626-5b197633d501.jpg', '2025-04-20 20:30:13', '2025-04-20 20:30:13'),
+(7, 'John Doe', '2025-05-02', 'Doe Enterprises', '123 Main St', 'Male', NULL, 30, 'Entrepreneur', NULL, 'Doe Enterprises', '3D Printing', '09171234567', '3D Printer', NULL, NULL, 'Online', '2025-05-05 10:00:00', '2025-05-06 14:00:00', 'Prototype creation for a new product', 'Jane Smith', '2025-05-02', 'sample_file.pdf', '2025-05-02 02:00:00', '2025-05-02 02:00:00'),
+(9, 'lmnop', '2025-05-02', 'lmnop', 'lmnop', 'Prefer not to say', '', 27, 'Others', '0', 'N/A', 'Equipment', '09471918324', 'Laser Cutting Machine, Print and Cut Machine', '', '', NULL, '', '0000-00-00 00:00:00', 'lmnop', '', '0000-00-00', '', '2025-05-01 18:08:09', '2025-05-01 18:19:04'),
+(10, 'lmnop', '2025-05-02', 'lmnopa', 'lmnop', 'Prefer not to say', '', 27, 'Others', '0', 'N/A', 'Equipment', '09471918324', 'Laser Cutting Machine, Print and Cut Machine', '', '', NULL, '', '2025-05-02 02:20:00', 'lmnop', '', '2025-05-02', '', '2025-05-01 18:20:40', '2025-05-01 18:20:40'),
+(11, 'lmnop', '2025-05-02', 'lmnop', 'lmnop', 'Prefer not to say', '', 26, 'Others', '0', 'N/A', 'Equipment', '09471918324', 'Laser Cutting Machine, Print and Cut Machine', '', '', NULL, '', '2025-05-09 02:22:00', 'lmnop', 'Dionnie', '0000-00-00', '6813bc1d02799-Jade-Raposa-Resume (1).pdf', '2025-05-01 18:23:25', '2025-05-01 18:23:25'),
+(13, 'mvut', '2025-05-02', 'mvut', 'mvut', 'Female', '', 26, 'Others', 'aaaaa', '0', 'Training/Tour/Orientation', '09471918324', NULL, '', '', NULL, '', '0000-00-00 00:00:00', 'mvut', 'Dionnie', '2025-05-02', '', '2025-05-01 19:50:20', '2025-05-01 19:52:22');
 
 -- --------------------------------------------------------
 
@@ -176,7 +179,24 @@ INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 (10, 'alice_jones', 'Added client profile and service request for client: Tralavero Tralala', '2025-04-21 04:30:13'),
 (11, 'alice_jones', 'Added billing for client: lapa', '2025-04-28 04:54:04'),
 (12, 'alice_jones', 'Added billing for client: larvie', '2025-04-28 05:23:55'),
-(13, 'alice_jones', 'Added billing for client: baba', '2025-04-28 07:03:42');
+(13, 'alice_jones', 'Added billing for client: baba', '2025-04-28 07:03:42'),
+(14, 'alice_jones', 'Added repository listing: fablab', '2025-05-01 21:22:33'),
+(15, 'alice_jones', 'Added repository listing: AQW design notes', '2025-05-01 21:34:19'),
+(16, 'alice_jones', 'Added repository listing: fablabb', '2025-05-01 23:50:32'),
+(17, 'alice_jones', 'Edited repository listing: fablabb', '2025-05-01 23:54:06'),
+(18, 'alice_jones', 'Updated client profile and service request for client: Lethal Companya', '2025-05-02 01:34:08'),
+(19, 'alice_jones', 'Deleted job request with ID: 2', '2025-05-01 19:34:51'),
+(20, 'alice_jones', 'Deleted job request with ID: 4', '2025-05-02 01:42:55'),
+(21, 'alice_jones', 'Deleted job request for client: Roe Designs', '2025-05-02 01:46:38'),
+(22, 'alice_jones', 'Added client profile and service request for client: lmnop', '2025-05-02 02:08:09'),
+(23, 'alice_jones', 'Updated client profile and service request for client: lmnop', '2025-05-02 02:12:07'),
+(24, 'alice_jones', 'Updated client profile and service request for client: lmnop', '2025-05-02 02:19:04'),
+(25, 'alice_jones', 'Added client profile and service request for client: lmnopa', '2025-05-02 02:20:40'),
+(26, 'alice_jones', 'Added client profile and service request for client: lmnop', '2025-05-02 02:23:25'),
+(27, 'alice_jones', 'Added client profile and service request for client: mvut', '2025-05-02 03:27:27'),
+(28, 'alice_jones', 'Updated client profile and service request for client: mvut', '2025-05-02 03:39:04'),
+(29, 'alice_jones', 'Deleted job request for client: mvut', '2025-05-02 03:49:07'),
+(30, 'alice_jones', 'Added client profile and service request for client: mvut', '2025-05-02 03:50:20');
 
 -- --------------------------------------------------------
 
@@ -187,17 +207,20 @@ INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 CREATE TABLE `repository` (
   `id` int(11) NOT NULL,
   `listing_name` varchar(255) NOT NULL,
-  `listing_type` varchar(100) NOT NULL,
-  `reference_file` varchar(255) NOT NULL
+  `listing_type` text NOT NULL,
+  `reference_file` varchar(255) NOT NULL,
+  `note` text DEFAULT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `repository`
 --
 
-INSERT INTO `repository` (`id`, `listing_name`, `listing_type`, `reference_file`) VALUES
-(1, 'Event Photos - Workshop 2025', 'Google Drive', 'https://drive.google.com/folder/example'),
-(2, 'Project Files - CNC Designs', 'Local Directory', 'C:/Projects/CNC_Designs/');
+INSERT INTO `repository` (`id`, `listing_name`, `listing_type`, `reference_file`, `note`, `date`) VALUES
+(2, 'Project Files - CNC Designs', 'Local Directory', 'C:/Projects/CNC_Designs/', NULL, '2025-05-01 21:29:59'),
+(14, 'fablabb', 'Local Directory', 'J:\\PHP\\fablab', '', '2025-05-01 21:29:59'),
+(15, 'AQW design notes', 'AQW Updates', 'https://www.aq.com/gamedesignnotes/', 'I did this on labor day, at 9:34 in the evening', '2025-05-01 21:34:19');
 
 -- --------------------------------------------------------
 
@@ -326,19 +349,19 @@ ALTER TABLE `equipment`
 -- AUTO_INCREMENT for table `job_requests`
 --
 ALTER TABLE `job_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `repository`
 --
 ALTER TABLE `repository`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `service_details`

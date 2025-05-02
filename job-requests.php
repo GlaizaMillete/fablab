@@ -136,7 +136,7 @@ $chartData = [
                             <input type="radio" name="designation" value="Teacher" required> Teacher<br>
                             <input type="radio" name="designation" value="Hobbyist" required> Hobbyist<br>
                             <input type="radio" name="designation" value="Others"> Others (Please Specify):
-                            <input type="text" name="designation_other">
+                            <input type="text" name="designation_other" placeholder="Enter your designation" disabled>
                         </div>
                     </div>
                     <br>
@@ -392,20 +392,34 @@ $chartData = [
         const modal = document.getElementById("jobRequestModal");
         const btn = document.getElementById("openFormBtn");
         const span = document.getElementsByClassName("close")[0];
+        const form = document.getElementById("jobRequestForm");
 
+        // Open modal for adding a new request
         btn.onclick = function() {
-            modal.style.display = "block";
-        }
+            // Reset the form fields
+            form.reset();
 
+            // Remove the hidden ID field if it exists
+            const hiddenIdField = document.querySelector('[name="id"]');
+            if (hiddenIdField) {
+                hiddenIdField.remove();
+            }
+
+            // Show the modal
+            modal.style.display = "block";
+        };
+
+        // Close the modal
         span.onclick = function() {
             modal.style.display = "none";
-        }
+        };
 
+        // Close the modal when clicking outside of it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-        }
+        };
 
         // Chart.js configuration
         const ctx = document.getElementById('requestChart').getContext('2d');
@@ -498,18 +512,32 @@ $chartData = [
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 fetch(`fetch-job_requests-handler.php?id=${id}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch job request data.');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
                         // Populate the form with the fetched data
-                        document.querySelector('[name="personal_name"]').value = data.personal_name;
-                        document.querySelector('[name="client_name"]').value = data.client_name;
-                        document.querySelector('[name="address"]').value = data.address;
-                        document.querySelector('[name="contact_no"]').value = data.contact_number;
-                        document.querySelector(`[name="gender"][value="${data.gender}"]`).checked = true;
-                        document.querySelector('[name="age"]').value = data.age;
-                        document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
-                        document.querySelector('[name="work_description"]').value = data.work_description;
-                        document.querySelector('[name="date"]').value = data.request_date;
+                        document.querySelector('[name="personal_name"]').value = data.personal_name || '';
+                        document.querySelector('[name="client_name"]').value = data.client_name || '';
+                        document.querySelector('[name="address"]').value = data.address || '';
+                        document.querySelector('[name="contact_no"]').value = data.contact_number || '';
+                        if (data.gender) {
+                            document.querySelector(`[name="gender"][value="${data.gender}"]`).checked = true;
+                        }
+                        document.querySelector('[name="age"]').value = data.age || '';
+                        if (data.designation) {
+                            document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
+                        }
+                        document.querySelector('[name="work_description"]').value = data.work_description || '';
+                        document.querySelector('[name="date"]').value = data.request_date || '';
 
                         // Add the ID to a hidden input field
                         const hiddenIdField = document.querySelector('[name="id"]');
@@ -524,7 +552,12 @@ $chartData = [
                         }
 
                         // Show the modal
-                        document.getElementById("jobRequestModal").style.display = "block";
+                        const modal = document.getElementById("jobRequestModal");
+                        modal.style.display = "block";
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while fetching the job request data.');
                     });
             });
         });
@@ -552,6 +585,19 @@ $chartData = [
                                 alert('Error deleting job request: ' + data.message);
                             }
                         });
+                }
+            });
+        });
+
+        // Enable/disable the "designation_other" field based on the "Others" radio button
+        document.querySelectorAll('input[name="designation"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherInput = document.querySelector('input[name="designation_other"]');
+                if (this.value === "Others") {
+                    otherInput.disabled = false;
+                } else {
+                    otherInput.disabled = true;
+                    otherInput.value = ""; // Clear the field if "Others" is not selected
                 }
             });
         });

@@ -4,6 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'config.php'; // Include the database connection
 
+// Ensure this script is accessed via an AJAX request
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+    http_response_code(403); // Forbidden
+    exit('Access denied');
+}
+
 if (isset($_GET['id'])) {
     // Fetch a single job request by ID
     $id = intval($_GET['id']);
