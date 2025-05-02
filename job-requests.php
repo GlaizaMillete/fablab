@@ -325,7 +325,7 @@ $chartData = [
                     <th>Client Name</th>
                     <th>Service Request</th>
                     <th>Client Profile</th>
-                    <th>Reference File</th>
+                    <th>Reference</th>
                     <th>Action</th> <!-- Add Action Column -->
                 </tr>
             </thead>
@@ -377,7 +377,7 @@ $chartData = [
                                 None
                             <?php endif; ?>
                         </td>
-                        <td>
+                        <td class="action-container">
                             <!-- Action Buttons -->
                             <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
                             <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>

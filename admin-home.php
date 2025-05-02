@@ -52,10 +52,10 @@ include 'config.php';
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <!-- <th>ID</th> -->
                             <th>User</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th class="text-align:center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,7 +66,7 @@ include 'config.php';
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . $row["staffID"] . "</td>";
+                                // echo "<td>" . $row["staffID"] . "</td>";
                                 echo "<td>" . $row["staffUsername"] . "</td>";
                                 echo "<td>" . $row["status"] . "</td>";
                                 echo "<td style='justify-content: center; display: flex; gap: 10px;'>";

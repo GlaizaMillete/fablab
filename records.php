@@ -326,34 +326,35 @@ while ($row = $result->fetch_assoc()) {
         <table>
             <thead>
                 <tr>
-                    <th>Profile</th>
+                    <th>No.</th>
+                    <th>Service Description</th>
                     <th>Client</th>
-                    <!-- <th>Equipment</th> -->
-                    <th>Amount</th>
+                    <th>Profile</th>
+                    <th>Total Amount</th>
                     <th>Date</th>
-                    <th>PDF</th>
+                    <th>Reference</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                foreach ($rows as $row) {
-                    $formattedDate = date("F d, Y", strtotime($row['billing_date']));
-                    echo "<tr data-id='{$row['id']}'>";
-                    echo "<td class='profile-cell'>" . htmlspecialchars(trim($row['client_profile'])) . "</td>"; // Trim whitespace
-                    echo "<td>" . htmlspecialchars($row['client_name']) . "</td>";
-                    // echo "<td>" . htmlspecialchars($row['equipment']) . "</td>";
-                    echo "<td>&#8369;" . number_format($row['total_invoice'], 2) . "</td>";
-                    echo "<td>$formattedDate</td>";
-                    echo "<td>";
-                    if (!empty($row['billing_pdf'])) {
-                        echo "<a href='uploads/billing/" . htmlspecialchars($row['billing_pdf']) . "' class='pdf-link' target='_blank'>View PDF</a>";
-                    } else {
-                        echo "<span class='no-pdf'>None</span>";
-                    }
-                    echo "</td>";
-                    echo "</tr>";
-                }
-                ?>
+                <?php foreach ($rows as $row): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['no']); ?></td>
+                        <td><?php echo htmlspecialchars($row['description']); ?></td>
+                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
+                        <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
+                        <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
+                        <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
+                        <td>
+                            <?php if (!empty($row['billing_pdf'])): ?>
+                                <button class="ref-link" onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
+                                    View PDF
+                                </button>
+                            <?php else: ?>
+                                <span class="no-pdf">None</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>

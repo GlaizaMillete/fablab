@@ -903,4 +903,9 @@ a:hover {
 .search-form button:hover {
     background-color: var(--color-primary-dark);
 }
+
+.action-container {
+    display: flex;
+    gap: 0.5rem;
+}
     

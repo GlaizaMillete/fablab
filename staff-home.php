@@ -91,7 +91,7 @@ include 'fetch-repository-handler.php';
                                 <th>Client Name</th>
                                 <th>Service Request</th>
                                 <th>Client Profile</th>
-                                <th>Reference File</th>
+                                <th>Reference</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -153,41 +153,37 @@ include 'fetch-repository-handler.php';
                 <div class="job-request-content" id="billing">
                     <div class="section-title">
                         <h1>Payment and Release</h1>
-                        <!-- add the "go to page" button here instead -->
                         <button class="btn-blue" onclick="redirectToPage()">Go to Page</button>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No.</th>
+                                <th>Service Description</th>
                                 <th>Client</th>
-                                <th>Equipment</th>
-                                <th>Amount</th>
+                                <th>Profile</th>
+                                <th>Total Amount</th>
                                 <th>Date</th>
-                                <th>PDF</th>
-                                <th>Actions</th>
+                                <th>Reference</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($billingRows as $row): ?>
                                 <tr>
-                                    <td><?php echo $row['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($row['no']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['description']); ?></td>
                                     <td><?php echo htmlspecialchars($row['client_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['equipment']); ?></td>
+                                    <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
                                     <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
                                     <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
-                                    <td>
+                                    <td style="text-align: center;">
                                         <?php if (!empty($row['billing_pdf'])): ?>
-                                            <!-- Render the PDF link as a button -->
                                             <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
                                                 View
                                             </button>
                                         <?php else: ?>
                                             <span class="no-pdf">None</span>
                                         <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <button onclick="editBilling(<?php echo $row['id']; ?>)">Edit</button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -205,7 +201,7 @@ include 'fetch-repository-handler.php';
                                 <th>Date</th>
                                 <th>Name</th>
                                 <th>Type</th>
-                                <th>Reference</th>
+                                <th>URL/Directory</th>
                                 <th>Note</th>
                                 <th>Actions</th>
                             </tr>
