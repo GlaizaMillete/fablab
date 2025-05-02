@@ -244,7 +244,7 @@ h4 {
 .search-form {
     display: flex;
     gap: 16px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 
 /* Form Elements with better accessibility */

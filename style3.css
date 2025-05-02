@@ -256,7 +256,7 @@ h4 {
 .search-form {
     display: flex;
     gap: 16px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 
 /* Form Elements with better accessibility */
@@ -904,8 +904,4 @@ a:hover {
     background-color: var(--color-primary-dark);
 }
 
-.action-container {
-    display: flex;
-    gap: 0.5rem;
-}
     

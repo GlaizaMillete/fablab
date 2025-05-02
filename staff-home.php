@@ -82,7 +82,7 @@ include 'fetch-repository-handler.php';
                     <div class="section-title">
                         <h1>Client Profile & Service Requests</h1>
                         <!-- add the "go to page" button here instead -->
-                        <button class="btn-blue" onclick="redirectToPage()">Go to Page</button>
+                        <button class="btn-blue" onclick="redirectToPage()">Go to Full Page</button>
                     </div>
                     <table>
                         <thead>
@@ -153,12 +153,12 @@ include 'fetch-repository-handler.php';
                 <div class="job-request-content" id="billing">
                     <div class="section-title">
                         <h1>Payment and Release</h1>
-                        <button class="btn-blue" onclick="redirectToPage()">Go to Page</button>
+                        <button class="btn-blue" onclick="redirectToPage()">Go to Full Page</button>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>No.</th>
+                                <th>No.</th>    
                                 <th>Service Description</th>
                                 <th>Client</th>
                                 <th>Profile</th>

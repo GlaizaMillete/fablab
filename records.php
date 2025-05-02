@@ -309,8 +309,8 @@ while ($row = $result->fetch_assoc()) {
             </form>
         </div>
 
+        <h2>Search Client Name</h2>
         <div class="search-section">
-            <h2>Search Client Name</h2>
             <form method="GET" class="search-form">
                 <input type="text" name="search_name" placeholder="Enter client name"
                     value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : '' ?>"
