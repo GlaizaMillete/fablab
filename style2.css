@@ -184,15 +184,18 @@ h4 {
 }
 
 .profile-total:nth-child(4) {
-    border-left-color: var(--color-success);
+    border-left-color: #3498db;
+    /* STUDENT */
 }
 
 .profile-total:nth-child(5) {
-    border-left-color: var(--color-warning);
+    border-left-color: #2ecc71;
+    /* MSME */
 }
 
 .profile-total:nth-child(6) {
-    border-left-color: var(--color-danger);
+    border-left-color: #e74c3c;
+    /* OTHERS */
 }
 
 /* Filter Section with improved spacing and visuals */

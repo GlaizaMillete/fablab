@@ -430,15 +430,6 @@ while ($row = $result->fetch_assoc()) {
             }
         });
 
-        // Event listener for dropdown change
-        document.getElementById('paymentColumn').addEventListener('change', function() {
-            const selectedColumn = this.value;
-            updatePaymentChart(selectedColumn);
-        });
-
-        // Initialize the chart with the default column
-        updatePaymentChart('client_profile');
-
         // Add new row to the service table
         document.getElementById('addRowBtn').addEventListener('click', function() {
             const table = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
