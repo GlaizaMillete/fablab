@@ -146,8 +146,8 @@ while ($row = $result->fetch_assoc()) {
                                 <td><input type="text" name="service_name[]" required></td>
                                 <td><input type="text" name="unit[]" required></td>
                                 <td><input type="text" name="rate[]" required></td>
-                                <td><input type="number" name="total_cost[]" step="0.01" required></td>
-                                <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+                                <td><input type="number" name="total_cost[]" step="0.01" required class="cost-input"></td>
+                                <td><button type="button" class="removeRowBtn">Remove</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -433,21 +433,51 @@ while ($row = $result->fetch_assoc()) {
         // Add new row to the service table
         document.getElementById('addRowBtn').addEventListener('click', function() {
             const table = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
-            const newRow = table.insertRow();
+            const newRow = document.createElement('tr');
+
             newRow.innerHTML = `
-            <td><input type="text" name="service_name[]" required></td>
-            <td><input type="text" name="unit[]" required></td>
-            <td><input type="text" name="rate[]" required></td>
-            <td><input type="number" name="total_cost[]" step="0.01" required></td>
-            <td><button type="button" onclick="removeRow(this)">Remove</button></td>
-        `;
+        <td><input type="text" name="service_name[]" required></td>
+        <td><input type="text" name="unit[]" required></td>
+        <td><input type="text" name="rate[]" required></td>
+        <td><input type="number" name="total_cost[]" step="0.01" required class="cost-input"></td>
+        <td><button type="button" class="removeRowBtn">Remove</button></td>
+    `;
+
+            table.appendChild(newRow);
+
+            // Add event listener for the remove button
+            newRow.querySelector('.removeRowBtn').addEventListener('click', function() {
+                newRow.remove();
+                updateTotalCost();
+            });
+
+            // Add event listener for the cost input
+            newRow.querySelector('.cost-input').addEventListener('input', updateTotalCost);
         });
 
-        // Remove a row from the service table
-        function removeRow(button) {
-            const row = button.parentElement.parentElement;
-            row.parentElement.removeChild(row);
+        // Function to update the total cost dynamically
+        function updateTotalCost() {
+            const costInputs = document.querySelectorAll('.cost-input');
+            let total = 0;
+
+            costInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
+
+            document.getElementById('totalCost').value = total.toFixed(2);
         }
+
+        // Initial event listeners for existing rows
+        document.querySelectorAll('.cost-input').forEach(input => {
+            input.addEventListener('input', updateTotalCost);
+        });
+        document.querySelectorAll('.removeRowBtn').forEach(button => {
+            button.addEventListener('click', function() {
+                button.closest('tr').remove();
+                updateTotalCost();
+            });
+        });
     </script>
 </body>
 
