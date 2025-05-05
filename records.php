@@ -465,7 +465,9 @@ while ($row = $result->fetch_assoc()) {
                 total += value;
             });
 
+            // Update the total in both the Total field and the "For the amount of" section
             document.getElementById('totalCost').value = total.toFixed(2);
+            document.getElementById('totalAmount').value = total.toFixed(2);
         }
 
         // Initial event listeners for existing rows
