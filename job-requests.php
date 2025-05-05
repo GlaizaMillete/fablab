@@ -511,54 +511,58 @@ $chartData = [
         document.querySelectorAll('.edit-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                fetch(`fetch-job_requests-handler.php?id=${id}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch job request data.');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            return;
-                        }
+                fetch(`fetch-job_requests-handler.php?id=${id}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest' // Add this header
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch job request data.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
 
-                        // Populate the form with the fetched data
-                        document.querySelector('[name="personal_name"]').value = data.personal_name || '';
-                        document.querySelector('[name="client_name"]').value = data.client_name || '';
-                        document.querySelector('[name="address"]').value = data.address || '';
-                        document.querySelector('[name="contact_no"]').value = data.contact_number || '';
-                        if (data.gender) {
-                            document.querySelector(`[name="gender"][value="${data.gender}"]`).checked = true;
-                        }
-                        document.querySelector('[name="age"]').value = data.age || '';
-                        if (data.designation) {
-                            document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
-                        }
-                        document.querySelector('[name="work_description"]').value = data.work_description || '';
-                        document.querySelector('[name="date"]').value = data.request_date || '';
+                    // Populate the form with the fetched data
+                    document.querySelector('[name="personal_name"]').value = data.personal_name || '';
+                    document.querySelector('[name="client_name"]').value = data.client_name || '';
+                    document.querySelector('[name="address"]').value = data.address || '';
+                    document.querySelector('[name="contact_no"]').value = data.contact_number || '';
+                    if (data.gender) {
+                        document.querySelector(`[name="gender"][value="${data.gender}"]`).checked = true;
+                    }
+                    document.querySelector('[name="age"]').value = data.age || '';
+                    if (data.designation) {
+                        document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
+                    }
+                    document.querySelector('[name="work_description"]').value = data.work_description || '';
+                    document.querySelector('[name="date"]').value = data.request_date || '';
 
-                        // Add the ID to a hidden input field
-                        const hiddenIdField = document.querySelector('[name="id"]');
-                        if (!hiddenIdField) {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'id';
-                            input.value = data.id;
-                            document.getElementById('jobRequestForm').appendChild(input);
-                        } else {
-                            hiddenIdField.value = data.id;
-                        }
+                    // Add the ID to a hidden input field
+                    const hiddenIdField = document.querySelector('[name="id"]');
+                    if (!hiddenIdField) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'id';
+                        input.value = data.id;
+                        document.getElementById('jobRequestForm').appendChild(input);
+                    } else {
+                        hiddenIdField.value = data.id;
+                    }
 
-                        // Show the modal
-                        const modal = document.getElementById("jobRequestModal");
-                        modal.style.display = "block";
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while fetching the job request data.');
-                    });
+                    // Show the modal
+                    const modal = document.getElementById("jobRequestModal");
+                    modal.style.display = "block";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching the job request data.');
+                });
             });
         });
 
@@ -601,7 +605,7 @@ $chartData = [
                 }
             });
         });
-    </script>
+    </script> 
 </body>
 
 </html>
