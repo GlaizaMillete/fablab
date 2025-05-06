@@ -348,6 +348,89 @@ table {
     border: 1px solid var(--color-gray-200);
 }
 
+/* Ensure table cells handle overflow */
+td {
+    overflow: hidden;
+    /* Hide overflowing text */
+    text-overflow: ellipsis;
+    /* Add "..." for overflowing text */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    position: relative;
+    cursor: pointer;
+    /* Indicate interactivity */
+}
+
+/* Enable horizontal scrolling when the cell is hovered */
+td:hover {
+    overflow: auto;
+    /* Allow scrolling */
+    white-space: nowrap;
+    /* Keep text in a single line */
+    text-overflow: unset;
+    /* Remove ellipsis */
+    background-color: var(--color-gray-100);
+    /* Optional: Highlight the cell */
+}
+
+/* Set specific widths for each column */
+th:nth-child(1),
+td:nth-child(1) {
+    /* Request Date */
+    width: 15%;
+    /* Adjust as needed */
+    max-width: 150px;
+    text-align: center;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    /* Client Name */
+    width: 15%;
+    /* Adjust as needed */
+    max-width: 150px;
+    text-align: left;
+    word-wrap: break-word;
+    /* Ensures long text wraps */
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    /* Service Request */
+    width: 25%;
+    /* Adjust as needed */
+    max-width: 250px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    /* Client Profile */
+    width: 10%;
+    /* Adjust as needed */
+    max-width: 100px;
+    text-align: center;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    /* Reference */
+    width: 15%;
+    /* Adjust as needed */
+    max-width: 150px;
+    text-align: center;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+    /* Action */
+    width: 20%;
+    /* Adjust as needed */
+    max-width: 200px;
+    text-align: center;
+}
+
 th,
 td {
     padding: 14px 18px;
