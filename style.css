@@ -604,6 +604,7 @@ th {
     align-items: center;
     max-height: 3rem;
     margin-bottom: 1rem;
+    /* Move closer to the left */
 }
 
 button {

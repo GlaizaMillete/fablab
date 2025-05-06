@@ -158,24 +158,24 @@ include 'fetch-repository-handler.php';
                     <table>
                         <thead>
                             <tr>
-                                <th>No.</th>    
-                                <th>Service Description</th>
+                                <th>Date</th>
+                                <th>No.</th>
                                 <th>Client</th>
+                                <th>Service Description</th>
                                 <th>Profile</th>
                                 <th>Total Amount</th>
-                                <th>Date</th>
                                 <th>Reference</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($billingRows as $row): ?>
                                 <tr>
+                                    <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
                                     <td><?php echo htmlspecialchars($row['no']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['description']); ?></td>
                                     <td><?php echo htmlspecialchars($row['client_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['description']); ?></td>
                                     <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
                                     <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
-                                    <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
                                     <td style="text-align: center;">
                                         <?php if (!empty($row['billing_pdf'])): ?>
                                             <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
@@ -193,16 +193,20 @@ include 'fetch-repository-handler.php';
                 <div class="job-request-content" id="repository">
                     <div class="section-title">
                         <h1>Repository</h1>
+                        <input type="text" id="repositorySearch" placeholder="Search..." onkeyup="filterTable()" style="width: 50%; padding: 8px 0;text-indent: 16px; margin-left: 21rem; border-radius: 8px;">
                         <button class="btn-green" onclick="showRepositoryForm()">Add</button>
                     </div>
-                    <table>
+                    <!-- <div>
+                        <input type="text" id="repositorySearch" placeholder="Search..." onkeyup="filterTable()" style="margin-bottom: 10px; width: 100%; padding: 8px 0; text-indent: 16px;">
+                    </div> -->
+                    <table id="repositoryTable">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>URL/Directory</th>
-                                <th>Note</th>
+                                <th onclick="sortTable(0)">Date</th>
+                                <th onclick="sortTable(1)">Name</th>
+                                <th onclick="sortTable(2)">Type</th>
+                                <th onclick="sortTable(3)">URL/Directory</th>
+                                <th onclick="sortTable(4)">Note</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -545,6 +549,56 @@ include 'fetch-repository-handler.php';
                     console.error('Error:', error);
                     alert('An error occurred while deleting the repository entry.');
                 });
+        }
+    }
+
+    // Function to sort the table by column
+    function sortTable(columnIndex) {
+        const table = document.getElementById("repositoryTable");
+        const rows = Array.from(table.rows).slice(1); // Exclude the header row
+        const isAscending = table.getAttribute("data-sort-order") === "asc";
+        const direction = isAscending ? 1 : -1;
+
+        rows.sort((a, b) => {
+            const aText = a.cells[columnIndex].innerText.trim();
+            const bText = b.cells[columnIndex].innerText.trim();
+
+            // Handle date sorting
+            if (columnIndex === 0) {
+                return direction * (new Date(aText) - new Date(bText));
+            }
+
+            // Handle text sorting
+            return direction * aText.localeCompare(bText);
+        });
+
+        // Append sorted rows back to the table
+        const tbody = table.querySelector("tbody");
+        rows.forEach(row => tbody.appendChild(row));
+
+        // Toggle sort order
+        table.setAttribute("data-sort-order", isAscending ? "desc" : "asc");
+    }
+
+    // Function to filter the table based on search input
+    function filterTable() {
+        const input = document.getElementById("repositorySearch");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("repositoryTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) { // Skip the header row
+            const cells = rows[i].getElementsByTagName("td");
+            let isVisible = false;
+
+            for (let j = 0; j < cells.length - 1; j++) { // Exclude the Actions column
+                if (cells[j] && cells[j].innerText.toLowerCase().includes(filter)) {
+                    isVisible = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = isVisible ? "" : "none";
         }
     }
 
