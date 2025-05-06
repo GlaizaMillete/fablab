@@ -407,18 +407,18 @@ td:nth-child(3) {
 th:nth-child(4),
 td:nth-child(4) {
     /* Client Profile */
-    width: 10%;
+    width: 12%;
     /* Adjust as needed */
-    max-width: 100px;
+    max-width: 120px;
     text-align: center;
 }
 
 th:nth-child(5),
 td:nth-child(5) {
     /* Reference */
-    width: 15%;
+    width: 13%;
     /* Adjust as needed */
-    max-width: 150px;
+    max-width: 130px;
     text-align: center;
 }
 
