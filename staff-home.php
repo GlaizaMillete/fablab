@@ -464,11 +464,33 @@ include 'fetch-repository-handler.php';
     });
 
     function showRepositoryForm() {
-        document.getElementById('repository-modal').style.display = 'block';
+        const modal = document.getElementById('repository-modal');
+        modal.style.display = 'block';
+
+        // Reset the form fields
+        const form = modal.querySelector('form');
+        form.reset();
+
+        // Clear the hidden repository ID field
+        document.getElementById('repository_id').value = '';
+
+        // Set the modal title to "Add Repository Listing"
+        document.querySelector('#repository-modal h2').innerText = 'Add Repository Listing';
     }
 
     function closeRepositoryForm() {
-        document.getElementById('repository-modal').style.display = 'none';
+        const modal = document.getElementById('repository-modal');
+        modal.style.display = 'none';
+
+        // Reset the form fields
+        const form = modal.querySelector('form');
+        form.reset();
+
+        // Clear the hidden repository ID field
+        document.getElementById('repository_id').value = '';
+
+        // Reset the modal title
+        document.querySelector('#repository-modal h2').innerText = 'Edit Repository Listing';
     }
 
     function openDirectory(directoryPath) {
