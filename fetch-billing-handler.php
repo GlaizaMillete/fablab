@@ -9,9 +9,20 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
     exit();
 }
 
+if (isset($_GET['action']) && $_GET['action'] === 'get_next_no') {
+    $result = $conn->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'fablab_db' AND TABLE_NAME = 'billing'");
+    if ($result && $row = $result->fetch_assoc()) {
+        echo json_encode(['success' => true, 'next_no' => $row['AUTO_INCREMENT']]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Unable to fetch next number.']);
+    }
+    $conn->close();
+    exit();
+}
+
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    $stmt = $conn->prepare("SELECT * FROM billing WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM billing WHERE no = ?"); // Changed 'id' to 'no'
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -19,7 +30,7 @@ if (isset($_GET['id'])) {
     if ($result->num_rows > 0) {
         $billing = $result->fetch_assoc();
 
-        $serviceStmt = $conn->prepare("SELECT * FROM service_details WHERE billing_id = ?");
+        $serviceStmt = $conn->prepare("SELECT * FROM service_details WHERE billing_id = ?"); // No changes needed here
         $serviceStmt->bind_param('i', $id);
         $serviceStmt->execute();
         $serviceResult = $serviceStmt->get_result();
@@ -42,7 +53,7 @@ if (isset($_GET['id'])) {
     exit();
 }
 
-$result = $conn->query("SELECT * FROM billing ORDER BY billing_date ASC");
+$result = $conn->query("SELECT * FROM billing ORDER BY no ASC"); // Changed 'id' to 'no'
 $billingRows = [];
 while ($row = $result->fetch_assoc()) {
     $billingRows[] = $row;

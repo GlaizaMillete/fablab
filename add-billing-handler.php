@@ -14,7 +14,6 @@ date_default_timezone_set('Asia/Manila');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Personal Information
-    $no = intval($_POST['no']);
     $billingDate = $_POST['date'];
     $clientName = $_POST['client_name'];
     $address = $_POST['address'];
@@ -78,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $billingId = intval($_POST['billing_id']);
 
         // Fetch the current record for comparison
-        $stmt = $conn->prepare("SELECT * FROM billing WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM billing WHERE no = ?"); // Changed 'id' to 'no'
         $stmt->bind_param('i', $billingId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -87,10 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Prepare the update query
         if (!empty($billingPdf)) {
-            $stmt = $conn->prepare("UPDATE billing SET no = ?, billing_date = ?, client_name = ?, address = ?, contact_no = ?, client_profile = ?, description = ?, completion_date = ?, prepared_by = ?, approved_by = ?, or_no = ?, payment_received_by = ?, receipt_acknowledged_by = ?, billing_pdf = ?, total_invoice = ? WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE billing SET no = ?, billing_date = ?, client_name = ?, address = ?, contact_no = ?, client_profile = ?, description = ?, completion_date = ?, prepared_by = ?, approved_by = ?, or_no = ?, payment_received_by = ?, receipt_acknowledged_by = ?, billing_pdf = ?, total_invoice = ? WHERE no = ?"); // Changed 'id' to 'no'
             $stmt->bind_param('isssssssssssssd', $no, $billingDate, $clientName, $address, $contactNo, $clientProfile, $description, $completionDate, $preparedBy, $approvedBy, $orNo, $paymentReceivedBy, $receiptAcknowledgedBy, $billingPdf, $totalCost, $billingId);
         } else {
-            $stmt = $conn->prepare("UPDATE billing SET no = ?, billing_date = ?, client_name = ?, address = ?, contact_no = ?, client_profile = ?, description = ?, completion_date = ?, prepared_by = ?, approved_by = ?, or_no = ?, payment_received_by = ?, receipt_acknowledged_by = ?, total_invoice = ? WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE billing SET no = ?, billing_date = ?, client_name = ?, address = ?, contact_no = ?, client_profile = ?, description = ?, completion_date = ?, prepared_by = ?, approved_by = ?, or_no = ?, payment_received_by = ?, receipt_acknowledged_by = ?, total_invoice = ? WHERE no = ?"); // Changed 'id' to 'no'
             $stmt->bind_param('issssssssssssd', $no, $billingDate, $clientName, $address, $contactNo, $clientProfile, $description, $completionDate, $preparedBy, $approvedBy, $orNo, $paymentReceivedBy, $receiptAcknowledgedBy, $totalCost, $billingId);
         }
 
@@ -133,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         // Insert into billing table
-        $stmt = $conn->prepare("INSERT INTO billing (no, billing_date, client_name, address, contact_no, client_profile, description, completion_date, prepared_by, approved_by, or_no, payment_received_by, receipt_acknowledged_by, billing_pdf, total_invoice) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO billing (no, billing_date, client_name, address, contact_no, client_profile, description, completion_date, prepared_by, approved_by, or_no, payment_received_by, receipt_acknowledged_by, billing_pdf, total_invoice) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); // Changed 'id' to 'no'
         $stmt->bind_param('isssssssssssssd', $no, $billingDate, $clientName, $address, $contactNo, $clientProfile, $description, $completionDate, $preparedBy, $approvedBy, $orNo, $paymentReceivedBy, $receiptAcknowledgedBy, $billingPdf, $totalCost);
         $stmt->execute();
         $billingId = $stmt->insert_id; // Get the ID of the inserted billing record

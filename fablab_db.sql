@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2025 at 09:54 PM
+-- Generation Time: May 06, 2025 at 08:54 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -47,13 +47,12 @@ INSERT INTO `adminfablab` (`adminID`, `adminUsername`, `adminPassword`) VALUES
 --
 
 CREATE TABLE `billing` (
-  `id` int(11) NOT NULL,
+  `no` int(11) NOT NULL,
   `client_profile` varchar(255) NOT NULL,
   `client_name` varchar(255) NOT NULL,
   `billing_date` date NOT NULL,
   `total_invoice` decimal(10,2) NOT NULL,
   `billing_pdf` varchar(255) NOT NULL,
-  `no` int(11) NOT NULL,
   `address` varchar(255) NOT NULL,
   `contact_no` varchar(20) NOT NULL,
   `description` text NOT NULL,
@@ -69,10 +68,12 @@ CREATE TABLE `billing` (
 -- Dumping data for table `billing`
 --
 
-INSERT INTO `billing` (`id`, `client_profile`, `client_name`, `billing_date`, `total_invoice`, `billing_pdf`, `no`, `address`, `contact_no`, `description`, `completion_date`, `prepared_by`, `approved_by`, `or_no`, `payment_received_by`, `receipt_acknowledged_by`) VALUES
-(388, 'STUDENT', 'lapa', '2025-04-28', 250.00, '680e996c2d719_hertalesdiary_3586003323029432749.jpg', 12, 'asdasdsadsa', '09471918324', 'Project Description 3D Print', NULL, 'alice_jones', 'aaaaaaaaaa', 12312321, 'jaded', 'asdasdsad'),
-(389, 'MSME', 'larvie', '2025-04-28', 19.00, '680ea06b551ff_INSIDE_BROCHURE02.jpg', 12, 'asdsadsa', '09471918324', 'asdasdsadsadada', NULL, 'alice_jones', 'aaaaaaaaaa', 12121212, 'Cashier', 'asdasdsad'),
-(390, 'aaaaaaaaaaa', 'baba', '2025-04-28', 69.00, '680eb7cef17dd_lakers_3576633226252579652.jpg', 12121, 'asdasdasda', '9471918323', 'hey you', '2025-04-28', 'alice_jones', 'Sir Jun', 12321321, 'Cashier', 'baba');
+INSERT INTO `billing` (`no`, `client_profile`, `client_name`, `billing_date`, `total_invoice`, `billing_pdf`, `address`, `contact_no`, `description`, `completion_date`, `prepared_by`, `approved_by`, `or_no`, `payment_received_by`, `receipt_acknowledged_by`) VALUES
+(388, 'STUDENT', 'Marsh', '2025-04-28', 250.00, '680e996c2d719_hertalesdiary_3586003323029432749.jpg', 'asdasdsadsa', '09471918324', 'Project Description 3D Print', NULL, 'alice_jones', 'aaaaaaaaaa', 12312321, 'jaded', 'asdasdsad'),
+(389, 'MSME', 'larvie', '2025-04-28', 19.00, '680ea06b551ff_INSIDE_BROCHURE02.jpg', 'asdsadsa', '09471918324', 'asdasdsadsadada', NULL, 'alice_jones', 'aaaaaaaaaa', 12121212, 'Cashier', 'asdasdsad'),
+(390, 'aaaaaaaaaaa', 'baba', '2025-04-28', 69.00, '680eb7cef17dd_lakers_3576633226252579652.jpg', 'asdasdasda', '9471918323', 'hey you', '2025-04-28', 'alice_jones', 'Sir Jun', 12321321, 'Cashier', 'baba'),
+(391, 'MSME', 'glaiza incorporated', '2025-05-05', 145.00, '68185a8022fd8_GROUP-1_-CAPSTONE_Manuscript2.pdf', 'glaiza', '12321231', 'good project', '2025-05-05', 'alice_jones', 'Sir jun', 123123213, 'cashier', 'asdsdsads'),
+(392, 'STUDENT', '1231321', '2025-05-05', 145.00, '6818664e48066_Picture1.jpg', 'asdsadasdsa', '1232132133213', '123213', '2025-05-05', 'alice_jones', 'asdsadsa', 1212321321, 'cashier', 'asdsdsads');
 
 -- --------------------------------------------------------
 
@@ -143,11 +144,12 @@ INSERT INTO `job_requests` (`id`, `personal_name`, `request_date`, `client_name`
 (3, '', '2025-01-20', 'Jaded', 'asdasdasd', 'Male', '', 28, 'Others', 'Jaded', 'N/A', 'Product/Design/Consultation', '09471918324', '', '', '', '', '', '0000-00-00 00:00:00', 'asdsadasd', '', '0000-00-00', NULL, '2025-04-20 15:29:19', '2025-05-01 19:25:17'),
 (5, 'hermione', '2024-04-21', 'Lethal Companya', 'asdsadsa', 'Prefer not to say', '', 35, 'Teacher', '0', 'N/A', 'Product/Design/Consultation', '96564', NULL, '', '', NULL, '', '0000-00-00 00:00:00', 'asdasdasdasdaas', '', '0000-00-00', '680531d4c8d30-outside_BROCHURE.jpg', '2025-04-20 17:41:40', '2025-05-01 17:34:08'),
 (6, 'Tralala', '2025-04-21', 'Tralavero Tralala', 'adasdsa', 'Prefer not to say', 'Bisexual', 25, 'MSME/Entrepreneur', '', 'N/A', 'Equipment', '1165', 'Print and Cut Machine, CNC Machine (Big), Other', '', 'nice', '', '', '2025-04-22 18:30:00', 'asdadad', 'Dionnie', '2025-04-21', '68055955b5cd6-df41b9b2-d857-4db3-8626-5b197633d501.jpg', '2025-04-20 20:30:13', '2025-04-20 20:30:13'),
-(7, 'John Doe', '2025-05-02', 'Doe Enterprises', '123 Main St', 'Male', NULL, 30, 'Entrepreneur', NULL, 'Doe Enterprises', '3D Printing', '09171234567', '3D Printer', NULL, NULL, 'Online', '2025-05-05 10:00:00', '2025-05-06 14:00:00', 'Prototype creation for a new product', 'Jane Smith', '2025-05-02', 'sample_file.pdf', '2025-05-02 02:00:00', '2025-05-02 02:00:00'),
 (9, 'lmnop', '2025-05-02', 'lmnop', 'lmnop', 'Prefer not to say', '', 27, 'Others', '0', 'N/A', 'Equipment', '09471918324', 'Laser Cutting Machine, Print and Cut Machine', '', '', NULL, '', '0000-00-00 00:00:00', 'lmnop', '', '0000-00-00', '', '2025-05-01 18:08:09', '2025-05-01 18:19:04'),
 (10, 'lmnop', '2025-05-02', 'lmnopa', 'lmnop', 'Prefer not to say', '', 27, 'Others', '0', 'N/A', 'Equipment', '09471918324', 'Laser Cutting Machine, Print and Cut Machine', '', '', NULL, '', '2025-05-02 02:20:00', 'lmnop', '', '2025-05-02', '', '2025-05-01 18:20:40', '2025-05-01 18:20:40'),
 (11, 'lmnop', '2025-05-02', 'lmnop', 'lmnop', 'Prefer not to say', '', 26, 'Others', '0', 'N/A', 'Equipment', '09471918324', 'Laser Cutting Machine, Print and Cut Machine', '', '', NULL, '', '2025-05-09 02:22:00', 'lmnop', 'Dionnie', '0000-00-00', '6813bc1d02799-Jade-Raposa-Resume (1).pdf', '2025-05-01 18:23:25', '2025-05-01 18:23:25'),
-(13, 'mvut', '2025-05-02', 'mvut', 'mvut', 'Female', '', 26, 'Others', 'aaaaa', '0', 'Training/Tour/Orientation', '09471918324', NULL, '', '', NULL, '', '0000-00-00 00:00:00', 'mvut', 'Dionnie', '2025-05-02', '', '2025-05-01 19:50:20', '2025-05-01 19:52:22');
+(13, 'mvut', '2025-05-02', 'mvut', 'mvut', 'Female', '', 26, 'Others', 'aaaaa', '0', 'Training/Tour/Orientation', '09471918324', NULL, '', '', NULL, '', '0000-00-00 00:00:00', 'mvut', 'Dionnie', '2025-05-02', '', '2025-05-01 19:50:20', '2025-05-01 19:52:22'),
+(14, 'Rey', '2025-05-02', 'Rey', 'Rey', 'Male', '', 22, 'Student', NULL, 'N/A', 'Equipment', '90909', 'Embroidery Machine (One Head), Embroidery Machine (Four Heads)', '', '', NULL, '', '2025-05-02 16:08:00', 'ReyRey', 'Rey', '2025-05-02', '68147d82994de-FABLAB_LOGO2.png', '2025-05-02 08:08:34', '2025-05-02 08:08:34'),
+(15, 'glaiza', '2025-05-05', 'glaiza incorporated', 'glaiza', 'Female', '', 13, 'Teacher', NULL, 'Fablab', 'Equipment', '1232132132', 'Laser Cutting Machine, Vacuum Forming', '', '', NULL, '', '2025-05-05 13:43:00', 'wala lang', 'jaded', '2025-05-05', '681850213c9c9-CAPSTONE PROJECT Mock Defense Score Sheet.pdf_final.pdf', '2025-05-05 05:44:01', '2025-05-05 05:44:01');
 
 -- --------------------------------------------------------
 
@@ -196,7 +198,13 @@ INSERT INTO `logs` (`id`, `staff_name`, `action`, `log_date`) VALUES
 (27, 'alice_jones', 'Added client profile and service request for client: mvut', '2025-05-02 03:27:27'),
 (28, 'alice_jones', 'Updated client profile and service request for client: mvut', '2025-05-02 03:39:04'),
 (29, 'alice_jones', 'Deleted job request for client: mvut', '2025-05-02 03:49:07'),
-(30, 'alice_jones', 'Added client profile and service request for client: mvut', '2025-05-02 03:50:20');
+(30, 'alice_jones', 'Added client profile and service request for client: mvut', '2025-05-02 03:50:20'),
+(31, 'sir_dave', 'Edited repository listing: fablab', '2025-05-02 15:09:51'),
+(32, 'sir_dave', 'Added client profile and service request for client: Rey', '2025-05-02 16:08:34'),
+(33, 'alice_jones', 'Deleted job request for client: Doe Enterprises', '2025-05-05 13:42:26'),
+(34, 'alice_jones', 'Added client profile and service request for client: glaiza incorporated', '2025-05-05 13:44:01'),
+(35, 'alice_jones', 'Added billing for client: glaiza incorporated', '2025-05-05 14:28:16'),
+(36, 'alice_jones', 'Added billing for client: 1231321', '2025-05-05 15:18:38');
 
 -- --------------------------------------------------------
 
@@ -219,7 +227,7 @@ CREATE TABLE `repository` (
 
 INSERT INTO `repository` (`id`, `listing_name`, `listing_type`, `reference_file`, `note`, `date`) VALUES
 (2, 'Project Files - CNC Designs', 'Local Directory', 'C:/Projects/CNC_Designs/', NULL, '2025-05-01 21:29:59'),
-(14, 'fablabb', 'Local Directory', 'J:\\PHP\\fablab', '', '2025-05-01 21:29:59'),
+(14, 'fablab', 'Local Directory', 'C:\\xampp\\htdocs\\fablab', 'Management Information System', '2025-05-01 21:29:59'),
 (15, 'AQW design notes', 'AQW Updates', 'https://www.aq.com/gamedesignnotes/', 'I did this on labor day, at 9:34 in the evening', '2025-05-01 21:34:19');
 
 -- --------------------------------------------------------
@@ -245,7 +253,9 @@ INSERT INTO `service_details` (`id`, `billing_id`, `service_name`, `unit`, `rate
 (1, 389, 'Jade', '1', '1', 10.00),
 (2, 389, 'Raposa', '2', '2', 9.00),
 (3, 390, 'Jade', '1', '1', 69.00),
-(4, 390, 'Raposa', '1', '1', 0.00);
+(4, 390, 'Raposa', '1', '1', 0.00),
+(5, 391, 'nice', '1', '1', 145.00),
+(6, 392, 'asASsss', '1', '1', 145.00);
 
 -- --------------------------------------------------------
 
@@ -284,7 +294,7 @@ ALTER TABLE `adminfablab`
 -- Indexes for table `billing`
 --
 ALTER TABLE `billing`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`no`);
 
 --
 -- Indexes for table `equipment`
@@ -337,7 +347,7 @@ ALTER TABLE `adminfablab`
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=391;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=393;
 
 --
 -- AUTO_INCREMENT for table `equipment`
@@ -349,13 +359,13 @@ ALTER TABLE `equipment`
 -- AUTO_INCREMENT for table `job_requests`
 --
 ALTER TABLE `job_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `repository`
@@ -367,7 +377,7 @@ ALTER TABLE `repository`
 -- AUTO_INCREMENT for table `service_details`
 --
 ALTER TABLE `service_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `stafffablab`
@@ -383,7 +393,7 @@ ALTER TABLE `stafffablab`
 -- Constraints for table `service_details`
 --
 ALTER TABLE `service_details`
-  ADD CONSTRAINT `service_details_ibfk_1` FOREIGN KEY (`billing_id`) REFERENCES `billing` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `service_details_ibfk_1` FOREIGN KEY (`billing_id`) REFERENCES `billing` (`no`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

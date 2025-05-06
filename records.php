@@ -52,7 +52,7 @@ if (!empty($_GET['search_name'])) {
 }
 
 $whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
-$query = "SELECT * FROM billing $whereClause ORDER BY id DESC";
+$query = "SELECT * FROM billing $whereClause ORDER BY no DESC"; // Changed 'id' to 'no'
 $result = $conn->query($query);
 
 if (!$result) {
@@ -99,7 +99,7 @@ while ($row = $result->fetch_assoc()) {
                     <h3>1. Personal Information</h3>
                     <div>
                         <label>No:</label>
-                        <input type="number" name="no" required>
+                        <input type="number" id="noField" name="no" readonly>
                     </div>
                     <div>
                         <label>Date:</label>
@@ -479,6 +479,23 @@ while ($row = $result->fetch_assoc()) {
                 button.closest('tr').remove();
                 updateTotalCost();
             });
+        });
+
+        // Fetch the next available 'no' value when the form is opened
+        document.getElementById('openFormBtn').addEventListener('click', function() {
+            fetch('fetch-billing-handler.php?action=get_next_no')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('noField').value = data.next_no;
+                    } else {
+                        alert('Error fetching the next number: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching the next number.');
+                });
         });
     </script>
 </body>
