@@ -9,6 +9,7 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
     exit();
 }
 
+// Fetch the next billing number (if requested)
 if (isset($_GET['action']) && $_GET['action'] === 'get_next_no') {
     $result = $conn->query("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'fablab_db' AND TABLE_NAME = 'billing'");
     if ($result && $row = $result->fetch_assoc()) {
@@ -20,46 +21,61 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_next_no') {
     exit();
 }
 
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-    $stmt = $conn->prepare("SELECT * FROM billing WHERE no = ?"); // Changed 'id' to 'no'
-    $stmt->bind_param('i', $id);
+// Fetch a single billing record by 'no'
+if (isset($_GET['no'])) {
+    $no = intval($_GET['no']); // Sanitize input
+    $stmt = $conn->prepare("SELECT * FROM billing WHERE no = ?");
+    if (!$stmt) {
+        echo json_encode(['success' => false, 'message' => 'Failed to prepare statement.']);
+        $conn->close();
+        exit();
+    }
+
+    $stmt->bind_param('i', $no);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $billing = $result->fetch_assoc();
 
-        $serviceStmt = $conn->prepare("SELECT * FROM service_details WHERE billing_id = ?"); // No changes needed here
-        $serviceStmt->bind_param('i', $id);
-        $serviceStmt->execute();
-        $serviceResult = $serviceStmt->get_result();
+        // Fetch associated services (if applicable)
+        $serviceStmt = $conn->prepare("SELECT service_name, unit, rate, total_cost FROM service_details WHERE billing_id = ?");
+        if ($serviceStmt) {
+            $serviceStmt->bind_param('i', $no);
+            $serviceStmt->execute();
+            $serviceResult = $serviceStmt->get_result();
 
-        $services = [];
-        while ($serviceRow = $serviceResult->fetch_assoc()) {
-            $services[] = $serviceRow;
+            $services = [];
+            while ($serviceRow = $serviceResult->fetch_assoc()) {
+                $services[] = $serviceRow;
+            }
+
+            $billing['services'] = $services; // Add services to the billing data
+            $serviceStmt->close();
         }
 
-        $billing['services'] = $services;
-
-        echo json_encode(['success' => true, 'billing' => $billing]);
+        echo json_encode(['success' => true, 'billing' => $billing]); // Include services in the response
     } else {
         echo json_encode(['success' => false, 'message' => 'Billing record not found.']);
     }
 
     $stmt->close();
-    $serviceStmt->close();
     $conn->close();
     exit();
 }
 
-$result = $conn->query("SELECT * FROM billing ORDER BY no ASC"); // Changed 'id' to 'no'
-$billingRows = [];
-while ($row = $result->fetch_assoc()) {
-    $billingRows[] = $row;
-}
+// Fetch all billing records (default behavior)
+$result = $conn->query("SELECT * FROM billing ORDER BY no ASC");
+if ($result) {
+    $billingRows = [];
+    while ($row = $result->fetch_assoc()) {
+        $billingRows[] = $row;
+    }
 
-echo json_encode(['success' => true, 'billing_records' => $billingRows]);
+    echo json_encode(['success' => true, 'billing_records' => $billingRows]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Failed to fetch billing records.']);
+}
 
 $conn->close();
 ?>

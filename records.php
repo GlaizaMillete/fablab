@@ -93,7 +93,7 @@ while ($row = $result->fetch_assoc()) {
         <div id="billingModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2>Payment and Releasing Form</h2>
+                <h2 id="billingModalTitle">Payment and Releasing Form</h2>
                 <form id="billingForm" enctype="multipart/form-data" action="add-billing-handler.php" method="POST">
                     <!-- Section 1: Personal Information -->
                     <h3>1. Personal Information</h3>
@@ -333,6 +333,7 @@ while ($row = $result->fetch_assoc()) {
                     <th>Profile</th>
                     <th>Total Amount</th>
                     <th>Reference</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -352,6 +353,10 @@ while ($row = $result->fetch_assoc()) {
                             <?php else: ?>
                                 <span class="no-pdf">None</span>
                             <?php endif; ?>
+                        </td>
+                        <td>
+                            <button class="edit-btn" data-id="<?= $row['no'] ?>">Edit</button>
+                            <button class="delete-btn" data-id="<?= $row['no'] ?>">Delete</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -496,6 +501,108 @@ while ($row = $result->fetch_assoc()) {
                     console.error('Error:', error);
                     alert('An error occurred while fetching the next number.');
                 });
+        });
+
+        // Edit Button Click
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id'); // Get the 'no' value from the data-id attribute
+                fetch(`fetch-billing-handler.php?no=${id}`) // Use 'no' as the identifier
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const form = document.getElementById('billingForm');
+                            form.reset();
+
+                            // Populate form fields with fetched data
+                            document.getElementById('noField').value = data.billing.no || '';
+                            document.querySelector('[name="date"]').value = data.billing.billing_date || '';
+                            document.querySelector('[name="client_name"]').value = data.billing.client_name || '';
+                            document.querySelector('[name="address"]').value = data.billing.address || '';
+                            document.querySelector('[name="contact_no"]').value = data.billing.contact_no || '';
+                            document.querySelector(`[name="client_profile"][value="${data.billing.client_profile}"]`).checked = true;
+                            document.querySelector('[name="client_profile_other"]').value = data.billing.client_profile_other || '';
+                            document.querySelector('[name="description"]').value = data.billing.description || '';
+                            document.querySelector('[name="completion_date"]').value = data.billing.completion_date || '';
+                            document.querySelector('[name="prepared_by"]').value = data.billing.prepared_by || '';
+                            document.querySelector('[name="prepared_date"]').value = data.billing.prepared_date || '';
+                            document.querySelector('[name="or_favor"]').value = data.billing.or_favor || '';
+                            document.querySelector('[name="or_amount"]').value = data.billing.or_amount || '';
+                            document.querySelector('[name="approved_by"]').value = data.billing.approved_by || '';
+                            document.querySelector('[name="or_no"]').value = data.billing.or_no || '';
+                            document.querySelector('[name="payment_date"]').value = data.billing.payment_date || '';
+                            document.querySelector('[name="payment_received_by"]').value = data.billing.payment_received_by || '';
+                            document.querySelector('[name="receipt_acknowledged_by"]').value = data.billing.receipt_acknowledged_by || '';
+                            document.querySelector('[name="receipt_date"]').value = data.billing.receipt_date || '';
+
+                            // Update modal title
+                            document.getElementById('billingModalTitle').innerText = 'Edit Billing';
+
+                            // Populate service details
+                            const serviceTableBody = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
+                            serviceTableBody.innerHTML = ''; // Clear existing rows
+                            data.billing.services.forEach(service => {
+                                const newRow = document.createElement('tr');
+                                newRow.innerHTML = `
+                            <td><input type="text" name="service_name[]" value="${service.service_name}" required></td>
+                            <td><input type="text" name="unit[]" value="${service.unit}" required></td>
+                            <td><input type="text" name="rate[]" value="${service.rate}" required></td>
+                            <td><input type="number" name="total_cost[]" value="${service.total_cost}" step="0.01" required class="cost-input"></td>
+                            <td><button type="button" class="removeRowBtn">Remove</button></td>
+                        `;
+                                serviceTableBody.appendChild(newRow);
+
+                                // Add event listener for the remove button
+                                newRow.querySelector('.removeRowBtn').addEventListener('click', function() {
+                                    newRow.remove();
+                                    updateTotalCost();
+                                });
+
+                                // Add event listener for the cost input
+                                newRow.querySelector('.cost-input').addEventListener('input', updateTotalCost);
+                            });
+
+                            // Show the modal
+                            document.getElementById('billingModal').style.display = 'block';
+                        } else {
+                            alert('Error fetching billing data: ' + data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+
+        // Close Modal
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('billingModal').style.display = 'none';
+        });
+
+        // Delete Button Click
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this record?')) {
+                    fetch(`delete-billing-handler.php`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                id
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Record deleted successfully.');
+                                location.reload();
+                            } else {
+                                alert('Error deleting record: ' + data.message);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
         });
     </script>
 </body>
