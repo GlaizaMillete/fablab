@@ -95,6 +95,9 @@ while ($row = $result->fetch_assoc()) {
                 <span class="close">&times;</span>
                 <h2 id="billingModalTitle">Payment and Releasing Form</h2>
                 <form id="billingForm" enctype="multipart/form-data" action="add-billing-handler.php" method="POST">
+
+                    <input type="hidden" name="billing_id" id="billingIdField">
+
                     <!-- Section 1: Personal Information -->
                     <h3>1. Personal Information</h3>
                     <div>
@@ -369,6 +372,7 @@ while ($row = $result->fetch_assoc()) {
         const modal = document.getElementById("billingModal");
         const btn = document.getElementById("openFormBtn");
         const span = document.getElementsByClassName("close")[0];
+        const form = document.getElementById("billingForm");
 
         btn.onclick = function() {
             modal.style.display = "block";
@@ -376,11 +380,13 @@ while ($row = $result->fetch_assoc()) {
 
         span.onclick = function() {
             modal.style.display = "none";
+            form.reset(); // Reset the form when the modal is closed
         }
 
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+                form.reset(); // Reset the form when clicking outside the modal
             }
         }
 
@@ -488,6 +494,36 @@ while ($row = $result->fetch_assoc()) {
 
         // Fetch the next available 'no' value when the form is opened
         document.getElementById('openFormBtn').addEventListener('click', function() {
+            // *** ADDED: Clear service details table and add a default row ***
+            const serviceTableBody = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
+            serviceTableBody.innerHTML = ''; // Clear existing rows
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" name="service_name[]" required></td>
+                <td><input type="text" name="unit[]" required></td>
+                <td><input type="text" name="rate[]" required></td>
+                <td><input type="number" name="total_cost[]" step="0.01" required class="cost-input"></td>
+                <td><button type="button" class="removeRowBtn">Remove</button></td>
+            `;
+            serviceTableBody.appendChild(newRow);
+
+            // Add event listeners for the new row
+            newRow.querySelector('.removeRowBtn').addEventListener('click', function() {
+                newRow.remove();
+                updateTotalCost();
+            });
+            newRow.querySelector('.cost-input').addEventListener('input', updateTotalCost);
+            // *** END ADDED SECTION ***
+
+            // Reset the form fields (excluding the service table which is handled above)
+            const form = document.getElementById('billingForm');
+            form.reset();
+
+            // Set the modal title for adding a new record
+            document.getElementById('billingModalTitle').innerText = 'Payment and Releasing Form';
+
+
             fetch('fetch-billing-handler.php?action=get_next_no')
                 .then(response => response.json())
                 .then(data => {
@@ -501,7 +537,11 @@ while ($row = $result->fetch_assoc()) {
                     console.error('Error:', error);
                     alert('An error occurred while fetching the next number.');
                 });
+
+            // Show the modal
+            modal.style.display = "block";
         });
+
 
         // Edit Button Click
         document.querySelectorAll('.edit-btn').forEach(button => {
@@ -515,6 +555,7 @@ while ($row = $result->fetch_assoc()) {
                             form.reset();
 
                             // Populate form fields with fetched data
+                            document.getElementById('billingIdField').value = data.billing.no; // Set the billing_id
                             document.getElementById('noField').value = data.billing.no || '';
                             document.querySelector('[name="date"]').value = data.billing.billing_date || '';
                             document.querySelector('[name="client_name"]').value = data.billing.client_name || '';
