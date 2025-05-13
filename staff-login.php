@@ -21,7 +21,7 @@ include 'header.php';
 <div class="login-container-staff">
     <div class="login-left">
         <img src="FABLAB_BICOL_LOGO (04).png" alt="Logo" class="logo">
-        <p class="logo-text">WELCOME TO FABLAB!</p>
+        <p class="logo-text">Welcome to Fablab Bicol!</p>
         <i>
             <p class="additional-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit!</p>
         </i>
