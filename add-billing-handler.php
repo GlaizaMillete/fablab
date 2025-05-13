@@ -27,18 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Completion Information
-    $completionDate = $_POST['completion_date'];
+    // $orFavor = $_POST['or_favor'];
+    $preparedDate = $_POST['prepared_date'];
+    // $completionDate = $_POST['completion_date'];
     $preparedBy = $_SESSION['staff_name']; // Current staff name from session
-    $approvedBy = $_POST['approved_by'];
+    // $approvedBy = $_POST['approved_by'];
 
     // Payment Information
-    $orNo = intval($_POST['or_no']);
-    $paymentDate = $_POST['payment_date'];
-    $paymentReceivedBy = $_POST['payment_received_by'];
+    // $orNo = intval($_POST['or_no']);
+    // $paymentDate = $_POST['payment_date'];
+    // $paymentReceivedBy = $_POST['payment_received_by'];
 
     // Receipt Information
-    $receiptAcknowledgedBy = $_POST['receipt_acknowledged_by'];
-    $receiptDate = $_POST['receipt_date'];
+    // $receiptAcknowledgedBy = $_POST['receipt_acknowledged_by'];
+    // $receiptDate = $_POST['receipt_date'];
 
     // Handle file upload for the reference file (stored as billing_pdf)
     $billingPdf = '';
@@ -91,84 +93,103 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Prepare the update query
         if (!empty($billingPdf)) {
             $stmt = $conn->prepare("UPDATE billing SET
-                billing_date = ?,
-                client_name = ?,
-                address = ?,
-                contact_no = ?,
-                client_profile = ?,
-                description = ?,
-                completion_date = ?,
-                prepared_by = ?,
-                approved_by = ?,
-                or_no = ?,
-                payment_received_by = ?,
-                receipt_acknowledged_by = ?,
-                billing_pdf = ?,
-                total_invoice = ?
-                WHERE no = ?"); // Removed "no = ?" from SET
+    billing_date = ?, 
+    client_name = ?, 
+    address = ?, 
+    contact_no = ?, 
+    client_profile = ?, 
+    description = ?, 
+    -- completion_date = ?, 
+    prepared_by = ?, 
+    prepared_date = ?, 
+    -- approved_by = ?, 
+    -- or_no = ?, 
+    -- or_favor = ?, 
+    -- payment_date = ?, 
+    -- payment_received_by = ?, 
+    -- receipt_acknowledged_by = ?, 
+    -- receipt_date = ?, 
+    billing_pdf = ?, 
+    total_invoice = ?
+    WHERE no = ?");
+            // Corrected bind_param types: 15 s, 2 i, 1 d -> ssssssssssssssisdsi
             $stmt->bind_param(
-                'sssssssssssssdi', // 14 parameters now (1 "d", 1 "i" at end)
+                'sssssssssssssisdsi',
                 $billingDate,
                 $clientName,
                 $address,
                 $contactNo,
                 $clientProfile,
                 $description,
-                $completionDate,
+                // $completionDate,
                 $preparedBy,
-                $approvedBy,
-                $orNo,
-                $paymentReceivedBy,
-                $receiptAcknowledgedBy,
+                $preparedDate,
+                // $approvedBy,
+                // $orNo,
+                // $orFavor,
+                // $paymentDate,
+                // $paymentReceivedBy,
+                // $receiptAcknowledgedBy,
+                // $receiptDate,
                 $billingPdf,
                 $totalCost,
-                $billingId // WHERE clause parameter
+                $billingId
             );
         } else {
             // Apply similar fixes to the non-PDF version
             $stmt = $conn->prepare("UPDATE billing SET
-                billing_date = ?,
-                client_name = ?,
-                address = ?,
-                contact_no = ?,
-                client_profile = ?,
-                description = ?,
-                completion_date = ?,
-                prepared_by = ?,
-                approved_by = ?,
-                or_no = ?,
-                payment_received_by = ?,
-                receipt_acknowledged_by = ?,
-                total_invoice = ?
-                WHERE no = ?");
+    billing_date = ?, 
+    client_name = ?, 
+    address = ?, 
+    contact_no = ?, 
+    client_profile = ?, 
+    description = ?, 
+    -- completion_date = ?, 
+    prepared_by = ?, 
+    prepared_date = ?, 
+    -- approved_by = ?, 
+    -- or_no = ?, 
+    -- or_favor = ?, 
+    -- payment_date = ?, 
+    -- payment_received_by = ?, 
+    -- receipt_acknowledged_by = ?, 
+    -- receipt_date = ?, 
+    total_invoice = ?
+    WHERE no = ?");
+            // Corrected bind_param types: 14 s, 2 i, 1 d -> sssssssssssssisdi
             $stmt->bind_param(
-                'ssssssssssssdi', // 13 parameters
+                'sssssssssssssisdi',
                 $billingDate,
                 $clientName,
                 $address,
                 $contactNo,
                 $clientProfile,
                 $description,
-                $completionDate,
+                // $completionDate,
                 $preparedBy,
-                $approvedBy,
-                $orNo,
-                $paymentReceivedBy,
-                $receiptAcknowledgedBy,
+                $preparedDate,
+                // $approvedBy,
+                // $orNo,
+                // $orFavor,
+                // $paymentDate,
+                // $paymentReceivedBy,
+                // $receiptAcknowledgedBy,
+                // $receiptDate,
                 $totalCost,
                 $billingId
             );
         }
 
+
         // Execute the update query
         if ($stmt->execute()) {
-            // *** ADDED: Delete existing service details for this billing record ***
+            // Delete existing service details for this billing record
             $deleteServiceStmt = $conn->prepare("DELETE FROM service_details WHERE billing_id = ?");
             $deleteServiceStmt->bind_param('i', $billingId);
             $deleteServiceStmt->execute();
             $deleteServiceStmt->close();
 
-            // *** ADDED: Insert the updated service details ***
+            // Insert the updated service details
             // Ensure $_POST['service_name'] is an array before iterating
             if (isset($_POST['service_name']) && is_array($_POST['service_name'])) {
                 foreach ($_POST['service_name'] as $index => $serviceName) {
@@ -180,7 +201,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         $serviceStmt = $conn->prepare("INSERT INTO service_details (billing_id, service_name, unit, rate, total_cost) VALUES (?, ?, ?, ?, ?)");
                         $serviceStmt->bind_param('isssd', $billingId, $serviceName, $unit, $rate, $totalCostRow);
-                        $serviceStmt->execute();
+                        if (!$serviceStmt->execute()) {
+                            // Log or handle error for service details insertion
+                            error_log("Error inserting service detail for billing ID $billingId: " . $serviceStmt->error);
+                            // Optionally, you might want to roll back the billing insertion here
+                        }
                         $serviceStmt->close(); // Close statement after each execution
                     }
                 }
@@ -220,62 +245,116 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         } else {
-            die('Error: ' . $stmt->error);
+            die('Error updating billing record: ' . $stmt->error);
         }
     } else {
         // Insert into billing table
         // Ensure the column names match the database schema
-        $stmt = $conn->prepare("INSERT INTO billing (billing_date, client_name, address, contact_no, client_profile, description, completion_date, prepared_by, approved_by, or_no, payment_received_by, receipt_acknowledged_by, billing_pdf, total_invoice) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO billing (
+            billing_date, 
+            client_name, 
+            address, 
+            contact_no, 
+            client_profile, 
+            description, 
+            -- completion_date, 
+            prepared_by, 
+            prepared_date, 
+            -- approved_by, 
+            -- or_no, 
+            -- or_favor, 
+            -- payment_date, 
+            -- payment_received_by, 
+            -- receipt_acknowledged_by, 
+            -- receipt_date, 
+            billing_pdf, 
+            total_invoice
+        ) VALUES (
+        ?, 
+        ?, 
+        ?, 
+        ?, 
+        ?, 
+        ?, 
+        ?, 
+        ?, 
+        ?, 
+        -- ?, 
+        -- ?, 
+        -- ?, 
+        -- ?, 
+        -- ?, 
+        -- ?, 
+        -- ?, 
+        -- ?, 
+        ?
+        )");
+        // Corrected bind_param types: 16 s, 1 i, 1 d -> ssssssssssssssisssd
         $stmt->bind_param(
-            'sssssssssssssd',
+            'sssssssssssssisssd',
             $billingDate,
             $clientName,
             $address,
             $contactNo,
             $clientProfile,
             $description,
-            $completionDate,
+            // $completionDate,
             $preparedBy,
-            $approvedBy,
-            $orNo,
-            $paymentReceivedBy,
-            $receiptAcknowledgedBy,
+            $preparedDate,
+            // $approvedBy,
+            // $orNo,
+            // $orFavor,
+            // $paymentDate,
+            // $paymentReceivedBy,
+            // $receiptAcknowledgedBy,
+            // $receiptDate,
             $billingPdf,
             $totalCost
         );
-        $stmt->execute();
-        $billingId = $stmt->insert_id; // Get the ID of the inserted billing record
-        $stmt->close(); // Close the billing statement
 
-        // Insert into service_details table
-        // Ensure $_POST['service_name'] is an array before iterating
-        if (isset($_POST['service_name']) && is_array($_POST['service_name'])) {
-            foreach ($_POST['service_name'] as $index => $serviceName) {
-                // Ensure corresponding keys exist in other arrays
-                if (isset($_POST['unit'][$index], $_POST['rate'][$index], $_POST['total_cost'][$index])) {
-                    $unit = $_POST['unit'][$index];
-                    $rate = $_POST['rate'][$index];
-                    $totalCostRow = floatval($_POST['total_cost'][$index]);
+        // Check if billing insertion was successful
+        if ($stmt->execute()) {
+            $billingId = $stmt->insert_id; // Get the ID of the inserted billing record
+            $stmt->close(); // Close the billing statement
 
-                    $serviceStmt = $conn->prepare("INSERT INTO service_details (billing_id, service_name, unit, rate, total_cost) VALUES (?, ?, ?, ?, ?)");
-                    $serviceStmt->bind_param('isssd', $billingId, $serviceName, $unit, $rate, $totalCostRow);
-                    $serviceStmt->execute();
-                    $serviceStmt->close(); // Close statement after each execution
+            // Insert into service_details table
+            // Ensure $_POST['service_name'] is an array before iterating
+            if (isset($_POST['service_name']) && is_array($_POST['service_name'])) {
+                foreach ($_POST['service_name'] as $index => $serviceName) {
+                    // Ensure corresponding keys exist in other arrays
+                    if (isset($_POST['unit'][$index], $_POST['rate'][$index], $_POST['total_cost'][$index])) {
+                        $unit = $_POST['unit'][$index];
+                        $rate = $_POST['rate'][$index];
+                        $totalCostRow = floatval($_POST['total_cost'][$index]);
+
+                        $serviceStmt = $conn->prepare("INSERT INTO service_details (billing_id, service_name, unit, rate, total_cost) VALUES (?, ?, ?, ?, ?)");
+                        // Use the successfully generated $billingId
+                        $serviceStmt->bind_param('isssd', $billingId, $serviceName, $unit, $rate, $totalCostRow);
+                        if (!$serviceStmt->execute()) {
+                            // Log or handle error for service details insertion
+                            error_log("Error inserting service detail for billing ID $billingId: " . $serviceStmt->error);
+                            // Optionally, you might want to roll back the billing insertion here
+                        }
+                        $serviceStmt->close(); // Close statement after each execution
+                    }
                 }
             }
-        }
 
 
-        // Log the action
-        if (isset($_SESSION['staff_name'])) {
-            $staffName = $_SESSION['staff_name'];
-            $logDate = date('Y-m-d H:i:s');
-            $action = "Added billing for client: $clientName";
+            // Log the action (only if billing and service details insertion were attempted)
+            if (isset($_SESSION['staff_name'])) {
+                $staffName = $_SESSION['staff_name'];
+                $logDate = date('Y-m-d H:i:s');
+                $action = "Added billing for client: $clientName";
 
-            $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
-            $logStmt->bind_param('sss', $staffName, $action, $logDate);
-            $logStmt->execute();
-            $logStmt->close();
+                $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
+                $logStmt->bind_param('sss', $staffName, $action, $logDate);
+                $logStmt->execute();
+                $logStmt->close();
+            }
+        } else {
+            // Handle the error if billing insertion failed
+            die('Error inserting billing record: ' . $stmt->error);
         }
     }
 
