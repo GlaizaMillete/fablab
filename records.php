@@ -84,6 +84,7 @@ while ($row = $result->fetch_assoc()) {
     <link rel="icon" href="fablab.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style2.css">
+    <!-- <link rel="stylesheet" href="style3.css"> -->
 </head>
 
 <body>
@@ -307,7 +308,7 @@ while ($row = $result->fetch_assoc()) {
                     <label>Receipt Acknowledged By:</label>
                     <input type="text" name="receipt_acknowledged_by" value="<?= isset($_GET['receipt_acknowledged_by']) ? htmlspecialchars($_GET['receipt_acknowledged_by']) : '' ?>">
                 </div> -->
-                <div style="display: flex; justify-content: center;">
+                <div>
                     <button type="submit">Filter</button>
                 </div>
             </form>
@@ -334,7 +335,7 @@ while ($row = $result->fetch_assoc()) {
                     <th>No.</th>
                     <th>Client</th>
                     <th>Service Description</th>
-                    <th>Profile</th>
+                    <th>Client Profile</th>
                     <th>Total Amount</th>
                     <th>Reference</th>
                     <th>Actions</th>
@@ -342,23 +343,21 @@ while ($row = $result->fetch_assoc()) {
             </thead>
             <tbody>
                 <?php foreach ($rows as $row): ?>
-                    <tr>
-                        <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
-                        <td><?php echo htmlspecialchars($row['no']); ?></td>
-                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['description']); ?></td>
-                        <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
-                        <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
+                    <tr data-id="<?= $row['no'] ?>">
+                        <td><?= date("F d, Y", strtotime($row['billing_date'])) ?></td>
+                        <td><?= htmlspecialchars($row['no']) ?></td>
+                        <td><?= htmlspecialchars($row['client_name']) ?></td>
+                        <td><?= htmlspecialchars($row['description']) ?></td>
+                        <td><?= htmlspecialchars(trim($row['client_profile'])) ?></td>
+                        <td>&#8369;<?= number_format($row['total_invoice'], 2) ?></td>
                         <td>
                             <?php if (!empty($row['billing_pdf'])): ?>
-                                <button class="ref-link" onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
-                                    View PDF
-                                </button>
+                                <a href="uploads/billing/<?= htmlspecialchars($row['billing_pdf']) ?>" class="ref-link" target="_blank">View PDF</a>
                             <?php else: ?>
                                 <span class="no-pdf">None</span>
                             <?php endif; ?>
                         </td>
-                        <td>
+                        <td class="action-container">
                             <button class="edit-btn" data-id="<?= $row['no'] ?>">Edit</button>
                             <button class="delete-btn" data-id="<?= $row['no'] ?>">Delete</button>
                         </td>

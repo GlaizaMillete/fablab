@@ -380,7 +380,7 @@ td:nth-child(1) {
     width: 15%;
     /* Adjust as needed */
     max-width: 150px;
-    text-align: center;
+    text-align: left;
 }
 
 th:nth-child(2),
@@ -410,7 +410,7 @@ td:nth-child(4) {
     width: 12%;
     /* Adjust as needed */
     max-width: 120px;
-    text-align: center;
+    text-align: left;
 }
 
 th:nth-child(5),
@@ -939,6 +939,10 @@ a:hover {
         background-size: contain;
         background-repeat: no-repeat;
     }
+    .ref-link:hover {
+        background-color: rgba(37, 99, 235, 0.15);
+        transform: translateY(-1px);
+        text-decoration: none;   }
 
 .search-section {
     background-color: white;
