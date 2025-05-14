@@ -40,11 +40,6 @@ p {
     background: linear-gradient(to right, #000D38 -2%, #029BE1 52%, #FFFFFF 79%);
 }
 
-.login-container-staff>div {
-    /* flex: 1; */
-    /* Each div takes up half of the container */
-}
-
 .login-left {
     flex: 3;
     display: flex;

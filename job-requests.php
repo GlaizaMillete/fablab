@@ -210,7 +210,7 @@ $chartData = [
                     <div class="form-columns">
                         <div>
                             <label>Name of Personnel:</label>
-                            <input type="text" name="personnel_name">
+                            <input type="text" name="personnel_name" value="<?= isset($_SESSION['staff_name']) ? htmlspecialchars($_SESSION['staff_name']) : '' ?>" readonly>
                         </div>
                         <div>
                             <label>Date:</label>
@@ -301,7 +301,7 @@ $chartData = [
                         ?>
                     </select>
                 </div>
-                <div>
+                <div class="filter-div">
                     <button type="submit">Filter</button>
                 </div>
             </form>

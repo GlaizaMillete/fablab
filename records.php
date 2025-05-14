@@ -22,12 +22,20 @@ if (!empty($_GET['year'])) {
     $year = intval($_GET['year']);
     $whereClauses[] = "YEAR(billing_date) = $year";
 }
-if (!empty($_GET['client_profile'])) {
-    $client_profile = $conn->real_escape_string($_GET['client_profile']);
-    if ($client_profile == 'OTHERS') {
-        $whereClauses[] = "client_profile NOT IN ('STUDENT', 'MSME')";
+if (!empty($_GET['client_profile']) && is_array($_GET['client_profile'])) {
+    $client_profiles = array_map([$conn, 'real_escape_string'], $_GET['client_profile']);
+    if (in_array('OTHERS', $client_profiles)) {
+        $client_profiles = array_diff($client_profiles, ['OTHERS']);
+        $profileConditions = [];
+        if (!empty($client_profiles)) {
+            $profileList = "'" . implode("','", $client_profiles) . "'";
+            $profileConditions[] = "client_profile IN ($profileList)";
+        }
+        $profileConditions[] = "client_profile NOT IN ('STUDENT', 'MSME')";
+        $whereClauses[] = '(' . implode(' OR ', $profileConditions) . ')';
     } else {
-        $whereClauses[] = "client_profile = '$client_profile'";
+        $profileList = "'" . implode("','", $client_profiles) . "'";
+        $whereClauses[] = "client_profile IN ($profileList)";
     }
 }
 if (!empty($_GET['prepared_by'])) {
@@ -125,7 +133,7 @@ while ($row = $result->fetch_assoc()) {
                         <input type="number" name="contact_no" required>
                     </div>
                     <div>
-                        <label>Client Profile:</label><br>
+                        <label>Client Profile:</label>
                         <input type="radio" name="client_profile" value="STUDENT" required> STUDENT<br>
                         <input type="radio" name="client_profile" value="MSME" required> MSME<br>
                         <input type="radio" name="client_profile" value="OTHERS" required> OTHERS (Specify):
@@ -133,7 +141,7 @@ while ($row = $result->fetch_assoc()) {
                     </div>
                     <div>
                         <label>Description of the Project:</label>
-                        <textarea name="description" required></textarea>
+                        <textarea class="description" name="description" required></textarea>
                     </div>
 
                     <!-- Section 2: Details of the Service to be Rendered -->
@@ -288,30 +296,17 @@ while ($row = $result->fetch_assoc()) {
                 </div>
                 <div>
                     <label>Client Profile:</label>
-                    <select name="client_profile">
-                        <option value="">All</option>
-                        <option value="STUDENT" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'STUDENT' ? 'selected' : '' ?>>STUDENT</option>
-                        <option value="MSME" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'MSME' ? 'selected' : '' ?>>MSME</option>
-                        <option value="OTHERS" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'OTHERS' ? 'selected' : '' ?>>OTHERS</option>
-                    </select>
+                    <div style="display: flex; gap: 0.2rem;">
+                        <input type="checkbox" name="client_profile[]" value="STUDENT" <?= isset($_GET['client_profile']) && in_array('STUDENT', (array)$_GET['client_profile']) ? 'checked' : '' ?>> STUDENT<br>
+                        <input type="checkbox" name="client_profile[]" value="MSME" <?= isset($_GET['client_profile']) && in_array('MSME', (array)$_GET['client_profile']) ? 'checked' : '' ?>> MSME<br>
+                        <input type="checkbox" name="client_profile[]" value="OTHERS" <?= isset($_GET['client_profile']) && in_array('OTHERS', (array)$_GET['client_profile']) ? 'checked' : '' ?>> OTHERS<br>
+                    </div>
                 </div>
                 <div>
                     <label>Prepared By:</label>
                     <input type="text" name="prepared_by" value="<?= isset($_GET['prepared_by']) ? htmlspecialchars($_GET['prepared_by']) : '' ?>">
                 </div>
-                <!-- <div>
-                    <label>Approved By:</label>
-                    <input type="text" name="approved_by" value="<?= isset($_GET['approved_by']) ? htmlspecialchars($_GET['approved_by']) : '' ?>">
-                </div>
-                <div>
-                    <label>Payment Received By:</label>
-                    <input type="text" name="payment_received_by" value="<?= isset($_GET['payment_received_by']) ? htmlspecialchars($_GET['payment_received_by']) : '' ?>">
-                </div>
-                <div>
-                    <label>Receipt Acknowledged By:</label>
-                    <input type="text" name="receipt_acknowledged_by" value="<?= isset($_GET['receipt_acknowledged_by']) ? htmlspecialchars($_GET['receipt_acknowledged_by']) : '' ?>">
-                </div> -->
-                <div>
+                <div class="filter-div">
                     <button type="submit">Filter</button>
                 </div>
             </form>

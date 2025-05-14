@@ -53,9 +53,12 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 80%;
+    /* Use 90% of the viewport width */
     margin: 0 auto;
-    padding: 24px;
+    padding: 16px;
+    /* Reduce padding for smaller screens */
+    box-sizing: border-box;
 }
 
 /* Typography */
@@ -222,26 +225,35 @@ h4 {
 .filter-grid div {
     flex: 1;
     /* Allow each div to take equal space */
-    min-width: 150px;
+    min-width: 15rem;
     /* Set a minimum width for each div */
 }
 
 .filter-grid button {
-    flex: 0;
-    /* Prevent the button from stretching */
-    padding: 10px 20px;
-    /* Add padding for better appearance */
+    /* flex: 0; */
+    padding: 12px 24px;
+    font-size: 1.5rem;
     background-color: var(--color-primary);
     color: white;
     border: none;
-    border-radius: var(--radius);
+    border-radius: 0.5rem;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    font-weight: 400;
+    transition: all 0.2sease;
+    width: 100%;
 }
 
 .filter-grid button:hover {
     background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    /* Add a hover effect */
+    box-shadow: var(--shadow-md);
+}
+
+.filter-div {
+    justify-content: center;
+    display: flex;
+    height: -webkit-fill-available;
 }
 
 .search-form {
@@ -1025,5 +1037,17 @@ td:nth-child(8) {
     background-color: var(--color-primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+}
+
+.description {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius);
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    color: var(--color-gray-800);
+    background-color: white;
 }
 

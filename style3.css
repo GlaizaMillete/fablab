@@ -53,9 +53,12 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 80%;
+    /* Use 90% of the viewport width */
     margin: 0 auto;
-    padding: 24px;
+    padding: 16px;
+    /* Reduce padding for smaller screens */
+    box-sizing: border-box;
 }
 
 /* Typography */
@@ -103,6 +106,7 @@ h4 {
 .dashboard {
     display: grid;
     grid-template-columns: 1fr 300px;
+    /* Default layout */
     gap: 24px;
     margin-bottom: 28px;
 }
@@ -247,10 +251,36 @@ h4 {
 }
 
 .filter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
-    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+}
+
+.filter-grid button {
+    /* flex: 0; */
+    padding: 12px 24px;
+    font-size: 1.5rem;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 400;
+    transition: all 0.2sease;
+    width: 100%;
+}
+
+.filter-grid div {
+    flex: 1;
+    min-width: 150px;
+}
+
+.filter-grid button:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    /* Add a hover effect */
+    box-shadow: var(--shadow-md);
 }
 
 .search-form {
@@ -1019,4 +1049,9 @@ a:hover {
     box-shadow: var(--shadow-lg);
 }
 
+.filter-div {
+    justify-content: center;
+    display: flex;
+    height: -webkit-fill-available;
+}
     
