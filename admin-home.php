@@ -33,10 +33,14 @@ include 'config.php';
             <div class="button" onclick="showContent('logs')">
                 <p>Logs</p>
             </div>
+            <div class="button" onclick="showChangePasswordModal()">
+                <p>Change Password</p>
+            </div>
         </div>
-        <div class="button" onclick="location.href='logout.php'">
+        <div class="button" onclick="confirmLogout()">
             <p class="logout">Logout</p>
         </div>
+
     </div>
     <div class="container-right">
         <div class="full-width-container">
@@ -55,7 +59,7 @@ include 'config.php';
                             <!-- <th>ID</th> -->
                             <th>User</th>
                             <th>Status</th>
-                            <th class="text-align:center;">Actions</th>
+                            <th style="text-align:center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,9 +74,9 @@ include 'config.php';
                                 echo "<td>" . $row["staffUsername"] . "</td>";
                                 echo "<td>" . $row["status"] . "</td>";
                                 echo "<td style='justify-content: center; display: flex; gap: 10px;'>";
-                echo "<button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>";
-                echo "<button onclick=\"toggleStatus('" . $row["staffID"] . "', '" . $row["status"] . "')\">" . ($row["status"] === "Active" ? "Deactivate" : "Activate") . "</button>";
-                echo "</td>";
+                                echo "<button onclick=\"editUser('" . $row["staffID"] . "', '" . $row["staffUsername"] . "')\">Edit</button>";
+                                echo "<button onclick=\"toggleStatus('" . $row["staffID"] . "', '" . $row["status"] . "')\">" . ($row["status"] === "Active" ? "Deactivate" : "Activate") . "</button>";
+                                echo "</td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -128,6 +132,21 @@ include 'config.php';
         <input type="password" id="confirm-password" name="confirm-password">
         <button type="submit">Submit</button>
         <button type="button" onclick="hideForm()">Cancel</button>
+    </form>
+</div>
+
+<!-- Change Password Modal -->
+<div id="change-password-modal" class="floating-form">
+    <form id="change-password-form" action="change-password-handler.php" method="POST">
+        <h2 id="form-title">Change Password</h2>
+        <label for="current-password">Current Password:</label>
+        <input type="password" id="current-password" name="current-password" required>
+        <label for="new-password">New Password:</label>
+        <input type="password" id="new-password" name="new-password" required>
+        <label for="confirm-password">Confirm New Password:</label>
+        <input type="password" id="confirm-password" name="confirm-password" required>
+        <button type="submit">Change Password</button>
+        <button type="button" onclick="closeChangePasswordModal()">Cancel</button>
     </form>
 </div>
 
@@ -223,9 +242,23 @@ include 'config.php';
         }
     }
 
+    function showChangePasswordModal() {
+        const modal = document.getElementById('change-password-modal');
+        const overlay = document.getElementById('background-overlay');
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function closeChangePasswordModal() {
+        const modal = document.getElementById('change-password-modal');
+        const overlay = document.getElementById('background-overlay');
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+
     function confirmLogout() {
         if (confirm("Are you sure you want to log out?")) {
-            window.location.href = 'logout.php';
+            window.location.href = 'admin-logout.php';
         }
     }
 </script>

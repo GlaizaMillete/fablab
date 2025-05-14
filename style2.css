@@ -53,9 +53,12 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 80%;
+    /* Use 90% of the viewport width */
     margin: 0 auto;
-    padding: 24px;
+    padding: 16px;
+    /* Reduce padding for smaller screens */
+    box-sizing: border-box;
 }
 
 /* Typography */
@@ -222,26 +225,35 @@ h4 {
 .filter-grid div {
     flex: 1;
     /* Allow each div to take equal space */
-    min-width: 150px;
+    min-width: 15rem;
     /* Set a minimum width for each div */
 }
 
 .filter-grid button {
-    flex: 0;
-    /* Prevent the button from stretching */
-    padding: 10px 20px;
-    /* Add padding for better appearance */
+    /* flex: 0; */
+    padding: 12px 24px;
+    font-size: 1.5rem;
     background-color: var(--color-primary);
     color: white;
     border: none;
-    border-radius: var(--radius);
+    border-radius: 0.5rem;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    font-weight: 400;
+    transition: all 0.2sease;
+    width: 100%;
 }
 
 .filter-grid button:hover {
     background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    /* Add a hover effect */
+    box-shadow: var(--shadow-md);
+}
+
+.filter-div {
+    justify-content: center;
+    display: flex;
+    height: -webkit-fill-available;
 }
 
 .search-form {
@@ -366,6 +378,19 @@ th:last-child {
 
 td {
     border-bottom: 1px solid var(--color-gray-200);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    cursor: pointer;
+}
+
+td:hover {
+    overflow: auto;
+    white-space: nowrap;
+    text-overflow: unset;
+    background-color: var(--color-gray-100);
+    scrollbar-width: thin;
 }
 
 tbody tr:last-child td {
@@ -909,4 +934,120 @@ a:hover {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
     background-size: contain;
     background-repeat: no-repeat;
+}
+
+/* Set specific widths for each column */
+th:nth-child(1),
+td:nth-child(1) {
+    /* Date */
+    width: 10%;
+    /* Adjust as needed */
+    max-width: 150px;
+    text-align: center;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    /* NO. */
+    width: 10%;
+    /* Adjust as needed */
+    max-width: 150px;
+    text-align: center;
+    word-wrap: break-word;
+    /* Ensures long text wraps */
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    /* Client Name */
+    width: 12.5%;
+    /* Adjust as needed */
+    max-width: 250px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    /* Service Description */
+    width: 20%;
+    /* Adjust as needed */
+    max-width: 120px;
+    text-align: left;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    /* Profile */
+    width: 10%;
+    /* Adjust as needed */
+    max-width: 130px;
+    text-align: left;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+    /* Total Amount */
+    width: 10%;
+    /* Adjust as needed */
+    max-width: 200px;
+    text-align: left;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+    /* Reference */
+    width: 10%;
+    /* Adjust as needed */
+    max-width: 200px;
+    text-align: center;
+}
+
+th:nth-child(8),
+td:nth-child(8) {
+    /* Action */
+    width: 17.5%;
+    /* Adjust as needed */
+    max-width: 200px;
+    text-align: center;
+}
+
+/* Back Button Styling */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: var(--color-primary);
+    color: white;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.back-button a {
+    color: white;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.description {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius);
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    color: var(--color-gray-800);
+    background-color: white;
 }

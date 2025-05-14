@@ -7,6 +7,9 @@ from PyPDF2 import PdfReader, PdfWriter
 import os
 import platform
 
+print("Current working directory:", os.getcwd())
+print("Looking for template.pdf...")
+
 def fill_pdf(data):
     output_filename = "filled_job_order.pdf"
     overlay_filename = "overlay.pdf"

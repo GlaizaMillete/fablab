@@ -40,11 +40,6 @@ p {
     background: linear-gradient(to right, #000D38 -2%, #029BE1 52%, #FFFFFF 79%);
 }
 
-.login-container-staff>div {
-    /* flex: 1; */
-    /* Each div takes up half of the container */
-}
-
 .login-left {
     flex: 3;
     display: flex;
@@ -686,6 +681,7 @@ button {
 
 /* Form Title Styling */
 .repository-form h2 {
+    margin-top: 1rem;
     margin-bottom: 20px;
     font-size: 1.8rem;
     color: #333;
@@ -750,4 +746,19 @@ button {
     to {
         opacity: 1;
     }
+}
+
+.search-full {
+    display: flex;
+    gap: 1rem;
+    width: 50%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-input {
+    text-indent: 16px;
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 8px;
 }

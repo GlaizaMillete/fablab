@@ -71,7 +71,7 @@ include 'fetch-repository-handler.php';
                 <p>Repository</p>
             </div>
         </div>
-        <div class="button" onclick="location.href='logout.php'">
+        <div class="button" onclick="confirmLogout()">
             <p class="logout">Logout</p>
         </div>
     </div>
@@ -81,17 +81,19 @@ include 'fetch-repository-handler.php';
                 <div class="job-request-content active" id="job-description">
                     <div class="section-title">
                         <h1>Client Profile & Service Requests</h1>
-                        <!-- add the "go to page" button here instead -->
-                        <button class="btn-blue" onclick="redirectToPage()">Go to Full Page</button>
+                        <div class="search-full">
+                            <input type="text" class="search-input" id="jobRequestsSearch" placeholder="Search..." onkeyup="filterJobRequestsTable()">
+                            <button class="btn-blue" onclick="redirectToPage()">Go to Full Page</button>
+                        </div>
                     </div>
-                    <table>
+                    <table id="jobRequestsTable">
                         <thead>
                             <tr>
-                                <th>Request Date</th>
-                                <th>Client Name</th>
-                                <th>Service Request</th>
-                                <th>Client Profile</th>
-                                <th>Reference</th>
+                                <th onclick="sortJobRequestsTable(0)">Request Date</th>
+                                <th onclick="sortJobRequestsTable(1)">Client Name</th>
+                                <th onclick="sortJobRequestsTable(2)">Service Request</th>
+                                <th onclick="sortJobRequestsTable(3)">Client Profile</th>
+                                <th onclick="sortJobRequestsTable(4)">Reference</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,46 +103,31 @@ include 'fetch-repository-handler.php';
                                     <td><?= htmlspecialchars($request['client_name']) ?></td>
                                     <td>
                                         <?php
-                                        // Start with the service requested
                                         $serviceRequest = htmlspecialchars($request['service_requested']);
-
-                                        // Append equipment if available
                                         if (!empty($request['equipment'])) {
                                             $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
                                         }
-
-                                        // Append hand tools if available, ensuring no redundancy
                                         if (!empty($request['hand_tools_other'])) {
                                             $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
                                         }
-
-                                        // Append hand tools if available, ensuring no redundancy
                                         if (!empty($request['equipment_other'])) {
                                             $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
                                         }
-
                                         echo $serviceRequest;
                                         ?>
                                     </td>
                                     <td>
                                         <?php
-                                        // Start with the designation
                                         $designation = htmlspecialchars($request['designation']);
-
-                                        // Append designation details if "Others" is selected
                                         if ($designation === "Others" && !empty($request['designation_other'])) {
                                             $designation .= ": " . htmlspecialchars($request['designation_other']);
                                         }
-
                                         echo $designation;
                                         ?>
                                     </td>
                                     <td style="text-align: center;">
                                         <?php if (!empty($request['reference_file'])): ?>
-                                            <!-- Render the reference file as a button -->
-                                            <button onclick="window.open('uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>', '_blank')">
-                                                View
-                                            </button>
+                                            <button onclick="window.open('uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>', '_blank')">View</button>
                                         <?php else: ?>
                                             None
                                         <?php endif; ?>
@@ -153,17 +140,20 @@ include 'fetch-repository-handler.php';
                 <div class="job-request-content" id="billing">
                     <div class="section-title">
                         <h1>Payment and Release</h1>
-                        <button class="btn-blue" onclick="redirectToPage()">Go to Full Page</button>
+                        <div class="search-full">
+                            <input type="text" class="search-input" id="billingSearch" placeholder="Search..." onkeyup="filterBillingTable()">
+                            <button class="btn-blue" onclick="redirectToPage()">Go to Full Page</button>
+                        </div>
                     </div>
-                    <table>
+                    <table id="billingTable">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>No.</th>
-                                <th>Client</th>
-                                <th>Service Description</th>
-                                <th>Profile</th>
-                                <th>Total Amount</th>
+                                <th onclick="sortBillingTable(0)">Date</th>
+                                <th onclick="sortBillingTable(1)">No.</th>
+                                <th onclick="sortBillingTable(2)">Client</th>
+                                <th onclick="sortBillingTable(3)">Service Description</th>
+                                <th onclick="sortBillingTable(4)">Profile</th>
+                                <th onclick="sortBillingTable(5)">Total Amount</th>
                                 <th>Reference</th>
                             </tr>
                         </thead>
@@ -178,9 +168,7 @@ include 'fetch-repository-handler.php';
                                     <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
                                     <td style="text-align: center;">
                                         <?php if (!empty($row['billing_pdf'])): ?>
-                                            <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
-                                                View
-                                            </button>
+                                            <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">View</button>
                                         <?php else: ?>
                                             <span class="no-pdf">None</span>
                                         <?php endif; ?>
@@ -193,8 +181,10 @@ include 'fetch-repository-handler.php';
                 <div class="job-request-content" id="repository">
                     <div class="section-title">
                         <h1>Repository</h1>
-                        <input type="text" id="repositorySearch" placeholder="Search..." onkeyup="filterTable()" style="width: 50%; padding: 8px 0;text-indent: 16px; margin-left: 21rem; border-radius: 8px;">
-                        <button class="btn-green" onclick="showRepositoryForm()">Add</button>
+                        <div class="search-full">
+                            <input type="text" class="search-input" id="repositorySearch" placeholder="Search..." onkeyup="filterTable()">
+                            <button class="btn-green" onclick="showRepositoryForm()">Add</button>
+                        </div>
                     </div>
                     <!-- <div>
                         <input type="text" id="repositorySearch" placeholder="Search..." onkeyup="filterTable()" style="margin-bottom: 10px; width: 100%; padding: 8px 0; text-indent: 16px;">
@@ -624,143 +614,116 @@ include 'fetch-repository-handler.php';
         }
     }
 
-    // Show the feedback form modal
-    // function showFeedbackForm() {
-    //     document.getElementById('feedback-modal').style.display = 'block';
-    // }
+    // Function to filter the Job Requests table
+    function filterJobRequestsTable() {
+        const input = document.getElementById("jobRequestsSearch");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("jobRequestsTable");
+        const rows = table.getElementsByTagName("tr");
 
-    // Close the feedback form modal
-    // function closeFeedbackForm() {
-    //     document.getElementById('feedback-modal').style.display = 'none';
-    // }
+        for (let i = 1; i < rows.length; i++) { // Skip the header row
+            const cells = rows[i].getElementsByTagName("td");
+            let isVisible = false;
 
-    // Close the modal if the user clicks outside of it
-    // window.onclick = function(event) {
-    //     const modal = document.getElementById('feedback-modal');
-    //     if (event.target === modal) {
-    //         modal.style.display = 'none';
-    //     }
-    // };
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j] && cells[j].innerText.toLowerCase().includes(filter)) {
+                    isVisible = true;
+                    break;
+                }
+            }
 
-    // Show the billing form modal
-    // function showBillingForm() {
-    //     document.getElementById('billing-modal').style.display = 'block';
-    // }
+            rows[i].style.display = isVisible ? "" : "none";
+        }
+    }
 
-    // function editBilling(id) {
-    //     // Fetch the billing data using AJAX
-    //     fetch(`fetch-billing-handler.php?id=${id}`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.success) {
-    //                 // Populate the modal fields with the fetched data
-    //                 document.getElementById('client_name').value = data.billing.client_name;
-    //                 document.getElementById('billing_date').value = data.billing.billing_date;
-    //                 document.querySelector(`input[name="client_profile"][value="${data.billing.client_profile}"]`).checked = true;
+    // Function to filter the Billing table
+    function filterBillingTable() {
+        const input = document.getElementById("billingSearch");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("billingTable");
+        const rows = table.getElementsByTagName("tr");
 
-    //                 // Populate equipment checkboxes
-    //                 const equipment = data.billing.equipment.split(', ');
-    //                 document.querySelectorAll('input[name="equipment[]"]').forEach(checkbox => {
-    //                     checkbox.checked = equipment.includes(checkbox.value);
-    //                 });
+        for (let i = 1; i < rows.length; i++) { // Skip the header row
+            const cells = rows[i].getElementsByTagName("td");
+            let isVisible = false;
 
-    //                 document.getElementById('total_invoice').value = data.billing.total_invoice;
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j] && cells[j].innerText.toLowerCase().includes(filter)) {
+                    isVisible = true;
+                    break;
+                }
+            }
 
-    //                 // Show the modal
-    //                 document.getElementById('billing-modal').style.display = 'block';
+            rows[i].style.display = isVisible ? "" : "none";
+        }
+    }
 
-    //                 // Add a hidden input for the billing ID
-    //                 let billingIdInput = document.getElementById('billing_id');
-    //                 if (!billingIdInput) {
-    //                     billingIdInput = document.createElement('input');
-    //                     billingIdInput.type = 'hidden';
-    //                     billingIdInput.id = 'billing_id';
-    //                     billingIdInput.name = 'billing_id';
-    //                     document.getElementById('billing-form').appendChild(billingIdInput);
-    //                 }
-    //                 billingIdInput.value = data.billing.id;
+    // Function to sort the Job Requests table
+    function sortJobRequestsTable(columnIndex) {
+        const table = document.getElementById("jobRequestsTable");
+        const rows = Array.from(table.rows).slice(1); // Exclude the header row
+        const isAscending = table.getAttribute("data-sort-order") === "asc";
+        const direction = isAscending ? 1 : -1;
 
-    //                 // Update the modal title to indicate editing
-    //                 document.getElementById('billing-modal-title').innerText = 'Edit Billing';
-    //             } else {
-    //                 alert('Error fetching billing data: ' + data.message);
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //             alert('An error occurred while fetching the billing data.');
-    //         });
-    // }
+        rows.sort((a, b) => {
+            const aText = a.cells[columnIndex].innerText.trim();
+            const bText = b.cells[columnIndex].innerText.trim();
 
-    // Close the billing form modal
-    // function closeBillingForm() {
-    //     document.getElementById('billing-modal').style.display = 'none';
-    // }
+            // Handle date sorting
+            if (columnIndex === 0) {
+                return direction * (new Date(aText) - new Date(bText));
+            }
 
-    // Close the modal if the user clicks outside of it
-    // window.onclick = function(event) {
-    //     const modal = document.getElementById('billing-modal');
-    //     if (event.target === modal) {
-    //         modal.style.display = 'none';
-    //     }
-    // };
+            // Handle text sorting
+            return direction * aText.localeCompare(bText);
+        });
 
-    // Confirmation dialog for billing form submission
-    // document.getElementById('billing-form').addEventListener('submit', function(e) {
-    //     e.preventDefault(); // Prevent the default form submission
+        // Append sorted rows back to the table
+        const tbody = table.querySelector("tbody");
+        rows.forEach(row => tbody.appendChild(row));
 
-    //     // Show confirmation dialog
-    //     const confirmation = confirm('Are you sure you want to submit these billing details?');
-    //     if (confirmation) {
-    //         // If the user clicks "Yes", submit the form
-    //         this.submit();
-    //         alert('Billing details submitted successfully!');
-    //     } else {
-    //         // If the user clicks "No", do nothing
-    //         alert('Submission canceled.');
-    //     }
-    // });
+        // Toggle sort order
+        table.setAttribute("data-sort-order", isAscending ? "desc" : "asc");
+    }
 
-    // Confirmation dialog for feedback form submission
-    // document.getElementById('feedback-modal').querySelector('form').addEventListener('submit', function(e) {
-    //     e.preventDefault(); // Prevent the default form submission
+    // Function to sort the Billing table
+    function sortBillingTable(columnIndex) {
+        const table = document.getElementById("billingTable");
+        const rows = Array.from(table.rows).slice(1); // Exclude the header row
+        const isAscending = table.getAttribute("data-sort-order") === "asc";
+        const direction = isAscending ? 1 : -1;
 
-    //     // Show confirmation dialog
-    //     const confirmation = confirm('Are you sure you want to submit this feedback?');
-    //     if (confirmation) {
-    //         // If the user clicks "Yes", submit the form
-    //         this.submit();
-    //         alert('Feedback submitted successfully!');
-    //     } else {
-    //         // If the user clicks "No", do nothing
-    //         alert('Submission canceled.');
-    //     }
-    // });
+        rows.sort((a, b) => {
+            const aText = a.cells[columnIndex].innerText.trim();
+            const bText = b.cells[columnIndex].innerText.trim();
 
-    // Handle form submission via AJAX
-    // document.getElementById('billing-form').addEventListener('submit', function(e) {
-    //     e.preventDefault();
+            // Handle date sorting
+            if (columnIndex === 0) {
+                return direction * (new Date(aText) - new Date(bText));
+            }
 
-    //     const formData = new FormData(this);
+            // Handle numeric sorting for Total Amount
+            if (columnIndex === 5) {
+                return direction * (parseFloat(aText.replace(/[^0-9.-]+/g, "")) - parseFloat(bText.replace(/[^0-9.-]+/g, "")));
+            }
 
-    //     fetch('save_billing.php', {
-    //             method: 'POST',
-    //             body: formData
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.success) {
-    //                 alert('Billing record added successfully!');
-    //                 location.reload(); // Reload the page to update the billing table
-    //             } else {
-    //                 alert('Error: ' + data.message);
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //             alert('An error occurred while submitting the form.');
-    //         });
-    // });
+            // Handle text sorting
+            return direction * aText.localeCompare(bText);
+        });
+
+        // Append sorted rows back to the table
+        const tbody = table.querySelector("tbody");
+        rows.forEach(row => tbody.appendChild(row));
+
+        // Toggle sort order
+        table.setAttribute("data-sort-order", isAscending ? "desc" : "asc");
+    }
+
+    function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = 'staff-logout.php';
+        }
+    }
 </script>
 </body>
 

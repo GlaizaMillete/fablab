@@ -22,30 +22,38 @@ if (!empty($_GET['year'])) {
     $year = intval($_GET['year']);
     $whereClauses[] = "YEAR(billing_date) = $year";
 }
-if (!empty($_GET['client_profile'])) {
-    $client_profile = $conn->real_escape_string($_GET['client_profile']);
-    if ($client_profile == 'OTHERS') {
-        $whereClauses[] = "client_profile NOT IN ('STUDENT', 'MSME')";
+if (!empty($_GET['client_profile']) && is_array($_GET['client_profile'])) {
+    $client_profiles = array_map([$conn, 'real_escape_string'], $_GET['client_profile']);
+    if (in_array('OTHERS', $client_profiles)) {
+        $client_profiles = array_diff($client_profiles, ['OTHERS']);
+        $profileConditions = [];
+        if (!empty($client_profiles)) {
+            $profileList = "'" . implode("','", $client_profiles) . "'";
+            $profileConditions[] = "client_profile IN ($profileList)";
+        }
+        $profileConditions[] = "client_profile NOT IN ('STUDENT', 'MSME')";
+        $whereClauses[] = '(' . implode(' OR ', $profileConditions) . ')';
     } else {
-        $whereClauses[] = "client_profile = '$client_profile'";
+        $profileList = "'" . implode("','", $client_profiles) . "'";
+        $whereClauses[] = "client_profile IN ($profileList)";
     }
 }
 if (!empty($_GET['prepared_by'])) {
     $prepared_by = $conn->real_escape_string(trim($_GET['prepared_by']));
     $whereClauses[] = "LOWER(prepared_by) LIKE LOWER('%$prepared_by%')";
 }
-if (!empty($_GET['approved_by'])) {
-    $approved_by = $conn->real_escape_string(trim($_GET['approved_by']));
-    $whereClauses[] = "LOWER(approved_by) LIKE LOWER('%$approved_by%')";
-}
-if (!empty($_GET['payment_received_by'])) {
-    $payment_received_by = $conn->real_escape_string(trim($_GET['payment_received_by']));
-    $whereClauses[] = "LOWER(payment_received_by) LIKE LOWER('%$payment_received_by%')";
-}
-if (!empty($_GET['receipt_acknowledged_by'])) {
-    $receipt_acknowledged_by = $conn->real_escape_string(trim($_GET['receipt_acknowledged_by']));
-    $whereClauses[] = "LOWER(receipt_acknowledged_by) LIKE LOWER('%$receipt_acknowledged_by%')";
-}
+// if (!empty($_GET['approved_by'])) {
+//     $approved_by = $conn->real_escape_string(trim($_GET['approved_by']));
+//     $whereClauses[] = "LOWER(approved_by) LIKE LOWER('%$approved_by%')";
+// }
+// if (!empty($_GET['payment_received_by'])) {
+//     $payment_received_by = $conn->real_escape_string(trim($_GET['payment_received_by']));
+//     $whereClauses[] = "LOWER(payment_received_by) LIKE LOWER('%$payment_received_by%')";
+// }
+// if (!empty($_GET['receipt_acknowledged_by'])) {
+//     $receipt_acknowledged_by = $conn->real_escape_string(trim($_GET['receipt_acknowledged_by']));
+//     $whereClauses[] = "LOWER(receipt_acknowledged_by) LIKE LOWER('%$receipt_acknowledged_by%')";
+// }
 if (!empty($_GET['search_name'])) {
     $search_name = $conn->real_escape_string(trim($_GET['search_name']));
     $whereClauses[] = "LOWER(client_name) LIKE LOWER('%$search_name%')";
@@ -84,9 +92,13 @@ while ($row = $result->fetch_assoc()) {
     <link rel="icon" href="fablab.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style2.css">
+    <!-- <link rel="stylesheet" href="style3.css"> -->
 </head>
 
 <body>
+    <div class="back-button">
+        <a href="staff-home.php">&larr; Back</a>
+    </div>
     <div class="container">
         <h1>Payment and Release</h1>
         <!-- The Modal -->
@@ -99,7 +111,7 @@ while ($row = $result->fetch_assoc()) {
                     <input type="hidden" name="billing_id" id="billingIdField">
 
                     <!-- Section 1: Personal Information -->
-                    <h3>1. Personal Information</h3>
+                    <h3>Personal Information</h3>
                     <div>
                         <label>No:</label>
                         <input type="number" id="noField" name="no" readonly>
@@ -121,7 +133,7 @@ while ($row = $result->fetch_assoc()) {
                         <input type="number" name="contact_no" required>
                     </div>
                     <div>
-                        <label>Client Profile:</label><br>
+                        <label>Client Profile:</label>
                         <input type="radio" name="client_profile" value="STUDENT" required> STUDENT<br>
                         <input type="radio" name="client_profile" value="MSME" required> MSME<br>
                         <input type="radio" name="client_profile" value="OTHERS" required> OTHERS (Specify):
@@ -129,11 +141,11 @@ while ($row = $result->fetch_assoc()) {
                     </div>
                     <div>
                         <label>Description of the Project:</label>
-                        <textarea name="description" required></textarea>
+                        <textarea class="description" name="description" required></textarea>
                     </div>
 
                     <!-- Section 2: Details of the Service to be Rendered -->
-                    <h3>2. Details of the Service to be Rendered</h3>
+                    <h3>Details of the Service to be Rendered</h3>
                     <table id="serviceTable">
                         <thead>
                             <tr>
@@ -161,10 +173,10 @@ while ($row = $result->fetch_assoc()) {
                     </div>
 
                     <!-- Completion Information -->
-                    <div>
+                    <!-- <div>
                         <label>Completion Date:</label>
                         <input type="date" name="completion_date" required>
-                    </div>
+                    </div> -->
                     <div>
                         <label>Prepared By:</label>
                         <input type="text" name="prepared_by" value="<?= $_SESSION['staff_name'] ?>" readonly>
@@ -175,7 +187,7 @@ while ($row = $result->fetch_assoc()) {
                     </div>
 
                     <!-- Section 3: Order Payment -->
-                    <h3>3. Order Payment</h3>
+                    <!-- <h3>3. Order Payment</h3>
                     <div>
                         <label>Please issue an Official Receipt in favor of:</label>
                         <input type="text" name="or_favor" required>
@@ -187,10 +199,10 @@ while ($row = $result->fetch_assoc()) {
                     <div>
                         <label>Approved by:</label>
                         <input type="text" name="approved_by" required>
-                    </div>
+                    </div> -->
 
                     <!-- Section 4: Payment -->
-                    <h3>4. Payment</h3>
+                    <!-- <h3>4. Payment</h3>
                     <div>
                         <label>OR No:</label>
                         <input type="number" name="or_no" required>
@@ -202,10 +214,10 @@ while ($row = $result->fetch_assoc()) {
                     <div>
                         <label>Payment Received by:</label>
                         <input type="text" name="payment_received_by" required>
-                    </div>
+                    </div> -->
 
                     <!-- Section 5: Receipt of Completed Work -->
-                    <h3>5. Receipt of Completed Work</h3>
+                    <!-- <h3>5. Receipt of Completed Work</h3>
                     <div>
                         <label>I, the client, acknowledge that I have received the above product.</label>
                         <input type="text" name="receipt_acknowledged_by" required>
@@ -213,9 +225,10 @@ while ($row = $result->fetch_assoc()) {
                     <div>
                         <label>Date:</label>
                         <input type="date" name="receipt_date" required>
-                    </div>
+                    </div> -->
 
                     <!-- Section 6: Reference File -->
+                    <h3>Reference File</h3>
                     <div>
                         <label>Upload Reference File (PDF, DOC, DOCX, JPG, PNG):</label>
                         <input type="file" name="billing_pdf" accept=".pdf,.doc,.docx,.jpg,.png" required>
@@ -283,30 +296,17 @@ while ($row = $result->fetch_assoc()) {
                 </div>
                 <div>
                     <label>Client Profile:</label>
-                    <select name="client_profile">
-                        <option value="">All</option>
-                        <option value="STUDENT" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'STUDENT' ? 'selected' : '' ?>>STUDENT</option>
-                        <option value="MSME" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'MSME' ? 'selected' : '' ?>>MSME</option>
-                        <option value="OTHERS" <?= isset($_GET['client_profile']) && $_GET['client_profile'] == 'OTHERS' ? 'selected' : '' ?>>OTHERS</option>
-                    </select>
+                    <div style="display: flex; gap: 0.2rem;">
+                        <input type="checkbox" name="client_profile[]" value="STUDENT" <?= isset($_GET['client_profile']) && in_array('STUDENT', (array)$_GET['client_profile']) ? 'checked' : '' ?>> STUDENT<br>
+                        <input type="checkbox" name="client_profile[]" value="MSME" <?= isset($_GET['client_profile']) && in_array('MSME', (array)$_GET['client_profile']) ? 'checked' : '' ?>> MSME<br>
+                        <input type="checkbox" name="client_profile[]" value="OTHERS" <?= isset($_GET['client_profile']) && in_array('OTHERS', (array)$_GET['client_profile']) ? 'checked' : '' ?>> OTHERS<br>
+                    </div>
                 </div>
                 <div>
                     <label>Prepared By:</label>
                     <input type="text" name="prepared_by" value="<?= isset($_GET['prepared_by']) ? htmlspecialchars($_GET['prepared_by']) : '' ?>">
                 </div>
-                <div>
-                    <label>Approved By:</label>
-                    <input type="text" name="approved_by" value="<?= isset($_GET['approved_by']) ? htmlspecialchars($_GET['approved_by']) : '' ?>">
-                </div>
-                <div>
-                    <label>Payment Received By:</label>
-                    <input type="text" name="payment_received_by" value="<?= isset($_GET['payment_received_by']) ? htmlspecialchars($_GET['payment_received_by']) : '' ?>">
-                </div>
-                <div>
-                    <label>Receipt Acknowledged By:</label>
-                    <input type="text" name="receipt_acknowledged_by" value="<?= isset($_GET['receipt_acknowledged_by']) ? htmlspecialchars($_GET['receipt_acknowledged_by']) : '' ?>">
-                </div>
-                <div>
+                <div class="filter-div">
                     <button type="submit">Filter</button>
                 </div>
             </form>
@@ -333,7 +333,7 @@ while ($row = $result->fetch_assoc()) {
                     <th>No.</th>
                     <th>Client</th>
                     <th>Service Description</th>
-                    <th>Profile</th>
+                    <th>Client Profile</th>
                     <th>Total Amount</th>
                     <th>Reference</th>
                     <th>Actions</th>
@@ -341,23 +341,21 @@ while ($row = $result->fetch_assoc()) {
             </thead>
             <tbody>
                 <?php foreach ($rows as $row): ?>
-                    <tr>
-                        <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
-                        <td><?php echo htmlspecialchars($row['no']); ?></td>
-                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['description']); ?></td>
-                        <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
-                        <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
+                    <tr data-id="<?= $row['no'] ?>">
+                        <td><?= date("F d, Y", strtotime($row['billing_date'])) ?></td>
+                        <td><?= htmlspecialchars($row['no']) ?></td>
+                        <td><?= htmlspecialchars($row['client_name']) ?></td>
+                        <td><?= htmlspecialchars($row['description']) ?></td>
+                        <td><?= htmlspecialchars(trim($row['client_profile'])) ?></td>
+                        <td>&#8369;<?= number_format($row['total_invoice'], 2) ?></td>
                         <td>
                             <?php if (!empty($row['billing_pdf'])): ?>
-                                <button class="ref-link" onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">
-                                    View PDF
-                                </button>
+                                <a href="uploads/billing/<?= htmlspecialchars($row['billing_pdf']) ?>" class="ref-link" target="_blank">View PDF</a>
                             <?php else: ?>
                                 <span class="no-pdf">None</span>
                             <?php endif; ?>
                         </td>
-                        <td>
+                        <td class="action-container">
                             <button class="edit-btn" data-id="<?= $row['no'] ?>">Edit</button>
                             <button class="delete-btn" data-id="<?= $row['no'] ?>">Delete</button>
                         </td>
@@ -494,41 +492,16 @@ while ($row = $result->fetch_assoc()) {
 
         // Fetch the next available 'no' value when the form is opened
         document.getElementById('openFormBtn').addEventListener('click', function() {
-            // *** ADDED: Clear service details table and add a default row ***
-            const serviceTableBody = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
-            serviceTableBody.innerHTML = ''; // Clear existing rows
 
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td><input type="text" name="service_name[]" required></td>
-                <td><input type="text" name="unit[]" required></td>
-                <td><input type="text" name="rate[]" required></td>
-                <td><input type="number" name="total_cost[]" step="0.01" required class="cost-input"></td>
-                <td><button type="button" class="removeRowBtn">Remove</button></td>
-            `;
-            serviceTableBody.appendChild(newRow);
+            // Clear the billing_id field to ensure it's treated as a new record
+            document.getElementById('billingIdField').value = '';
 
-            // Add event listeners for the new row
-            newRow.querySelector('.removeRowBtn').addEventListener('click', function() {
-                newRow.remove();
-                updateTotalCost();
-            });
-            newRow.querySelector('.cost-input').addEventListener('input', updateTotalCost);
-            // *** END ADDED SECTION ***
-
-            // Reset the form fields (excluding the service table which is handled above)
-            const form = document.getElementById('billingForm');
-            form.reset();
-
-            // Set the modal title for adding a new record
-            document.getElementById('billingModalTitle').innerText = 'Payment and Releasing Form';
-
-
+            // Fetch the next available 'no' value
             fetch('fetch-billing-handler.php?action=get_next_no')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('noField').value = data.next_no;
+                        document.getElementById('noField').value = data.next_no; // Populate the 'no' field
                     } else {
                         alert('Error fetching the next number: ' + data.message);
                     }
@@ -538,10 +511,37 @@ while ($row = $result->fetch_assoc()) {
                     alert('An error occurred while fetching the next number.');
                 });
 
+            // Clear service details table and add a default row
+            const serviceTableBody = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
+            serviceTableBody.innerHTML = ''; // Clear existing rows
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+<td><input type=\"text\" name=\"service_name[]\" required></td>
+<td><input type=\"text\" name=\"unit[]\" required></td>
+<td><input type=\"text\" name=\"rate[]\" required></td>
+<td><input type=\"number\" name=\"total_cost[]\" step=\"0.01\" required class=\"cost-input\"></td>
+<td><button type=\"button\" class=\"removeRowBtn\">Remove</button></td>
+`;
+            serviceTableBody.appendChild(newRow);
+
+            // Add event listeners for the new row
+            newRow.querySelector('.removeRowBtn').addEventListener('click', function() {
+                newRow.remove();
+                updateTotalCost();
+            });
+            newRow.querySelector('.cost-input').addEventListener('input', updateTotalCost);
+
+            // Reset the form fields (excluding the service table which is handled above)
+            const form = document.getElementById('billingForm');
+            form.reset();
+
+            // Set the modal title for adding a new record
+            document.getElementById('billingModalTitle').innerText = 'Add New Record';
+
             // Show the modal
             modal.style.display = "block";
         });
-
 
         // Edit Button Click
         document.querySelectorAll('.edit-btn').forEach(button => {
@@ -561,23 +561,33 @@ while ($row = $result->fetch_assoc()) {
                             document.querySelector('[name="client_name"]').value = data.billing.client_name || '';
                             document.querySelector('[name="address"]').value = data.billing.address || '';
                             document.querySelector('[name="contact_no"]').value = data.billing.contact_no || '';
-                            document.querySelector(`[name="client_profile"][value="${data.billing.client_profile}"]`).checked = true;
-                            document.querySelector('[name="client_profile_other"]').value = data.billing.client_profile_other || '';
+
+                            // Handle client profile radio buttons
+                            const clientProfileRadio = document.querySelector(`[name="client_profile"][value="${data.billing.client_profile}"]`);
+                            if (clientProfileRadio) {
+                                clientProfileRadio.checked = true;
+                                document.querySelector('[name="client_profile_other"]').value = ''; // Clear "OTHERS" field
+                            } else {
+                                // If no matching radio button, assume "OTHERS"
+                                document.querySelector('[name="client_profile"][value="OTHERS"]').checked = true;
+                                document.querySelector('[name="client_profile_other"]').value = data.billing.client_profile || '';
+                            }
+
                             document.querySelector('[name="description"]').value = data.billing.description || '';
-                            document.querySelector('[name="completion_date"]').value = data.billing.completion_date || '';
+                            // document.querySelector('[name="completion_date"]').value = data.billing.completion_date || '';
                             document.querySelector('[name="prepared_by"]').value = data.billing.prepared_by || '';
                             document.querySelector('[name="prepared_date"]').value = data.billing.prepared_date || '';
-                            document.querySelector('[name="or_favor"]').value = data.billing.or_favor || '';
-                            document.querySelector('[name="or_amount"]').value = data.billing.or_amount || '';
-                            document.querySelector('[name="approved_by"]').value = data.billing.approved_by || '';
-                            document.querySelector('[name="or_no"]').value = data.billing.or_no || '';
-                            document.querySelector('[name="payment_date"]').value = data.billing.payment_date || '';
-                            document.querySelector('[name="payment_received_by"]').value = data.billing.payment_received_by || '';
-                            document.querySelector('[name="receipt_acknowledged_by"]').value = data.billing.receipt_acknowledged_by || '';
-                            document.querySelector('[name="receipt_date"]').value = data.billing.receipt_date || '';
+                            // document.querySelector('[name="or_favor"]').value = data.billing.or_favor || '';
+                            // document.querySelector('[name="or_amount"]').value = data.billing.or_amount || '';
+                            // document.querySelector('[name="approved_by"]').value = data.billing.approved_by || '';
+                            // document.querySelector('[name="or_no"]').value = data.billing.or_no || '';
+                            // document.querySelector('[name="payment_date"]').value = data.billing.payment_date || '';
+                            // document.querySelector('[name="payment_received_by"]').value = data.billing.payment_received_by || '';
+                            // document.querySelector('[name="receipt_acknowledged_by"]').value = data.billing.receipt_acknowledged_by || '';
+                            // document.querySelector('[name="receipt_date"]').value = data.billing.receipt_date || '';
 
                             // Update modal title
-                            document.getElementById('billingModalTitle').innerText = 'Edit Billing';
+                            document.getElementById('billingModalTitle').innerText = 'Edit Record';
 
                             // Populate service details
                             const serviceTableBody = document.getElementById('serviceTable').getElementsByTagName('tbody')[0];
