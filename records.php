@@ -88,6 +88,9 @@ while ($row = $result->fetch_assoc()) {
 </head>
 
 <body>
+    <div class="back-button">
+        <a href="staff-home.php">&larr; Back</a>
+    </div>
     <div class="container">
         <h1>Payment and Release</h1>
         <!-- The Modal -->
