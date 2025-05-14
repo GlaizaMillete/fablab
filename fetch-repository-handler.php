@@ -41,7 +41,7 @@ if (isset($_GET['id'])) {
 }
 
 // Fetch all repository data for the table
-$sql = "SELECT id, listing_name, listing_type, reference_file, note, date FROM repository";
+$sql = "SELECT * FROM repository ORDER BY date ASC";
 $result = $conn->query($sql);
 
 if (!$result) {

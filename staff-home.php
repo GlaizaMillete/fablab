@@ -34,7 +34,7 @@ while ($row = $result->fetch_assoc()) {
 
 // Fetch Job Requests
 $jobRequests = [];
-$sql = "SELECT * FROM job_requests ORDER BY request_date DESC";
+$sql = "SELECT * FROM job_requests ORDER BY request_date ASC";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -118,11 +118,12 @@ include 'fetch-repository-handler.php';
                                     </td>
                                     <td>
                                         <?php
-                                        $designation = htmlspecialchars($request['designation']);
-                                        if ($designation === "Others" && !empty($request['designation_other'])) {
-                                            $designation .= ": " . htmlspecialchars($request['designation_other']);
+                                        // Check if the designation is "Others" and display only the "designation_other" value
+                                        if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
+                                            echo htmlspecialchars($request['designation_other']);
+                                        } else {
+                                            echo htmlspecialchars($request['designation']);
                                         }
-                                        echo $designation;
                                         ?>
                                     </td>
                                     <td style="text-align: center;">
@@ -301,17 +302,17 @@ include 'fetch-repository-handler.php';
 <div id="repository-modal" class="modal">
     <div class="modal-content repository-form">
         <span class="close" onclick="closeRepositoryForm()">&times;</span>
-        <h2>Add/Edit Repository Listing</h2>
+        <h2>Add/Edit Repository</h2>
         <form action="add-repository-handler.php" method="POST">
             <input type="hidden" id="repository_id" name="repository_id"> <!-- Hidden input for ID -->
-            <label for="listing_name">Listing Name:</label>
+            <label for="listing_name">Name:</label>
             <input type="text" id="listing_name" name="listing_name" required>
 
             <label for="listing_type">Type:</label>
             <input type="text" id="listing_type" name="listing_type" required>
 
-            <label for="reference_file">Reference File/URL:</label>
-            <input type="text" id="reference_file" name="reference_file" required>
+            <label for="reference_file">File Directory/URL:</label>
+            <input type="text" id="reference_file" name="reference_file" placeholder="e.g., https://example.com/file.pdf or C:\files\document.pdf" required>
 
             <label for="note">Note:</label>
             <textarea id="note" name="note" rows="4"></textarea>

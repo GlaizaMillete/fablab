@@ -60,7 +60,7 @@ if (!empty($_GET['search_name'])) {
 }
 
 $whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
-$query = "SELECT * FROM billing $whereClause ORDER BY no DESC"; // Changed 'id' to 'no'
+$query = "SELECT * FROM billing $whereClause ORDER BY billing_date ASC"; // Changed to ASC for oldest to newest
 $result = $conn->query($query);
 
 if (!$result) {

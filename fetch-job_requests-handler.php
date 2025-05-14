@@ -23,7 +23,7 @@ if (isset($_GET['id'])) {
     }
 } else {
     // Fetch all job requests
-    $sql = "SELECT * FROM job_requests ORDER BY request_date DESC";
+    $sql = "SELECT * FROM job_requests ORDER BY request_date ASC"; // Changed to ASC for oldest to newest
     $result = $conn->query($sql);
     $jobRequests = [];
 

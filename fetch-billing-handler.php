@@ -65,7 +65,7 @@ if (isset($_GET['no'])) {
 }
 
 // Fetch all billing records (default behavior)
-$result = $conn->query("SELECT * FROM billing ORDER BY no ASC");
+$result = $conn->query("SELECT * FROM billing ORDER BY billing_date ASC"); // Changed to ASC for oldest to newest
 if ($result) {
     $billingRows = [];
     while ($row = $result->fetch_assoc()) {
