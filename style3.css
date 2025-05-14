@@ -401,6 +401,7 @@ td:hover {
     /* Remove ellipsis */
     background-color: var(--color-gray-100);
     /* Optional: Highlight the cell */
+    scrollbar-width: thin;
 }
 
 /* Set specific widths for each column */
@@ -410,7 +411,7 @@ td:nth-child(1) {
     width: 15%;
     /* Adjust as needed */
     max-width: 150px;
-    text-align: left;
+    text-align: center;
 }
 
 th:nth-child(2),
@@ -1054,4 +1055,46 @@ a:hover {
     display: flex;
     height: -webkit-fill-available;
 }
+
+#columnDetails {
+    max-height: 220px;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: hidden;
+    /* Disable horizontal scrolling */
+    border-radius: var(--radius);
+    scrollbar-width: none;
+    /* For Firefox: Hide scrollbar */
+    -ms-overflow-style: none;
+    /* For Internet Explorer and Edge */
+}
+
+#columnDetails::-webkit-scrollbar {
+    width: 0;
+    /* For Chrome, Safari, and Edge: Hide scrollbar */
+}
+
+#columnDetails:hover {
+    scrollbar-width: thin;
+    /* For Firefox: Show thin scrollbar on hover */
+}
+
+#columnDetails:hover::-webkit-scrollbar {
+    width: 8px;
+    /* For Chrome, Safari, and Edge: Show scrollbar on hover */
+}
+
+#columnDetails:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-400);
+    /* Customize scrollbar thumb color */
+    border-radius: var(--radius);
+    /* Rounded scrollbar thumb */
+}
+
+#columnDetails:hover::-webkit-scrollbar-track {
+    background-color: var(--color-gray-200);
+    /* Customize scrollbar track color */
+}
+
+
     

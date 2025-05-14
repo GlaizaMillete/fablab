@@ -274,7 +274,7 @@ $chartData = [
                         } ?>
                     </select>
                 </div>
-                <div>
+                <!-- <div>
                     <label>Designation:</label>
                     <select name="designation">
                         <option value="">All</option>
@@ -300,7 +300,7 @@ $chartData = [
                         }
                         ?>
                     </select>
-                </div>
+                </div> -->
                 <div class="filter-div">
                     <button type="submit">Filter</button>
                 </div>
@@ -430,16 +430,53 @@ $chartData = [
 
         // Function to fetch and update chart data
         function updateChart(column) {
-            fetch(`fetch-graph-data.php?column=${column}`)
-                .then(response => response.json())
+            // Get the current URL's query string
+            const currentQueryString = window.location.search;
+
+            // Construct the fetch URL, including the column and existing filters
+            // Ensure we don't duplicate the 'column' parameter if it's already in the query string
+            const fetchUrl = `fetch-graph-data.php?column=${column}${currentQueryString ? '&' + currentQueryString.substring(1) : ''}`;
+
+            fetch(fetchUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        // Handle HTTP errors
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    if (data.error) {
+                        console.error('Error fetching chart data:', data.error);
+                        // Optionally display an error message to the user
+                        return;
+                    }
+
                     const labels = data.labels;
                     const values = data.values;
+                    // Define a set of colors. You might need more colors if you have many categories.
+                    // Consider generating colors dynamically or using a color palette library for more categories.
                     const colors = [
-                        'rgba(245, 158, 11, 0.8)', // Example colors
-                        'rgba(37, 99, 235, 0.8)',
-                        'rgba(16, 185, 129, 0.8)',
-                        'rgba(239, 68, 68, 0.8)'
+                        'rgba(245, 158, 11, 0.8)', // Pending/Category 1
+                        'rgba(37, 99, 235, 0.8)', // In Progress/Category 2
+                        'rgba(16, 185, 129, 0.8)', // Completed/Category 3
+                        'rgba(239, 68, 68, 0.8)', // Cancelled/Category 4
+                        'rgba(139, 92, 246, 0.8)', // Category 5
+                        'rgba(249, 128, 255, 0.8)', // Category 6
+                        'rgba(113, 113, 122, 0.8)', // Category 7
+                        'rgba(250, 204, 21, 0.8)', // Category 8
+                        'rgba(34, 197, 94, 0.8)', // Category 9
+                        'rgba(59, 130, 246, 0.8)', // Category 10
+                        'rgba(168, 85, 247, 0.8)', // Category 11
+                        'rgba(244, 63, 94, 0.8)', // Category 12
+                        'rgba(6, 182, 212, 0.8)', // Category 13
+                        'rgba(132, 204, 22, 0.8)', // Category 14
+                        'rgba(249, 168, 16, 0.8)', // Category 15
+                        'rgba(236, 72, 153, 0.8)', // Category 16
+                        'rgba(14, 165, 233, 0.8)', // Category 17
+                        'rgba(163, 230, 53, 0.8)', // Category 18
+                        'rgba(251, 146, 60, 0.8)', // Category 19
+                        'rgba(232, 121, 220, 0.8)', // Category 20
                     ];
 
                     // Display column details
@@ -457,7 +494,8 @@ $chartData = [
 
                         const detailDiv = document.createElement('div');
                         detailDiv.className = 'profile-total';
-                        detailDiv.style.borderLeftColor = colors[index]; // Assign color dynamically
+                        // Use modulo to cycle through the defined colors if there are more labels than colors
+                        detailDiv.style.borderLeftColor = colors[index % colors.length];
                         detailDiv.innerHTML = `<strong>${label}:</strong> ${formattedValue}`;
                         columnDetails.appendChild(detailDiv);
                     });
@@ -474,7 +512,8 @@ $chartData = [
                             labels: labels,
                             datasets: [{
                                 data: values,
-                                backgroundColor: colors, // Use the same colors for the chart
+                                // Use modulo to cycle through the defined colors
+                                backgroundColor: labels.map((_, index) => colors[index % colors.length]),
                                 borderWidth: 1
                             }]
                         },
@@ -484,6 +523,10 @@ $chartData = [
                             plugins: {
                                 legend: {
                                     position: 'bottom'
+                                },
+                                title: {
+                                    display: true,
+                                    text: `Distribution by ${column === 'designation' ? 'Client Profile' : 'Service Requested'}` // Dynamic title
                                 }
                             }
                         }
@@ -498,8 +541,10 @@ $chartData = [
             updateChart(selectedColumn);
         });
 
-        // Initialize the chart with the default column
-        updateChart('designation');
+        // Initialize the chart with the default column and current filters on page load
+        // Get the initial selected column from the dropdown
+        const initialColumn = document.getElementById('graphColumn').value;
+        updateChart(initialColumn);
 
         // Form validation for service requested
         document.getElementById('jobRequestForm').addEventListener('submit', function(e) {

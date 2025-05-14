@@ -681,6 +681,7 @@ button {
 
 /* Form Title Styling */
 .repository-form h2 {
+    margin-top: 1rem;
     margin-bottom: 20px;
     font-size: 1.8rem;
     color: #333;

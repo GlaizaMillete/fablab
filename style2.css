@@ -390,6 +390,7 @@ td:hover {
     white-space: nowrap;
     text-overflow: unset;
     background-color: var(--color-gray-100);
+    scrollbar-width: thin;
 }
 
 tbody tr:last-child td {
@@ -951,7 +952,7 @@ td:nth-child(2) {
     width: 10%;
     /* Adjust as needed */
     max-width: 150px;
-    text-align: left;
+    text-align: center;
     word-wrap: break-word;
     /* Ensures long text wraps */
 }
@@ -1050,4 +1051,3 @@ td:nth-child(8) {
     color: var(--color-gray-800);
     background-color: white;
 }
-
