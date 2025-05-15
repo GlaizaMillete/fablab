@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, StringVar, IntVar, BooleanVar
 from tkcalendar import DateEntry
 from reportlab.pdfgen import canvas as reportlab_canvas
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import legal
 from PyPDF2 import PdfReader, PdfWriter
 from reportlab.lib.colors import black
 import os
@@ -13,12 +13,12 @@ def fill_pdf(data):
     output_filename = "filled_request_form.pdf"
     overlay_filename = "request_overlay.pdf"
 
-    c = reportlab_canvas.Canvas(overlay_filename, pagesize=letter)
+    c = reportlab_canvas.Canvas(overlay_filename, pagesize=legal)
     c.setFont("Helvetica", 10)
     c.setFillColor(black)
 
     # Date requested
-    c.drawString(210, 800, data["date_requested"])
+    c.drawString(210, 795, data["date_requested"])
     
     # Consent checkbox
     if data["consent"]:
