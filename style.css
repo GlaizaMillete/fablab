@@ -63,6 +63,15 @@ p {
     margin: 0;
 }
 
+button {
+    font-family: 'Roboto Slab'; 
+}
+
+input {
+    font-family: 'Roboto Slab';
+    /* Apply the Roboto Slab font to all input fields */
+}
+
 .admin-login-page {
     background: url('SUPER_USER01.png') no-repeat center center fixed;
     background-size: cover;
@@ -82,7 +91,15 @@ p {
     text-align: center;
     margin: 0;
     width: 70%;
-}
+    }
+    .login-header img {
+        /* border: 3px solid #000; */
+        border-radius: 50%;
+        width: 100%;
+        max-width: 13rem;
+        height: auto;
+        object-fit: cover;
+    }
 
 .login-header p {
     margin: 0;
@@ -105,10 +122,15 @@ p {
     gap: 1rem;
     display: flex;
     flex-direction: column;
+    margin-top: 2rem;
     }
     .login-pictext img {
         border: 3px solid #000;
         border-radius: 50%;
+        width: 100%;
+        max-width: 14rem;
+        height: auto;
+        object-fit: cover;
     }
 
 .login-text {
@@ -198,16 +220,17 @@ p {
     box-shadow: 5px 4px 7px 1px rgba(0, 0, 0, 0.50);
     align-items: center;
     text-align: center;
+    border: 4px solid #000;
 }
 
 .login-card-staff {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    gap: 1rem;
-    max-width: 76%;
+    justify-content: space-between;
+    /* gap: 1rem; */
+    max-width: 65%;
     width: 100%;
-    height: 100%;
+    height: 67%;
     max-height: 76vh;
     padding: 40px 40px 50px 40px;
     border: 4px solid #000;
@@ -241,11 +264,11 @@ i {
 
 .login-card input {
     margin-bottom: 20px;
-    /* Increased margin */
     width: 100%;
     padding: 20px;
-    /* Increased padding */
     box-sizing: border-box;
+    font-family: 'Roboto Slab';
+    font-size: 1rem;
 }
 
 .login-card i {
@@ -259,6 +282,8 @@ i {
     padding: 20px;
     /* Increased padding */
     box-sizing: border-box;
+    font-family: 'Roboto Slab';
+    font-size: 1rem;
 }
 
 .login-inputs {
@@ -413,7 +438,11 @@ i {
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-        }
+            }
+            .user-content div p:hover {
+                color: #F37123;
+                transition: all 0.3s ease;
+            }
 
 .full-width-container {
     width: 100%;
@@ -517,6 +546,7 @@ i {
 }
 
 table {
+    font-family: 'Roboto Slab';
     width: 100%;
     border-collapse: separate;
     /* Important for border-radius to work */
@@ -560,6 +590,10 @@ td {
     max-width: 50vw;
 }
 
+td button {
+    font-weight: 400;
+}
+
 th {
     background-color: #f2f2f2;
     font-size: 1.2rem;
@@ -575,9 +609,8 @@ th {
     transition: background-color 0.3s;
 }
 
-.user-content .button:hover,
-.user-content .button.active {
-    background-color: #029ae16c;
+.user-content .button:hover {
+    /* background-color: #cc00ff; */
 }
 
 .admin-image {
@@ -764,6 +797,7 @@ th {
     }
     .logout:hover {
         background: red;        /* Change to a darker shade on hover */
+        color: black;
         transition: all 0.3s ease;
     }
 
@@ -1091,4 +1125,179 @@ button {
     padding: 8px;
     text-align: center;
     border: 1px solid #ccc;
+}
+
+.staff-login-inline-link {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    text-align: left;
+    width: 100%;
+    padding-left: 2px;
+    color: #454444a9;
+}
+
+.staff-login-inline-link a {
+    /* remove color of a element link */
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.staff-login-inline-link a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+    /* color: #032242; */
+}
+
+.admin-login-inline-link {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    text-align: right;
+    width: 100%;
+    padding-left: 2px;
+    color: #454444a9;
+}
+
+.admin-login-inline-link a {
+    /* remove color of a element link */
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.admin-login-inline-link a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+    /* color: #032242; */
+}
+
+/* Credits Slide Panel Styles */
+.credits-container {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.credits-toggle {
+    background: #F37123;
+    color: #fff;
+    font-family: 'Roboto Slab';
+    font-size: 1.1rem;
+    padding: 10px 9px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+    cursor: pointer;
+    margin-bottom: 6px;
+    transition: background 0.2s;
+    outline: none;
+    border: 2px solid #000;
+    user-select: none;
+}
+
+.credits-toggle:hover,
+.credits-toggle:focus {
+    background: #029BE1;
+}
+
+.credits-panel {
+    background: #fff;
+    color: #222;
+    min-width: 220px;
+    max-width: fit-content;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    padding: 20px 24px 16px 24px;
+    position: absolute;
+    left: 0;
+    bottom: 60px;
+    transform: translateY(120%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(.77, 0, .18, 1), opacity 0.3s;
+    font-family: 'Roboto Slab';
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.credits-panel.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.credits-panel h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    color: #029BE1;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.credits-panel ul {
+    margin: 0;
+    /* padding-left: 18px; */
+    font-size: 1rem;
+}
+
+.credits-panel li {
+    margin-bottom: 6px;
+    color: #222;
+    font-family: 'Roboto Slab';
+}
+
+/* Developer cards inside credits panel */
+.credits-devs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 36px;
+    /* More gap between devs */
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.credits-devs li {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dev-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 170px;
+    /* Wider for bigger images and names */
+}
+
+.dev-card img {
+    width: 156px;
+    /* was 64px */
+    height: 156px;
+    /* was 64px */
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #029BE1;
+    box-shadow: 0 2px 8px rgba(2, 155, 225, 0.15);
+    margin-bottom: 6px;
+    background: #eee;
+}
+
+.dev-card span {
+    font-size: 0.95rem;
+    color: #222;
+    font-family: 'Roboto Slab';
+    text-align: center;
+    font-weight: 600;
+    margin-top: 2px;
+    word-break: break-word;
 }

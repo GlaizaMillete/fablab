@@ -32,7 +32,7 @@ include 'header.php';
     <div class="login-right">
         <div class="login-card-staff">
             <div class="login-pictext">
-                <img src="user.png" alt="user" width="280">
+                <img src="user.png" alt="user">
                 <p class="login-text">Staff Login</p>
             </div>
             <div class="login-inputs">
@@ -42,9 +42,65 @@ include 'header.php';
                     <input type="submit" class="login login-submit" name="login" value="LOGIN">
                 </form>
             </div>
+            <p class="admin-login-inline-link">
+                Not staff? <a href="admin-login.php">Go to Admin Login</a>
+            </p>
         </div>
     </div>
 </div>
+<div class="credits-container">
+    <div class="credits-toggle" tabindex="0">
+        <span>👨‍💻</span>
+    </div>
+    <div class="credits-panel">
+        <h3>Developers</h3>
+        <ul class="credits-devs">
+            <li>
+                <div class="dev-card">
+                    <img src="devs/jade.jpg" alt="Jade Raposa">
+                    <span>Jade Raposa</span>
+                </div>
+            </li>
+            <li>
+                <div class="dev-card">
+                    <img src="devs/glaiza.jpg" alt="Glaiza Mea Millete">
+                    <span>Glaiza Mea Millete</span>
+                </div>
+            </li>
+            <li>
+                <div class="dev-card">
+                    <img src="devs/rey.jpg" alt="Rey Gabriel Literal">
+                    <span>Rey Gabriel Literal</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Slide in/out on hover or click
+    const creditsToggle = document.querySelector('.credits-toggle');
+    const creditsPanel = document.querySelector('.credits-panel');
+
+    creditsToggle.addEventListener('mouseenter', () => {
+        creditsPanel.classList.add('show');
+    });
+    creditsToggle.addEventListener('mouseleave', () => {
+        creditsPanel.classList.remove('show');
+    });
+    creditsPanel.addEventListener('mouseenter', () => {
+        creditsPanel.classList.add('show');
+    });
+    creditsPanel.addEventListener('mouseleave', () => {
+        creditsPanel.classList.remove('show');
+    });
+
+    // Also allow click/tap to toggle for mobile
+    creditsToggle.addEventListener('click', () => {
+        creditsPanel.classList.toggle('show');
+    });
+</script>
+
 </body>
 
 </html>

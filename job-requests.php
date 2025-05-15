@@ -531,11 +531,37 @@ $chartData = [
                             maintainAspectRatio: false,
                             plugins: {
                                 legend: {
-                                    position: 'bottom'
+                                    position: 'bottom',
+                                    labels: {
+                                        font: {
+                                            family: 'Roboto Slab', // Custom font family
+                                            size: 14, // Font size
+                                            weight: 'bold', // Font weight
+                                            style: 'italic' // Optional: Font style
+                                        },
+                                        color: '#333' // Font color
+                                    }
+                                },
+                                tooltip: {
+                                    bodyFont: {
+                                        family: 'Roboto Slab', // Custom font for tooltip body
+                                        size: 14, // Font size
+                                        weight: 'normal' // Font weight
+                                    },
+                                    titleFont: {
+                                        family: 'Roboto Slab', // Custom font for tooltip title
+                                        size: 16, // Font size
+                                        weight: 'bold' // Font weight
+                                    }
                                 },
                                 title: {
                                     display: true,
-                                    text: `Distribution by ${column === 'designation' ? 'Client Profile' : 'Service Requested'}` // Dynamic title
+                                    text: `Distribution by ${column === 'designation' ? 'Client Profile' : 'Service Requested'}`,
+                                    font: {
+                                        family: 'Roboto Slab', // Custom font for title
+                                        size: 18, // Font size
+                                        weight: 'bold' // Font weight
+                                    }
                                 }
                             }
                         }

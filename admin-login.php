@@ -27,7 +27,7 @@ include 'admin-login-handler.php';
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <img src="FABLAB_LOGO.png" alt="fablab logo" width="180">
+                <img src="FABLAB_LOGO.png" alt="fablab logo">
                 <div class="login-header-text">
                     <p>FABLAB</p>
                     <p>Master Portal</p>
@@ -37,8 +37,11 @@ include 'admin-login-handler.php';
                 <form action="" method="post">
                     <input type="text" name="username" placeholder="Username" required>
                     <input type="password" name="password" placeholder="Password" required>
-                    <input type="submit" name="login" class="login login-submit" value="Login">
+                    <input type="submit" name="login" class="login login-submit" value="LOGIN">
                 </form>
+                <p class="staff-login-inline-link">
+                    <a href="staff-login.php">&#8592; Go Back</a>
+                </p>
             </div>
         </div>
     </div>

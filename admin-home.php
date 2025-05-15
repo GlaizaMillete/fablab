@@ -125,7 +125,7 @@ include 'config.php';
 <!-- Floating Form -->
 <div id="floating-form" class="floating-form">
     <form id="add-user-form" action="add-user-handler.php" method="post">
-        <h2 id="form-title">Add New User</h2>
+        <h2 id="form-title">Add User</h2>
         <hr style="width: 100%;">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
