@@ -35,7 +35,7 @@ if (!empty($_GET['search_name'])) {
 }
 
 $whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
-$sql = "SELECT * FROM job_requests $whereClause ORDER BY request_date DESC";
+$sql = "SELECT * FROM job_requests $whereClause ORDER BY request_date ASC"; // Changed to ASC for oldest to newest
 $result = $conn->query($sql);
 
 $jobRequests = [];
@@ -362,15 +362,12 @@ $chartData = [
                         </td>
                         <td>
                             <?php
-                            // Start with the designation
-                            $designation = htmlspecialchars($request['designation']);
-
-                            // Append designation details if "Others" is selected
-                            if ($designation === "Others" && !empty($request['designation_other'])) {
-                                $designation .= ": " . htmlspecialchars($request['designation_other']);
+                            // Check if the designation is "Others" and display only the "designation_other" value
+                            if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
+                                echo htmlspecialchars($request['designation_other']);
+                            } else {
+                                echo htmlspecialchars($request['designation']);
                             }
-
-                            echo $designation;
                             ?>
                         </td>
                         <td>
