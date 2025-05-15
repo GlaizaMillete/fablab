@@ -20,9 +20,10 @@ if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== tru
     exit();
 }
 
-// Display a login success message if redirected from the login handler
-if (isset($_GET['login']) && $_GET['login'] === 'success') {
-    echo '<script>alert("You have successfully logged in.");</script>';
+// Display the success message if it exists
+if (isset($_SESSION['login_success'])) {
+    echo '<script>alert("' . $_SESSION['login_success'] . '");</script>';
+    unset($_SESSION['login_success']); // Clear the message after displaying it
 }
 
 // Fetch billing records directly in staff-home.php
@@ -53,16 +54,17 @@ include 'fetch-repository-handler.php';
         <div class="header">
             <img src="FABLAB_LOGO.png" alt="Description of image" class="admin-image">
             <div class="header-text">
-                <p>Hello <b><?php echo htmlspecialchars($_SESSION['staff_name']); ?>!</b></p>
-                <p>Staff</p>
+                <p>Hello <b style="color: #F37123;"><?php echo htmlspecialchars($_SESSION['staff_name']); ?>!</b><br>
+                <p style="color: white;">Staff</p>
             </div>
         </div>
+        <hr style="color: white; width: 80%;">
         <div class="user-content">
             <!-- <div class="button" onclick="showTab('dashboard', 'Dashboard')">
                 <p>Dashboard</p>
             </div> -->
             <div class="button" onclick="showTab('job-description', 'Client Profile and Service Requests')">
-                <p>Client Profile & Service Requests</p>
+                <p>Client Profile &<br>Service Requests</p>
             </div>
             <div class="button" onclick="showTab('billing', 'Payment and Release')">
                 <p>Payment and Release</p>
@@ -89,7 +91,7 @@ include 'fetch-repository-handler.php';
                     <table id="jobRequestsTable">
                         <thead>
                             <tr>
-                                <th onclick="sortJobRequestsTable(0)">Request Date</th>
+                                <th onclick="sortJobRequestsTable(0)">Date Requested</th>
                                 <th onclick="sortJobRequestsTable(1)">Client Name</th>
                                 <th onclick="sortJobRequestsTable(2)">Service Request</th>
                                 <th onclick="sortJobRequestsTable(3)">Client Profile</th>

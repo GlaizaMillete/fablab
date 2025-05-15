@@ -22,12 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Verify the password
         if (password_verify($password, $hashedPassword)) {
-            // Set admin session variables
             $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_username'] = $username; // Store the admin's username
+            $_SESSION['admin_username'] = $username;
             $_SESSION['admin_id'] = $adminID;
 
-            // Redirect to admin home page
+            // Set a session variable for the success message
+            $_SESSION['login_success'] = "You have successfully logged in.";
+
+            // Redirect to admin-home.php without the query parameter
             header("Location: admin-home.php");
             exit();
         } else {

@@ -8,9 +8,10 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit();
 }
 
-// Display a login success message if redirected from the login handler
-if (isset($_GET['login']) && $_GET['login'] === 'success') {
-    echo '<script>alert("You have successfully logged in.");</script>';
+// Display the success message if it exists
+if (isset($_SESSION['login_success'])) {
+    echo '<script>alert("' . $_SESSION['login_success'] . '");</script>';
+    unset($_SESSION['login_success']); // Clear the message after displaying it
 }
 
 $pageTitle = "Admin Control Room";
@@ -23,9 +24,10 @@ include 'config.php';
         <div class="header">
             <img src="FABLAB_LOGO.png" alt="Description of image" class="admin-image">
             <div class="header-text-admin">
-                <p>Hello <b><?php echo htmlspecialchars($_SESSION['admin_username']); ?>!</b></p>
+                <p style="color: #FFF; font-family: Roboto Slab; font-size: 1.2rem; font-style: normal;font-weight: 400; line-height: normal;">Hello <b style="color: #F37123;"><?php echo htmlspecialchars($_SESSION['admin_username']); ?>!</b></p>
             </div>
         </div>
+        <hr style="color: white; width: 80%;">
         <div class="user-content">
             <div class="button" onclick="showContent('users')">
                 <p>Users</p>
@@ -57,7 +59,7 @@ include 'config.php';
                     <thead>
                         <tr>
                             <!-- <th>ID</th> -->
-                            <th>User</th>
+                            <th>Username</th>
                             <th>Status</th>
                             <th style="text-align:center;">Actions</th>
                         </tr>
@@ -124,6 +126,7 @@ include 'config.php';
 <div id="floating-form" class="floating-form">
     <form id="add-user-form" action="add-user-handler.php" method="post">
         <h2 id="form-title">Add New User</h2>
+        <hr style="width: 100%;">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <label for="password">Password:</label>
@@ -139,13 +142,14 @@ include 'config.php';
 <div id="change-password-modal" class="floating-form">
     <form id="change-password-form" action="change-password-handler.php" method="POST">
         <h2 id="form-title">Change Password</h2>
+        <hr style="width: 100%;">
         <label for="current-password">Current Password:</label>
         <input type="password" id="current-password" name="current-password" required>
         <label for="new-password">New Password:</label>
         <input type="password" id="new-password" name="new-password" required>
         <label for="confirm-password">Confirm New Password:</label>
         <input type="password" id="confirm-password" name="confirm-password" required>
-        <button type="submit">Change Password</button>
+        <button type="submit">Submit</button>
         <button type="button" onclick="closeChangePasswordModal()">Cancel</button>
     </form>
 </div>
