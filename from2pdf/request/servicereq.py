@@ -212,124 +212,120 @@ def toggle_other_equipment():
 # Create the main window
 root = tk.Tk()
 root.title("FAB LAB BICOL - Client Profile and Service Request Form")
-root.geometry("800x900")
+root.geometry("1000x1000")
+root.configure(bg="#f0f0f0")
 
-# Create a scrollable frame
-main_frame = tk.Frame(root)
-main_frame.pack(fill=tk.BOTH, expand=1)
+# Configure font styles
+title_font = ("Arial", 16, "bold")
+header_font = ("Arial", 12, "bold")
+normal_font = ("Arial", 10)
 
-# Create canvas with scrollbar
-my_canvas = tk.Canvas(main_frame)
-scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=my_canvas.yview)
-scrollable_frame = ttk.Frame(my_canvas)
+# Create main frame with padding
+main_frame = ttk.Frame(root, padding="20 20 20 20")
+main_frame.pack(fill=tk.BOTH, expand=True)
 
-scrollable_frame.bind(
-    "<Configure>",
-    lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all"))
-)
+# Create a notebook for tabbed interface
+notebook = ttk.Notebook(main_frame)
+notebook.pack(fill=tk.BOTH, expand=True, pady=10)
 
-my_canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-my_canvas.configure(yscrollcommand=scrollbar.set)
+# First tab - Client Information
+client_frame = ttk.Frame(notebook, padding="10")
+notebook.add(client_frame, text="Client Information")
 
-my_canvas.pack(side="left", fill="both", expand=True)
-scrollbar.pack(side="right", fill="y")
+# Second tab - Service Details
+service_frame = ttk.Frame(notebook, padding="10")
+notebook.add(service_frame, text="Service Details")
 
-# Title Label
-title_label = ttk.Label(scrollable_frame, text="FAB LAB BICOL - Client Profile and Service Request Form", font=("Helvetica", 14, "bold"))
-title_label.grid(row=0, column=0,sticky="w",padx="200", pady=10)
+# Client Information Tab
+# Title
+title_label = ttk.Label(client_frame, text="Client Information", font=title_font)
+title_label.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 20))
 
 # Date requested
-ttk.Label(scrollable_frame, text="Date Requested:").grid(row=1, column=0, sticky="w", padx=10, pady=5)
-date_requested = DateEntry(scrollable_frame, width=20, background='darkblue', foreground='white', borderwidth=2, date_pattern='mm/dd/yyyy')
-date_requested.grid(row=1, column=0, sticky="w", padx=200, pady=5)
+ttk.Label(client_frame, text="Date Requested:", font=normal_font).grid(row=1, column=0, sticky="w", padx=(0, 10), pady=5)
+date_requested = DateEntry(client_frame, width=20, background='darkblue', foreground='white', borderwidth=2, date_pattern='mm/dd/yyyy')
+date_requested.grid(row=1, column=1, sticky="w", pady=5)
 date_requested.set_date(datetime.datetime.now())
 
 # Consent checkbox
-ttk.Label(scrollable_frame, text="Consent:").grid(row=2, column=0, sticky="w", padx=10, pady=5)
-consent_frame = ttk.Frame(scrollable_frame)
-consent_frame.grid(row=2, column=0, columnspan=3, sticky="w", padx=200, pady=5)
 consent_var = BooleanVar(value=True)
-consent_check = ttk.Checkbutton(consent_frame, text="I agree to the Data Privacy Act of 2012", variable=consent_var)
-consent_check.grid(row=0, column=0, sticky="w")
+consent_check = ttk.Checkbutton(client_frame, text="I agree to the Data Privacy Act of 2012", variable=consent_var)
+consent_check.grid(row=2, column=0, columnspan=2, sticky="w", pady=10)
 
 # Personal Information section
-ttk.Label(scrollable_frame, text="Personal Information", font=("Helvetica", 12, "bold")).grid(row=3, column=0, columnspan=4, sticky="w", padx=10, pady=5)
+section_label = ttk.Label(client_frame, text="Personal Information", font=header_font)
+section_label.grid(row=3, column=0, columnspan=2, sticky="w", pady=(10, 5))
 
 # Name
-ttk.Label(scrollable_frame, text="Name:").grid(row=4, column=0, sticky="w", padx=10, pady=5)
-name_entry = ttk.Entry(scrollable_frame, width=40)
-name_entry.grid(row=4, column=0, columnspan=3, sticky="w", padx=200, pady=5)
+ttk.Label(client_frame, text="Name:", font=normal_font).grid(row=4, column=0, sticky="w", padx=(0, 10), pady=5)
+name_entry = ttk.Entry(client_frame, width=40)
+name_entry.grid(row=4, column=1, sticky="ew", pady=5)
 
 # Address
-ttk.Label(scrollable_frame, text="Address:").grid(row=5, column=0, sticky="w", padx=10, pady=5)
-address_entry = ttk.Entry(scrollable_frame, width=40)
-address_entry.grid(row=5, column=0, columnspan=3, sticky="w", padx=200, pady=5)
+ttk.Label(client_frame, text="Address:", font=normal_font).grid(row=5, column=0, sticky="w", padx=(0, 10), pady=5)
+address_entry = ttk.Entry(client_frame, width=40)
+address_entry.grid(row=5, column=1, sticky="ew", pady=5)
 
 # Contact Number
-ttk.Label(scrollable_frame, text="Contact No.:").grid(row=6, column=0, sticky="w", padx=10, pady=5)
-contact_entry = ttk.Entry(scrollable_frame, width=40)
-contact_entry.grid(row=6, column=0, columnspan=3, sticky="w", padx=200, pady=5)
+ttk.Label(client_frame, text="Contact No.:", font=normal_font).grid(row=6, column=0, sticky="w", padx=(0, 10), pady=5)
+contact_entry = ttk.Entry(client_frame, width=40)
+contact_entry.grid(row=6, column=1, sticky="ew", pady=5)
 
-# Gender
-ttk.Label(scrollable_frame, text="Gender:").grid(row=7, column=0, sticky="w", padx=10, pady=5)
+# Gender and Age
+gender_frame = ttk.Frame(client_frame)
+gender_frame.grid(row=7, column=0, columnspan=2, sticky="w", pady=5)
+
+ttk.Label(gender_frame, text="Gender:", font=normal_font).grid(row=0, column=0, sticky="w", padx=(0, 10))
 gender_var = StringVar(value="Male")
-gender_frame = ttk.Frame(scrollable_frame)
-gender_frame.grid(row=7, column=0, sticky="w", padx=200, pady=5)
-ttk.Radiobutton(gender_frame, text="Male", variable=gender_var, value="Male").grid(row=0, column=0, sticky="w")
-ttk.Radiobutton(gender_frame, text="Female", variable=gender_var, value="Female").grid(row=0, column=1, sticky="w")
-ttk.Radiobutton(gender_frame, text="Prefer not to say", variable=gender_var, value="Prefer not to say").grid(row=0, column=2, sticky="w")
+ttk.Radiobutton(gender_frame, text="Male", variable=gender_var, value="Male").grid(row=0, column=1, sticky="w", padx=(0, 10))
+ttk.Radiobutton(gender_frame, text="Female", variable=gender_var, value="Female").grid(row=0, column=2, sticky="w", padx=(0, 10))
+ttk.Radiobutton(gender_frame, text="Prefer not to say", variable=gender_var, value="Prefer not to say").grid(row=0, column=3, sticky="w")
 
-# Age
-ttk.Label(scrollable_frame, text="Age:").grid(row=7, column=0, sticky="w", padx=460, pady=5)
-age_entry = ttk.Entry(scrollable_frame, width=10)
-age_entry.grid(row=7, column=0, sticky="w", padx=500, pady=5)
+ttk.Label(gender_frame, text="Age:", font=normal_font).grid(row=0, column=4, sticky="w", padx=(20, 5))
+age_entry = ttk.Entry(gender_frame, width=10)
+age_entry.grid(row=0, column=5, sticky="w")
 
-# Work/Position/Designation
-ttk.Label(scrollable_frame, text="Work/Position/Designation:").grid(row=8, column=0, sticky="w", padx=10, pady=5)
+# Position
+position_frame = ttk.LabelFrame(client_frame, text="Work/Position/Designation", padding=10)
+position_frame.grid(row=8, column=0, columnspan=2, sticky="ew", pady=10)
+
 position_var = StringVar(value="Student")
-position_frame = ttk.Frame(scrollable_frame)
-position_frame.grid(row=8, column=0, columnspan=2, sticky="w", padx=200, pady=5)
-
-# Add trace to position_var to enable/disable other field
 position_var.trace_add("write", lambda *args: toggle_position_other())
 
 ttk.Radiobutton(position_frame, text="Student", variable=position_var, value="Student").grid(row=0, column=0, sticky="w")
 ttk.Radiobutton(position_frame, text="MSME/Entrepreneur", variable=position_var, value="MSME/Entrepreneur").grid(row=0, column=1, sticky="w")
-ttk.Radiobutton(position_frame, text="Teacher", variable=position_var, value="Teacher").grid(row=0, column=2, sticky="w")
-ttk.Radiobutton(position_frame, text="Hobbyist", variable=position_var, value="Hobbyist").grid(row=0, column=2, padx=80, sticky="w")
-ttk.Radiobutton(position_frame, text="Other", variable=position_var, value="Other").grid(row=1, column=0, sticky="w")
-
-# Other position specification
-ttk.Label(position_frame, text="(please specify):").grid(row=1, column=1, sticky="w")
+ttk.Radiobutton(position_frame, text="Teacher", variable=position_var, value="Teacher").grid(row=1, column=0, sticky="w")
+ttk.Radiobutton(position_frame, text="Hobbyist", variable=position_var, value="Hobbyist").grid(row=1, column=1, sticky="w")
+ttk.Radiobutton(position_frame, text="Other", variable=position_var, value="Other").grid(row=2, column=0, sticky="w")
 position_other_entry = ttk.Entry(position_frame, width=20, state="disabled")
-position_other_entry.grid(row=1, column=2, sticky="w")
+position_other_entry.grid(row=2, column=1, sticky="w")
 
-# Company/Affiliated with
-ttk.Label(scrollable_frame, text="Company/Affiliated with:").grid(row=9, column=0, sticky="w", padx=10, pady=5)
-company_entry = ttk.Entry(scrollable_frame, width=40)
-company_entry.grid(row=9, column=0, columnspan=2, sticky="w", padx=200, pady=5)
+# Company
+ttk.Label(client_frame, text="Company/Affiliated with:", font=normal_font).grid(row=9, column=0, sticky="w", padx=(0, 10), pady=5)
+company_entry = ttk.Entry(client_frame, width=40)
+company_entry.grid(row=9, column=1, sticky="ew", pady=5)
 
-# Service Requested section
-ttk.Label(scrollable_frame, text="Service Requested", font=("Helvetica", 12, "bold")).grid(row=10, column=0, columnspan=4, sticky="w", padx=10, pady=10)
+# Service Details Tab
+# Title
+title_label = ttk.Label(service_frame, text="Service Details", font=title_font)
+title_label.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 20))
 
-# Service types
-service_frame = ttk.Frame(scrollable_frame)
-service_frame.grid(row=11, column=0, columnspan=4, sticky="w", padx=10, pady=5)
+# Service Requested
+section_label = ttk.Label(service_frame, text="Service Requested", font=header_font)
+section_label.grid(row=1, column=0, columnspan=2, sticky="w", pady=(10, 5))
 
 training_var = BooleanVar()
-ttk.Checkbutton(service_frame, text="Training/Tour/Orientation", variable=training_var).grid(row=0, column=0, sticky="w")
+ttk.Checkbutton(service_frame, text="Training/Tour/Orientation", variable=training_var).grid(row=2, column=0, sticky="w", pady=5)
 
 product_design_var = BooleanVar()
-ttk.Checkbutton(service_frame, text="Product/Design/Consultation", variable=product_design_var).grid(row=1, column=0, sticky="w")
+ttk.Checkbutton(service_frame, text="Product/Design/Consultation", variable=product_design_var).grid(row=3, column=0, sticky="w", pady=5)
 
 equipment_var = BooleanVar()
-ttk.Checkbutton(service_frame, text="Equipment (Select equipment below)", variable=equipment_var).grid(row=2, column=0, sticky="w")
+ttk.Checkbutton(service_frame, text="Equipment (Select equipment below)", variable=equipment_var).grid(row=4, column=0, sticky="w", pady=5)
 
 # Equipment section
-ttk.Label(scrollable_frame, text="Equipment", font=("Helvetica", 10)).grid(row=12, column=0, columnspan=4, sticky="w", padx=20, pady=5)
-
-equipment_frame = ttk.Frame(scrollable_frame)
-equipment_frame.grid(row=13, column=0, columnspan=4, sticky="w", padx=30, pady=5)
+equipment_frame = ttk.LabelFrame(service_frame, text="Equipment", padding=10)
+equipment_frame.grid(row=5, column=0, columnspan=2, sticky="ew", pady=10)
 
 # First column of equipment
 printer_3d_var = BooleanVar()
@@ -355,93 +351,90 @@ ttk.Checkbutton(equipment_frame, text="Vinyl Cutter", variable=vinyl_cutter_var)
 
 # Second column of equipment
 embroidery_one_var = BooleanVar()
-ttk.Checkbutton(equipment_frame, text="Embroidery Machine (One head)", variable=embroidery_one_var).grid(row=0, column=1, sticky="w", padx=20)
+ttk.Checkbutton(equipment_frame, text="Embroidery Machine (One head)", variable=embroidery_one_var).grid(row=0, column=1, sticky="w")
 
 embroidery_four_var = BooleanVar()
-ttk.Checkbutton(equipment_frame, text="Embroidery Machine (Four Heads)", variable=embroidery_four_var).grid(row=1, column=1, sticky="w", padx=20)
+ttk.Checkbutton(equipment_frame, text="Embroidery Machine (Four Heads)", variable=embroidery_four_var).grid(row=1, column=1, sticky="w")
 
 flatbed_cutter_var = BooleanVar()
-ttk.Checkbutton(equipment_frame, text="Flatbed Cutter", variable=flatbed_cutter_var).grid(row=2, column=1, sticky="w", padx=20)
+ttk.Checkbutton(equipment_frame, text="Flatbed Cutter", variable=flatbed_cutter_var).grid(row=2, column=1, sticky="w")
 
 vacuum_forming_var = BooleanVar()
-ttk.Checkbutton(equipment_frame, text="Vacuum Forming", variable=vacuum_forming_var).grid(row=3, column=1, sticky="w", padx=20)
+ttk.Checkbutton(equipment_frame, text="Vacuum Forming", variable=vacuum_forming_var).grid(row=3, column=1, sticky="w")
 
 water_jet_var = BooleanVar()
-ttk.Checkbutton(equipment_frame, text="Water Jet Machine", variable=water_jet_var).grid(row=4, column=1, sticky="w", padx=20)
+ttk.Checkbutton(equipment_frame, text="Water Jet Machine", variable=water_jet_var).grid(row=4, column=1, sticky="w")
 
 # Hand tools with trigger for entry field
 hand_tools_var = BooleanVar()
-hand_tools_frame = ttk.Frame(equipment_frame)
-hand_tools_frame.grid(row=5, column=1, sticky="w", padx=20)
-ttk.Checkbutton(hand_tools_frame, text="Hand Tools (please specify):", variable=hand_tools_var, 
-               command=toggle_hand_tools).grid(row=0, column=0, sticky="w")
-hand_tools_entry = ttk.Entry(hand_tools_frame, width=25, state="disabled")
-hand_tools_entry.grid(row=0, column=1, sticky="w")
+ttk.Checkbutton(equipment_frame, text="Hand Tools (please specify):", variable=hand_tools_var, 
+               command=toggle_hand_tools).grid(row=5, column=1, sticky="w")
+hand_tools_entry = ttk.Entry(equipment_frame, width=25, state="disabled")
+hand_tools_entry.grid(row=6, column=1, sticky="w")
 
 # Other equipment with trigger for entry field
 other_equipment_var = BooleanVar()
-other_equipment_frame = ttk.Frame(equipment_frame)
-other_equipment_frame.grid(row=6, column=1, sticky="w", padx=20)
-ttk.Checkbutton(other_equipment_frame, text="Other (please specify):", variable=other_equipment_var,
-               command=toggle_other_equipment).grid(row=0, column=0, sticky="w")
-other_equipment_entry = ttk.Entry(other_equipment_frame, width=25, state="disabled")
-other_equipment_entry.grid(row=0, column=1, sticky="w")
+ttk.Checkbutton(equipment_frame, text="Other (please specify):", variable=other_equipment_var,
+               command=toggle_other_equipment).grid(row=7, column=1, sticky="w")
+other_equipment_entry = ttk.Entry(equipment_frame, width=25, state="disabled")
+other_equipment_entry.grid(row=8, column=1, sticky="w")
 
 # Consultation mode
-ttk.Label(scrollable_frame, text="Other details:", font=("Helvetica", 10)).grid(row=14, column=0, sticky="w", padx=10, pady=10)
-ttk.Label(scrollable_frame, text="If consultation, what mode of meeting do you prefer?").grid(row=15, column=0, sticky="w", padx=30, pady=5)
+section_label = ttk.Label(service_frame, text="Other Details", font=header_font)
+section_label.grid(row=6, column=0, columnspan=2, sticky="w", pady=(10, 5))
 
-consultation_frame = ttk.Frame(scrollable_frame)
-consultation_frame.grid(row=15, column=0, columnspan=3, sticky="w", padx=400, pady=5)
+ttk.Label(service_frame, text="If consultation, what mode of meeting do you prefer?", font=normal_font).grid(row=7, column=0, sticky="w", pady=5)
 
 consultation_virtual_var = BooleanVar()
-ttk.Checkbutton(consultation_frame, text="Virtual", variable=consultation_virtual_var).grid(row=0, column=0, sticky="w")
+ttk.Checkbutton(service_frame, text="Virtual", variable=consultation_virtual_var).grid(row=7, column=1, sticky="w")
 
 consultation_face_var = BooleanVar()
-ttk.Checkbutton(consultation_frame, text="Face to Face", variable=consultation_face_var).grid(row=0, column=1, sticky="w")
+ttk.Checkbutton(service_frame, text="Face to Face", variable=consultation_face_var).grid(row=8, column=1, sticky="w")
 
 # Schedule information
-ttk.Label(scrollable_frame, text="Please specify your schedule:").grid(row=16, column=0, sticky="w", padx=30, pady=5)
-schedule_entry = ttk.Entry(scrollable_frame, width=40)
-schedule_entry.grid(row=16, column=0, columnspan=3, sticky="w", padx=400, pady=5)
+ttk.Label(service_frame, text="Please specify your schedule:", font=normal_font).grid(row=9, column=0, sticky="w", pady=5)
+schedule_entry = ttk.Entry(service_frame, width=40)
+schedule_entry.grid(row=9, column=1, sticky="ew", pady=5)
 
-ttk.Label(scrollable_frame, text="If equipment utilization, please specify your schedule:").grid(row=17, column=0, sticky="w", padx=30, pady=5)
-equipment_schedule_entry = ttk.Entry(scrollable_frame, width=40)
-equipment_schedule_entry.grid(row=17, column=0, columnspan=3, sticky="w", padx=400, pady=5)
+ttk.Label(service_frame, text="If equipment utilization, please specify your schedule:", font=normal_font).grid(row=10, column=0, sticky="w", pady=5)
+equipment_schedule_entry = ttk.Entry(service_frame, width=40)
+equipment_schedule_entry.grid(row=10, column=1, sticky="ew", pady=5)
 
 # Work description
-ttk.Label(scrollable_frame, text="Describe the work requested:").grid(row=18, column=0, sticky="w", padx=30, pady=5)
-work_description_text = tk.Text(scrollable_frame, width=40, height=5)
-work_description_text.grid(row=18, column=0, columnspan=3, sticky="w", padx=400, pady=5)
+ttk.Label(service_frame, text="Describe the work requested:", font=normal_font).grid(row=11, column=0, sticky="w", pady=5)
+work_description_text = tk.Text(service_frame, width=40, height=5)
+work_description_text.grid(row=11, column=1, sticky="ew", pady=5)
 
 # Signature section
-ttk.Label(scrollable_frame, text="Signature Information", font=("Helvetica", 12, "bold")).grid(row=19, column=0, columnspan=4, sticky="w", padx=10, pady=10)
+section_label = ttk.Label(service_frame, text="Signature Information", font=header_font)
+section_label.grid(row=12, column=0, columnspan=2, sticky="w", pady=(10, 5))
 
-ttk.Label(scrollable_frame, text="Date:").grid(row=20, column=0, sticky="w", padx=10, pady=5)
-signature_date = DateEntry(scrollable_frame, width=20, background='darkblue', foreground='white', borderwidth=2, date_pattern='mm/dd/yyyy')
-signature_date.grid(row=20, column=0, sticky="w", padx=200, pady=5)
+ttk.Label(service_frame, text="Date:", font=normal_font).grid(row=13, column=0, sticky="w", pady=5)
+signature_date = DateEntry(service_frame, width=20, background='darkblue', foreground='white', borderwidth=2, date_pattern='mm/dd/yyyy')
+signature_date.grid(row=13, column=1, sticky="w", pady=5)
 signature_date.set_date(datetime.datetime.now())
 
-ttk.Label(scrollable_frame, text="Client Name:").grid(row=21, column=0, sticky="w", padx=10, pady=5)
-client_name_entry = ttk.Entry(scrollable_frame, width=35)
-client_name_entry.grid(row=21, column=0, columnspan=2, sticky="w", padx=200, pady=5)
+ttk.Label(service_frame, text="Client Name:", font=normal_font).grid(row=14, column=0, sticky="w", pady=5)
+client_name_entry = ttk.Entry(service_frame, width=40)
+client_name_entry.grid(row=14, column=1, sticky="ew", pady=5)
 
-# Submit button
-submit_button = ttk.Button(scrollable_frame, text="Generate PDF", command=on_submit)
-submit_button.grid(row=22, column=0, columnspan=1,sticky="w", padx=350, pady=20)
+# Configure grid weights
+client_frame.columnconfigure(1, weight=1)
+service_frame.columnconfigure(1, weight=1)
 
-# Result label
-result_label = ttk.Label(scrollable_frame, text="")
-result_label.grid(row=23, column=0, columnspan=1, sticky="w", padx=320, pady=5)
+# Submit button and status
+button_frame = ttk.Frame(main_frame)
+button_frame.pack(fill=tk.X, pady=10)
 
-# Note about template
-# note_label = ttk.Label(scrollable_frame, text="Note: This application requires 'request.pdf' to be in the same directory.", font=("Helvetica", 8))
-# note_label.grid(row=24, column=0, sticky="w",padx=280, pady=10)
+submit_button = ttk.Button(button_frame, text="Generate PDF", command=on_submit, style="Primary.TButton")
+submit_button.pack(side=tk.RIGHT, padx=5)
 
-# Bind mouse wheel to canvas for scrolling
-def _on_mousewheel(event):
-    my_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+result_label = ttk.Label(main_frame, text="", font=normal_font)
+result_label.pack(fill=tk.X, pady=5)
 
-my_canvas.bind_all("<MouseWheel>", _on_mousewheel)
+# Configure button styles
+style = ttk.Style()
+style.configure("Primary.TButton", background="#0066cc", foreground="white")
+style.configure("Secondary.TButton", background="#e0e0e0")
 
 root.mainloop()
