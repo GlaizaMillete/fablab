@@ -942,11 +942,12 @@ td:nth-child(1) {
     /* Date */
     width: 10%;
     /* Adjust as needed */
-    max-width: 150px;
+    /* max-width: 150px; */
     text-align: center;
 }
+
 td:nth-child(1) {
-text-align: left;
+    text-align: left;
 }
 
 th:nth-child(2),
@@ -954,7 +955,7 @@ td:nth-child(2) {
     /* NO. */
     width: 10%;
     /* Adjust as needed */
-    max-width: 150px;
+    /* max-width: 150px; */
     text-align: center;
     word-wrap: break-word;
     /* Ensures long text wraps */
@@ -963,9 +964,9 @@ td:nth-child(2) {
 th:nth-child(3),
 td:nth-child(3) {
     /* Client Name */
-    width: 12.5%;
+    width: 5%;
     /* Adjust as needed */
-    max-width: 250px;
+    /* max-width: 250px; */
     text-align: left;
     word-wrap: break-word;
 }
@@ -975,7 +976,7 @@ td:nth-child(4) {
     /* Service Description */
     width: 20%;
     /* Adjust as needed */
-    max-width: 120px;
+    /* max-width: 120px; */
     text-align: left;
 }
 
@@ -984,7 +985,7 @@ td:nth-child(5) {
     /* Profile */
     width: 10%;
     /* Adjust as needed */
-    max-width: 130px;
+    /* max-width: 130px; */
     text-align: left;
 }
 
@@ -993,7 +994,7 @@ td:nth-child(6) {
     /* Total Amount */
     width: 10%;
     /* Adjust as needed */
-    max-width: 200px;
+    /* max-width: 200px; */
     text-align: left;
 }
 
@@ -1002,16 +1003,16 @@ td:nth-child(7) {
     /* Reference */
     width: 10%;
     /* Adjust as needed */
-    max-width: 200px;
+    /* max-width: 200px; */
     text-align: center;
 }
 
 th:nth-child(8),
 td:nth-child(8) {
     /* Action */
-    width: 17.5%;
+    width: 25%;
     /* Adjust as needed */
-    max-width: 200px;
+    /* max-width: 200px; */
     text-align: center;
 }
 

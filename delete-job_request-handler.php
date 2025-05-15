@@ -29,10 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Job request deleted successfully.']);
 
-            // Log the deletion action
             if (isset($_SESSION['staff_name'])) {
                 $staffName = $_SESSION['staff_name'];
-                $logDate = date('Y-m-d H:i:s'); // Get the current time
+                $logDate = date('Y-m-d H:i:s');
                 $action = "Deleted job request for client: $clientName";
 
                 $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");

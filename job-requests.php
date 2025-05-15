@@ -378,7 +378,7 @@ $chartData = [
                             <?php endif; ?>
                         </td>
                         <td class="action-container">
-                            <!-- Action Buttons -->
+                            <button class="view-btn" data-id="<?= $request['id'] ?>">View</button>
                             <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
                             <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>
                         </td>
@@ -387,6 +387,18 @@ $chartData = [
             </tbody>
         </table>
     </div>
+
+    <!-- Add the View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <span class="close-view">&times;</span>
+            <h2 style="text-align: center;">View Job Request Details</h2>
+            <div id="viewDetails">
+                <!-- Data will be dynamically populated here -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // Modal functionality
         const modal = document.getElementById("jobRequestModal");
@@ -648,6 +660,71 @@ $chartData = [
                     otherInput.disabled = true;
                     otherInput.value = ""; // Clear the field if "Others" is not selected
                 }
+            });
+        });
+
+        // Modal functionality for View
+        const viewModal = document.getElementById("viewModal");
+        const closeView = document.querySelector(".close-view");
+
+        closeView.onclick = function() {
+            viewModal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == viewModal) {
+                viewModal.style.display = "none";
+            }
+        };
+
+        // View Button Click
+        document.querySelectorAll('.view-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                fetch(`fetch-job_requests-handler.php?id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert('Error fetching job request data: ' + data.error);
+                            return;
+                        }
+
+                        const details = data;
+
+                        // Format the request date
+                        const requestDate = new Date(details.request_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+
+                        // Populate the modal with job request details
+                        document.getElementById('viewDetails').innerHTML = `
+                        <div style="display: flex; justify-content: space-between; width: 90%; margin-bottom: 20px;">
+                            <div>
+                                <p><strong>Client Name:</strong> ${details.client_name}</p>
+                                <p><strong>Address:</strong> ${details.address}</p>
+                                <p><strong>Contact No:</strong> ${details.contact_number}</p>
+                                <p><strong>Gender:</strong> ${details.gender}</p>
+                                <p><strong>Age:</strong> ${details.age}</p>
+                            </div>
+                            <div>
+                                <p><strong>Request ID:</strong> ${details.id}</p>
+                                <p><strong>Request Date:</strong> ${requestDate}</p>
+                                <p><strong>Client Profile:</strong> ${details.designation}</p>
+                                <p><strong>Company:</strong> ${details.company}</p>
+                            </div>
+                        </div>
+                        <p><strong>Service Requested:</strong> ${details.service_requested}</p>
+                        <p><strong>Equipment:</strong> ${details.equipment || 'N/A'}</p>
+                        <p><strong>Hand Tools:</strong> ${details.hand_tools_other || 'N/A'}</p>
+                        <p><strong>Other Equipment:</strong> ${details.equipment_other || 'N/A'}</p>
+                        <p><strong>Work Description:</strong></p>
+                        <p>${details.work_description}</p>
+                    `;
+                        viewModal.style.display = "block";
+                    })
+                    .catch(error => console.error('Error:', error));
             });
         });
     </script>
