@@ -1020,7 +1020,7 @@ td:nth-child(8) {
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 1000;
+    z-index: 100;
     background-color: var(--color-primary);
     color: white;
     padding: 10px 16px;
@@ -1053,4 +1053,72 @@ td:nth-child(8) {
     transition: all 0.2s ease;
     color: var(--color-gray-800);
     background-color: white;
+}
+
+/* Ensure the table layout is fixed */
+#viewServiceTable {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#viewServiceTable th,
+#viewServiceTable td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Define specific widths for each column */
+#viewServiceTable th:nth-child(1),
+#viewServiceTable td:nth-child(1) {
+    width: 40%;
+    /* Service Name */
+}
+
+#viewServiceTable th:nth-child(2),
+#viewServiceTable td:nth-child(2) {
+    width: 20%;
+    /* Unit */
+}
+
+#viewServiceTable th:nth-child(3),
+#viewServiceTable td:nth-child(3) {
+    width: 20%;
+    /* Rate */
+}
+
+#viewServiceTable th:nth-child(4),
+#viewServiceTable td:nth-child(4) {
+    width: 20%;
+    /* Total Cost */
+}
+
+/* Style for the close button */
+.close-view {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.close-view:hover {
+    color: #e74c3c;
+}
+
+.view-modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 2rem;
+    padding-top: 1.5rem;
+    border: none;
+    width: 80%;
+    max-width: 650px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3ease;
 }

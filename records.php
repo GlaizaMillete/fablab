@@ -356,6 +356,7 @@ while ($row = $result->fetch_assoc()) {
                             <?php endif; ?>
                         </td>
                         <td class="action-container">
+                            <button class="view-btn" data-id="<?= $row['no'] ?>">View</button>
                             <button class="edit-btn" data-id="<?= $row['no'] ?>">Edit</button>
                             <button class="delete-btn" data-id="<?= $row['no'] ?>">Delete</button>
                         </td>
@@ -363,6 +364,17 @@ while ($row = $result->fetch_assoc()) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
+
+    <!-- Add the View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="view-modal-content" style="position: relative;">
+            <span class="close-view">&times;</span>
+            <h2 style="text-align: center;">View Billing Details</h2>
+            <div id="viewDetails">
+                <!-- Data will be dynamically populated here -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -653,6 +665,96 @@ while ($row = $result->fetch_assoc()) {
                         })
                         .catch(error => console.error('Error:', error));
                 }
+            });
+        });
+
+        // Modal functionality for View
+        const viewModal = document.getElementById("viewModal");
+        const closeView = document.querySelector(".close-view");
+
+        closeView.onclick = function() {
+            viewModal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == viewModal) {
+                viewModal.style.display = "none";
+            }
+        };
+
+        // View Button Click
+        document.querySelectorAll('.view-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                fetch(`fetch-billing-handler.php?no=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const details = data.billing;
+
+                            // Format the dates
+                            const billingDate = new Date(details.billing_date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            const preparedDate = details.prepared_date ?
+                                new Date(details.prepared_date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) :
+                                'N/A';
+
+                            const services = details.services.map(service => `
+                        <tr>
+                            <td>${service.service_name}</td>
+                            <td>${service.unit}</td>
+                            <td>${service.rate}</td>
+                            <td>${service.total_cost}</td>
+                        </tr>
+                    `).join('');
+
+                            document.getElementById('viewDetails').innerHTML = `
+                        <div style="display: flex; justify-content: space-between; width: 90%;">
+                            <div>
+                                <p><strong>Client Name:</strong> ${details.client_name}</p>
+                                <p><strong>Address:</strong> ${details.address}</p>
+                                <p><strong>Contact No:</strong>${details.contact_no}</p>
+                            </div>
+                            <div>
+                                <p><strong>No:</strong><span style="color: red; font-weight: bold;"> ${details.no}</span></p>
+                                <p><strong>Date:</strong> ${billingDate}</p>
+                            </div>
+                        </div>
+                        <p><strong>Client Profile:</strong> ${details.client_profile}</p>
+                        <p><strong>Description:</strong></p>
+                        <p>${details.description}</p>
+                        <br>
+                        <h3>Service Details</h3>
+                        <table id="viewServiceTable">
+                            <thead>
+                                <tr>
+                                    <th>Service Name</th>
+                                    <th>Unit</th>
+                                    <th>Rate</th>
+                                    <th>Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${services}
+                            </tbody>
+                        </table>
+                        <p><strong>Total Amount:</strong> &#8369;${parseFloat(details.total_invoice).toFixed(2)}</p>
+                        <p><strong>Prepared By:</strong> ${details.prepared_by}</p>
+                        <p><strong>Prepared Date:</strong> ${preparedDate}</p>
+                    `;
+                            viewModal.style.display = "block";
+                        } else {
+                            alert('Error fetching billing data: ' + data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             });
         });
     </script>

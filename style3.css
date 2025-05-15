@@ -1030,7 +1030,7 @@ a:hover {
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 1000;
+    z-index: 100;
     background-color: var(--color-primary);
     color: white;
     padding: 10px 16px;

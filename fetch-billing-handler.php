@@ -38,7 +38,7 @@ if (isset($_GET['no'])) {
     if ($result->num_rows > 0) {
         $billing = $result->fetch_assoc();
 
-        // Fetch associated services (if applicable)
+        // Fetch associated services
         $serviceStmt = $conn->prepare("SELECT service_name, unit, rate, total_cost FROM service_details WHERE billing_id = ?");
         if ($serviceStmt) {
             $serviceStmt->bind_param('i', $no);
