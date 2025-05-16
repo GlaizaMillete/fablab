@@ -207,7 +207,20 @@ if ($stmt->execute()) {
     if (isset($_SESSION['staff_name'])) {
         $staffName = $_SESSION['staff_name'];
         $logDate = date('Y-m-d H:i:s');
-        $action = isset($id) ? "Updated client profile and service request for client: $clientName" : "Added client profile and service request for client: $clientName";
+
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
+            // Log the changes for editing
+            $changes = [];
+            foreach ($currentData as $key => $value) {
+                if ($value != $$key) {
+                    $changes[] = "$key: '$value' -> '" . $$key . "'";
+                }
+            }
+            $action = "Edited job request ID $id. Changes: " . implode(", ", $changes);
+        } else {
+            // Log the addition
+            $action = "Added new job request for client: $clientName";
+        }
 
         $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
         $logStmt->bind_param('sss', $staffName, $action, $logDate);

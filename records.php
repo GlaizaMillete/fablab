@@ -421,6 +421,11 @@ while ($row = $result->fetch_assoc()) {
                 }]
             },
             options: {
+                font: {
+                    family: 'Roboto Slab',
+                    // size: 16,
+                    // weight: 'bold'
+                },
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
@@ -430,8 +435,13 @@ while ($row = $result->fetch_assoc()) {
                             boxWidth: 20,
                             padding: 10,
                             font: {
-                                size: 12
-                            }
+                                family: 'Roboto Slab', // Set your custom font family
+                                size: 14, // Set font size
+                                weight: 'bold', // Set font weight
+                                style: 'italic', // Optional: Set font style
+                                lineHeight: 1.5 // Optional: Set line height
+                            },
+                            color: '#333' // Set font color
                         }
                     },
                     tooltip: {
@@ -443,7 +453,14 @@ while ($row = $result->fetch_assoc()) {
                             }
                         },
                         bodyFont: {
-                            size: 15
+                            family: 'Roboto Slab', // Set custom font for tooltips
+                            size: 15, // Set font size for tooltips
+                            weight: 'normal' // Set font weight for tooltips
+                        },
+                        titleFont: {
+                            family: 'Roboto Slab', // Set custom font for tooltip titles
+                            size: 16, // Set font size for tooltip titles
+                            weight: 'bold' // Set font weight for tooltip titles
                         }
                     }
                 },
@@ -720,7 +737,7 @@ while ($row = $result->fetch_assoc()) {
                             <div>
                                 <p><strong>Client Name:</strong> ${details.client_name}</p>
                                 <p><strong>Address:</strong> ${details.address}</p>
-                                <p><strong>Contact No:</strong>${details.contact_no}</p>
+                                <p><strong>Contact No:</strong> ${details.contact_no}</p>
                             </div>
                             <div>
                                 <p><strong>No:</strong><span style="color: red; font-weight: bold;"> ${details.no}</span></p>
@@ -728,8 +745,8 @@ while ($row = $result->fetch_assoc()) {
                             </div>
                         </div>
                         <p><strong>Client Profile:</strong> ${details.client_profile}</p>
-                        <p><strong>Description:</strong></p>
-                        <p>${details.description}</p>
+                        <p class="desc-margin"><strong>Description:</strong></p>
+                        <p class="desc-margin">${details.description}</p>
                         <br>
                         <h3>Service Details</h3>
                         <table id="viewServiceTable">

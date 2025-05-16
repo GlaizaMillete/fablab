@@ -1,4 +1,8 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(); // Start the session only if it's not already started
+}
+
 include 'config.php'; // Include the database connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -26,14 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Verify the password
         if (password_verify($password, $hashedPassword)) {
             // Start the session and set session variables
-            session_start();
             $_SESSION['staff_logged_in'] = true; // Indicates staff is logged in
             $_SESSION['staff_username'] = $staffUsername; // Store the staff username
             $_SESSION['staff_id'] = $staffID; // Store the staff ID
             $_SESSION['staff_name'] = $staffUsername; // Store the staff name (for display purposes)
 
-            // Redirect to the staff home page with a success message
-            header("Location: staff-home.php?login=success");
+            // Set a session variable for the success message
+            $_SESSION['login_success'] = "You have successfully logged in.";
+
+            // Redirect to admin-home.php without the query parameter
+            header("Location: staff-home.php");
             exit();
         } else {
             // Invalid password

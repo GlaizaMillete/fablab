@@ -76,14 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-
     // Check if this is an update or a new record
     if (isset($_POST['billing_id']) && !empty($_POST['billing_id'])) {
         // Update existing billing record
         $billingId = intval($_POST['billing_id']);
 
         // Fetch the current record for comparison
-        $stmt = $conn->prepare("SELECT * FROM billing WHERE no = ?"); // Changed 'id' to 'no'
+        $stmt = $conn->prepare("SELECT * FROM billing WHERE no = ?");
         $stmt->bind_param('i', $billingId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -136,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $billingId
             );
         } else {
-            // Apply similar fixes to the non-PDF version
             $stmt = $conn->prepare("UPDATE billing SET
     billing_date = ?, 
     client_name = ?, 
@@ -180,7 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
         }
 
-
         // Execute the update query
         if ($stmt->execute()) {
             // Delete existing service details for this billing record
@@ -206,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             error_log("Error inserting service detail for billing ID $billingId: " . $serviceStmt->error);
                             // Optionally, you might want to roll back the billing insertion here
                         }
-                        $serviceStmt->close(); // Close statement after each execution
+                        $serviceStmt->close();
                     }
                 }
             }
@@ -216,33 +213,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_SESSION['staff_name'])) {
                 $staffName = $_SESSION['staff_name'];
                 $logDate = date('Y-m-d H:i:s');
+
                 $changes = [];
+                foreach ($oldData as $key => $value) {
+                    if ($value != $$key) {
+                        $changes[] = "$key: '$value' -> '" . $$key . "'";
+                    }
+                }
+                $action = "Edited billing record ID $billingId. Changes: " . implode(", ", $changes);
 
-                // Compare old and new values
-                if ($oldData['client_name'] !== $clientName) {
-                    $changes[] = "Client Name: '{$oldData['client_name']}' -> '{$clientName}'";
-                }
-                if ($oldData['billing_date'] !== $billingDate) {
-                    $changes[] = "Billing Date: '{$oldData['billing_date']}' -> '{$billingDate}'";
-                }
-                if ($oldData['client_profile'] !== $clientProfile) {
-                    $changes[] = "Client Profile: '{$oldData['client_profile']}' -> '{$clientProfile}'";
-                }
-                if ($oldData['total_invoice'] != $totalCost) { // Use != for numeric comparison
-                    $changes[] = "Total Invoice: '{$oldData['total_invoice']}' -> '{$totalCost}'";
-                }
-                if (!empty($billingPdf) && $oldData['billing_pdf'] !== $billingPdf) {
-                    $changes[] = "Reference File was updated";
-                }
-
-                // Create the log entry
-                if (!empty($changes)) {
-                    $action = "Updated billing for client {$clientName}: " . implode(", ", $changes);
-                    $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
-                    $logStmt->bind_param('sss', $staffName, $action, $logDate);
-                    $logStmt->execute();
-                    $logStmt->close();
-                }
+                $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
+                $logStmt->bind_param('sss', $staffName, $action, $logDate);
+                $logStmt->execute();
+                $logStmt->close();
             }
         } else {
             die('Error updating billing record: ' . $stmt->error);
@@ -345,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_SESSION['staff_name'])) {
                 $staffName = $_SESSION['staff_name'];
                 $logDate = date('Y-m-d H:i:s');
-                $action = "Added billing for client: $clientName";
+                $action = "Added new billing record for client: $clientName";
 
                 $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
                 $logStmt->bind_param('sss', $staffName, $action, $logDate);
@@ -358,10 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Close connection
     $conn->close();
-
-    // Redirect to the previous page
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit();
 }

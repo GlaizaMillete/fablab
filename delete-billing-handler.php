@@ -51,11 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $action = "Deleted billing record for client: $clientName";
 
                 $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
-                if ($logStmt) {
-                    $logStmt->bind_param('sss', $staffName, $action, $logDate);
-                    $logStmt->execute();
-                    $logStmt->close();
-                }
+                $logStmt->bind_param('sss', $staffName, $action, $logDate);
+                $logStmt->execute();
+                $logStmt->close();
             }
         } else {
             error_log('SQL Error: ' . $deleteStmt->error);
