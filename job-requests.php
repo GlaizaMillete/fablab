@@ -88,9 +88,9 @@ $chartData = [
 </head>
 
 <body>
-    <div class="back-button">
-        <a href="staff-home.php">&larr; Back</a>
-    </div>
+    <button class="back-button" onclick="window.location.href='staff-home.php'">
+        &larr; Back
+    </button>
     <div class="container">
         <h1>Client Profile and Service Request</h1>
         <!-- The Modal -->
@@ -174,11 +174,12 @@ $chartData = [
                     </div>
                     <br>
                     <div>
-                        <label>Other Details:</label>
+                        <h3>Other Details:</h3>
                         <label>If consultation, what mode of meeting do you prefer?</label>
                         <input type="radio" name="consultation_mode" value="Virtual"> Virtual<br>
                         <input type="radio" name="consultation_mode" value="Face to Face"> Face to Face<br>
-                        <input type="text" name="consultation_schedule" placeholder="Specify your schedule (date and time)">
+                        <label>Consultation Schedule:</label>
+                        <input class="datetime-local" type="datetime-local" name="consultation_schedule">
                     </div>
                     <br>
                     <div>
@@ -319,7 +320,7 @@ $chartData = [
 
         <div class="request-table">
             <h2>Client Profile and Service Requests</h2>
-            <button class="cpsc_button" id="openFormBtn">Add New Request</button>
+            <button class="cpsc_button" id="openFormBtn">Add New Service Request</button>
         </div>
         <table>
             <thead>
@@ -596,7 +597,7 @@ $chartData = [
                 const id = this.getAttribute('data-id');
                 fetch(`fetch-job_requests-handler.php?id=${id}`, {
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest' // Add this header
+                            'X-Requested-With': 'XMLHttpRequest'
                         }
                     })
                     .then(response => {
@@ -622,7 +623,74 @@ $chartData = [
                         document.querySelector('[name="age"]').value = data.age || '';
                         if (data.designation) {
                             document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
+                            // Enable/disable designation_other
+                            const otherInput = document.querySelector('input[name="designation_other"]');
+                            if (data.designation === "Others") {
+                                otherInput.disabled = false;
+                                otherInput.value = data.designation_other || '';
+                            } else {
+                                otherInput.disabled = true;
+                                otherInput.value = "";
+                            }
                         }
+                        document.querySelector('[name="company"]').value = data.company || '';
+
+                        // Service Requested (checkboxes)
+                        if (data.service_requested) {
+                            // Uncheck all first
+                            document.querySelectorAll('input[name="service_requested[]"]').forEach(cb => cb.checked = false);
+                            // Parse as array (if stored as comma-separated string)
+                            let services = Array.isArray(data.service_requested) ?
+                                data.service_requested :
+                                data.service_requested.split(',').map(s => s.trim());
+                            document.querySelectorAll('input[name="service_requested[]"]').forEach(cb => {
+                                if (services.includes(cb.value)) cb.checked = true;
+                            });
+                        }
+
+                        // Equipment (checkboxes)
+                        if (data.equipment) {
+                            document.querySelectorAll('input[name="equipment[]"]').forEach(cb => cb.checked = false);
+                            let equipmentArr = Array.isArray(data.equipment) ?
+                                data.equipment :
+                                data.equipment.split(',').map(s => s.trim());
+                            document.querySelectorAll('input[name="equipment[]"]').forEach(cb => {
+                                if (equipmentArr.includes(cb.value)) cb.checked = true;
+                            });
+                        }
+                        document.querySelector('[name="hand_tools_other"]').value = data.hand_tools_other || '';
+                        document.querySelector('[name="equipment_other"]').value = data.equipment_other || '';
+
+                        // Consultation mode and schedule
+                        if (data.consultation_mode) {
+                            let radio = document.querySelector(`[name="consultation_mode"][value="${data.consultation_mode}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                        if (data.consultation_schedule && data.consultation_schedule !== "0000-00-00 00:00:00") {
+                            let dt = new Date(data.consultation_schedule);
+                            let local = dt.toISOString().slice(0, 16);
+                            document.querySelector('[name="consultation_schedule"]').value = local;
+                        } else {
+                            document.querySelector('[name="consultation_schedule"]').value = '';
+                        }
+
+                        // Equipment schedule (datetime-local)
+                        if (data.equipment_schedule && data.equipment_schedule !== "0000-00-00 00:00:00") {
+                            // Format for input[type="datetime-local"]
+                            let dt = new Date(data.equipment_schedule);
+                            let local = dt.toISOString().slice(0, 16);
+                            document.querySelector('[name="equipment_schedule"]').value = local;
+                        } else {
+                            document.querySelector('[name="equipment_schedule"]').value = '';
+                        }
+
+                        // Personnel_date
+                        if (data.personnel_date && data.personnel_date !== "0000-00-00") {
+                            document.querySelector('[name="personnel_date"]').value = data.personnel_date;
+                        } else {
+                            document.querySelector('[name="personnel_date"]').value = '';
+                        }
+
                         document.querySelector('[name="work_description"]').value = data.work_description || '';
                         document.querySelector('[name="date"]').value = data.request_date || '';
 
@@ -637,6 +705,9 @@ $chartData = [
                         } else {
                             hiddenIdField.value = data.id;
                         }
+
+                        // Make reference file optional in edit mode
+                        document.querySelector('[name="reference_file"]').required = false;
 
                         // Show the modal
                         const modal = document.getElementById("jobRequestModal");
