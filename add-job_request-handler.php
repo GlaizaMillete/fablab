@@ -208,15 +208,42 @@ if ($stmt->execute()) {
         $staffName = $_SESSION['staff_name'];
         $logDate = date('Y-m-d H:i:s');
 
+        // Field label mapping
+        $fieldLabels = [
+            'personal_name' => 'Personal Name',
+            'client_name' => 'Client Name',
+            'address' => 'Address',
+            'contact_number' => 'Contact Number',
+            'gender' => 'Gender',
+            'gender_optional' => 'Gender (Optional)',
+            'age' => 'Age',
+            'designation' => 'Designation',
+            'designation_other' => 'Other Designation',
+            'company' => 'Company',
+            'service_requested' => 'Service Requested',
+            'equipment' => 'Equipment',
+            'hand_tools_other' => 'Hand Tools (Other)',
+            'equipment_other' => 'Other Equipment',
+            'consultation_mode' => 'Consultation Mode',
+            'consultation_schedule' => 'Consultation Schedule',
+            'equipment_schedule' => 'Equipment Schedule',
+            'work_description' => 'Work Description',
+            'request_date' => 'Request Date',
+            'personnel_name' => 'Personnel Name',
+            'personnel_date' => 'Personnel Date',
+            'reference_file' => 'Reference File'
+        ];
+
         if (isset($_POST['id']) && !empty($_POST['id'])) {
             // Log the changes for editing
             $changes = [];
             foreach ($currentData as $key => $value) {
-                if ($value != $$key) {
-                    $changes[] = "$key: '$value' -> '" . $$key . "'";
+                if (array_key_exists($key, $fieldLabels) && $value != $$key) {
+                    $label = $fieldLabels[$key];
+                    $changes[] = "$label: '$value' -> '" . $$key . "'";
                 }
             }
-            $action = "Edited job request ID $id. Changes: " . implode(", ", $changes);
+            $action = "Edited job request ID $id. Changes:\n" . implode("\n", $changes);
         } else {
             // Log the addition
             $action = "Added new job request for client: $clientName";
@@ -227,12 +254,6 @@ if ($stmt->execute()) {
         $logStmt->execute();
         $logStmt->close();
     }
-
-    // Redirect back to the referring page
-    $stmt->close();
-    $conn->close();
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
-    exit();
 } else {
     die('Error: ' . $stmt->error);
 }

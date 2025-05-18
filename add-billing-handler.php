@@ -89,6 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $oldData = $result->fetch_assoc();
         $stmt->close();
 
+        // If no new file uploaded, use the old PDF filename
+        if (empty($billingPdf)) {
+            $billingPdf = $oldData['billing_pdf'];
+        }
+
         // Prepare the update query
         if (!empty($billingPdf)) {
             $stmt = $conn->prepare("UPDATE billing SET
@@ -98,81 +103,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     contact_no = ?, 
     client_profile = ?, 
     description = ?, 
-    -- completion_date = ?, 
     prepared_by = ?, 
     prepared_date = ?, 
-    -- approved_by = ?, 
-    -- or_no = ?, 
-    -- or_favor = ?, 
-    -- payment_date = ?, 
-    -- payment_received_by = ?, 
-    -- receipt_acknowledged_by = ?, 
-    -- receipt_date = ?, 
     billing_pdf = ?, 
     total_invoice = ?
     WHERE no = ?");
-            // Corrected bind_param types: 15 s, 2 i, 1 d -> ssssssssssssssisdsi
             $stmt->bind_param(
-                'sssssssssssssisdsi',
+                'ssssssssssi',
                 $billingDate,
                 $clientName,
                 $address,
                 $contactNo,
                 $clientProfile,
                 $description,
-                // $completionDate,
                 $preparedBy,
                 $preparedDate,
-                // $approvedBy,
-                // $orNo,
-                // $orFavor,
-                // $paymentDate,
-                // $paymentReceivedBy,
-                // $receiptAcknowledgedBy,
-                // $receiptDate,
                 $billingPdf,
                 $totalCost,
                 $billingId
             );
         } else {
             $stmt = $conn->prepare("UPDATE billing SET
-    billing_date = ?, 
-    client_name = ?, 
-    address = ?, 
-    contact_no = ?, 
-    client_profile = ?, 
-    description = ?, 
-    -- completion_date = ?, 
-    prepared_by = ?, 
-    prepared_date = ?, 
-    -- approved_by = ?, 
-    -- or_no = ?, 
-    -- or_favor = ?, 
-    -- payment_date = ?, 
-    -- payment_received_by = ?, 
-    -- receipt_acknowledged_by = ?, 
-    -- receipt_date = ?, 
-    total_invoice = ?
-    WHERE no = ?");
-            // Corrected bind_param types: 14 s, 2 i, 1 d -> sssssssssssssisdi
+            billing_date = ?, 
+            client_name = ?, 
+            address = ?, 
+            contact_no = ?, 
+            client_profile = ?, 
+            description = ?, 
+            prepared_by = ?, 
+            prepared_date = ?, 
+            billing_pdf = ?, 
+            total_invoice = ?
+            WHERE no = ?");
             $stmt->bind_param(
-                'sssssssssssssisdi',
+                'ssssssssssi',
                 $billingDate,
                 $clientName,
                 $address,
                 $contactNo,
                 $clientProfile,
                 $description,
-                // $completionDate,
                 $preparedBy,
                 $preparedDate,
-                // $approvedBy,
-                // $orNo,
-                // $orFavor,
-                // $paymentDate,
-                // $paymentReceivedBy,
-                // $receiptAcknowledgedBy,
-                // $receiptDate,
+                $billingPdf,
                 $totalCost,
                 $billingId
             );
@@ -214,13 +187,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $staffName = $_SESSION['staff_name'];
                 $logDate = date('Y-m-d H:i:s');
 
+                // Field label mapping
+                $fieldLabels = [
+                    'billing_date' => 'Billing Date',
+                    'client_name' => 'Client Name',
+                    'address' => 'Address',
+                    'contact_no' => 'Contact Number',
+                    'client_profile' => 'Client Profile',
+                    'description' => 'Description',
+                    // 'completion_date' => 'Completion Date',
+                    'prepared_by' => 'Prepared By',
+                    'prepared_date' => 'Prepared Date',
+                    // 'approved_by' => 'Approved By',
+                    // 'or_no' => 'OR No',
+                    // 'or_favor' => 'OR Favor',
+                    // 'payment_date' => 'Payment Date',
+                    // 'payment_received_by' => 'Payment Received By',
+                    // 'receipt_acknowledged_by' => 'Receipt Acknowledged By',
+                    // 'receipt_date' => 'Receipt Date',
+                    'billing_pdf' => 'Reference File',
+                    'total_invoice' => 'Total Invoice'
+                ];
+
                 $changes = [];
                 foreach ($oldData as $key => $value) {
-                    if ($value != $$key) {
-                        $changes[] = "$key: '$value' -> '" . $$key . "'";
+                    if (array_key_exists($key, $fieldLabels) && $value != $$key) {
+                        $label = $fieldLabels[$key];
+                        $changes[] = "$label: '$value' -> '" . $$key . "'";
                     }
                 }
-                $action = "Edited billing record ID $billingId. Changes: " . implode(", ", $changes);
+                $action = "Edited billing record ID $billingId. Changes:\n" . implode("\n", $changes);
 
                 $logStmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
                 $logStmt->bind_param('sss', $staffName, $action, $logDate);
@@ -345,4 +341,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit();
 }
-?>

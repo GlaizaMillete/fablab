@@ -231,7 +231,7 @@ while ($row = $result->fetch_assoc()) {
                     <h3>Reference File</h3>
                     <div>
                         <label>Upload Reference File (PDF, DOC, DOCX, JPG, PNG):</label>
-                        <input type="file" name="billing_pdf" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                        <input type="file" name="billing_pdf" accept=".pdf,.doc,.docx,.jpg,.png">
                     </div>
 
                     <button type="submit">Submit</button>
