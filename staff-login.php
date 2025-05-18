@@ -35,16 +35,18 @@ include 'header.php';
                 <img src="user.png" alt="user">
                 <p class="login-text">Staff Login</p>
             </div>
-            <div class="login-inputs">
-                <form action="staff-login-handler.php" method="post">
-                    <input type="text" name="username" placeholder="Username" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <input type="submit" class="login login-submit" name="login" value="LOGIN">
-                </form>
+            <div class="login-inputs-lower">
+                <div class="login-inputs">
+                    <form action="staff-login-handler.php" method="post">
+                        <input type="text" name="username" placeholder="Username" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="submit" class="login login-submit" name="login" value="LOGIN">
+                    </form>
+                </div>
+                <p class="admin-login-inline-link">
+                    Not staff? <a href="admin-login.php">Go to Admin Login</a>
+                </p>
             </div>
-            <p class="admin-login-inline-link">
-                Not staff? <a href="admin-login.php">Go to Admin Login</a>
-            </p>
         </div>
     </div>
 </div>
@@ -63,7 +65,7 @@ include 'header.php';
             </li>
             <li>
                 <div class="dev-card">
-                    <img src="devs/glaiza.jpg" alt="Glaiza Mea Millete">
+                    <img src="devs/glaiza.jfif" alt="Glaiza Mea Millete">
                     <span>Glaiza Mea Millete</span>
                 </div>
             </li>

@@ -427,11 +427,11 @@ $chartData = [
         };
 
         // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        };
+        // window.onclick = function(event) {
+        //     if (event.target == modal) {
+        //         modal.style.display = "none";
+        //     }
+        // };
 
         // Chart.js configuration
         const ctx = document.getElementById('requestChart').getContext('2d');
@@ -753,6 +753,25 @@ $chartData = [
                     .catch(error => console.error('Error:', error));
             });
         });
+
+        function enableModalCloseOnOutsideClick(modalSelector, contentSelector, closeCallback) {
+            document.addEventListener('mousedown', function(event) {
+                const modal = document.querySelector(modalSelector);
+                const content = document.querySelector(contentSelector);
+                if (modal && content && modal.style.display === "block") {
+                    if (!content.contains(event.target) && modal.contains(event.target)) {
+                        modal.style.display = "none";
+                        if (typeof closeCallback === "function") closeCallback();
+                    }
+                }
+            });
+        }
+
+        // Enable for both modals
+        enableModalCloseOnOutsideClick('#jobRequestModal', '.modal-content', function() {
+            document.getElementById('jobRequestForm').reset();
+        });
+        enableModalCloseOnOutsideClick('#viewModal', '.modal-content');
     </script>
 </body>
 

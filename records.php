@@ -152,7 +152,7 @@ while ($row = $result->fetch_assoc()) {
                                 <th>Service Name</th>
                                 <th>Unit</th>
                                 <th>Rate</th>
-                                <th>Total Cost</th>
+                                <th>Cost</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -167,8 +167,8 @@ while ($row = $result->fetch_assoc()) {
                         </tbody>
                     </table>
                     <button type="button" id="addRowBtn">Add Row</button>
-                    <div>
-                        <label>Total:</label>
+                    <div style="margin-top: 1rem;">
+                        <label>Total Cost:</label>
                         <input type="number" id="totalCost" name="total" step="0.01" readonly>
                     </div>
 
@@ -642,11 +642,20 @@ while ($row = $result->fetch_assoc()) {
                                 newRow.querySelector('.cost-input').addEventListener('input', updateTotalCost);
                             });
 
+                            // Set the total cost field to the previous value from the database
+                            document.getElementById('totalCost').value = parseFloat(data.billing.total_invoice).toFixed(2);
+                            // If you have a second field for "For the amount of", set it too:
+                            if (document.getElementById('totalAmount')) {
+                                document.getElementById('totalAmount').value = parseFloat(data.billing.total_invoice).toFixed(2);
+                            }
+
                             // Show the modal
                             document.getElementById('billingModal').style.display = 'block';
                         } else {
                             alert('Error fetching billing data: ' + data.message);
                         }
+                        // updateTotalCost();
+
                     })
                     .catch(error => console.error('Error:', error));
             });
@@ -755,14 +764,14 @@ while ($row = $result->fetch_assoc()) {
                                     <th>Service Name</th>
                                     <th>Unit</th>
                                     <th>Rate</th>
-                                    <th>Total Cost</th>
+                                    <th>Cost</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${services}
                             </tbody>
                         </table>
-                        <p><strong>Total Amount:</strong> &#8369;${parseFloat(details.total_invoice).toFixed(2)}</p>
+                        <p><strong>Total Cost:</strong> &#8369;${parseFloat(details.total_invoice).toFixed(2)}</p>
                         <p><strong>Prepared By:</strong> ${details.prepared_by}</p>
                         <p><strong>Prepared Date:</strong> ${preparedDate}</p>
                     `;
@@ -773,6 +782,30 @@ while ($row = $result->fetch_assoc()) {
                     })
                     .catch(error => console.error('Error:', error));
             });
+        });
+
+        function enableModalCloseOnOutsideClick(modalSelector, contentSelector, closeCallback) {
+            document.addEventListener('mousedown', function(event) {
+                const modal = document.querySelector(modalSelector);
+                const content = document.querySelector(contentSelector);
+                if (modal && content && modal.style.display === "block") {
+                    if (!content.contains(event.target) && modal.contains(event.target)) {
+                        modal.style.display = "none";
+                        if (typeof closeCallback === "function") closeCallback();
+                    }
+                }
+            });
+        }
+
+        // Enable for both modals
+        enableModalCloseOnOutsideClick('#billingModal', '.modal-content', function() {
+            document.getElementById('billingForm').reset();
+        });
+        enableModalCloseOnOutsideClick('#viewModal', '.view-modal-content');
+
+        // Example usage for records.php:
+        enableModalCloseOnOutsideClick('#billingModal', '.modal-content', function() {
+            document.getElementById('billingForm').reset();
         });
     </script>
 </body>
