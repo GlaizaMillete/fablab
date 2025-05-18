@@ -20,6 +20,7 @@ As Staff, you can;
      - Payment and Release
      - Repository
      - Logout
-*You can access full page for Client Profile and Service Requests and Payment and Release to use complicated tasks such as adding, editing, data analytics, search, filter, and delete.
+
+You can access full page for Client Profile and Service Requests and Payment and Release to use complicated tasks such as adding, editing, data analytics, search, filter, and delete.
 
        
