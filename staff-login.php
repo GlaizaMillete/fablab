@@ -45,7 +45,7 @@ include 'header.php';
                     </form>
                 </div>
                 <p class="admin-login-inline-link">
-                    Not staff? <a href="admin-login.php">Go to Admin Login</a>
+                    Not a staff? <a href="admin-login.php">Go to Admin Login</a>
                 </p>
             </div>
         </div>
