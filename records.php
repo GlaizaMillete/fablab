@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'config.php'; // Include the database connection
 
+// date_default_timezone_set('Asia/Manila');
+
 // Check if the user is logged in as staff
 if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== true) {
     // Redirect to the staff login page if not logged in

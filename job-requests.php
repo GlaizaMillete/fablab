@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'config.php'; // Include the database connection
 
+// date_default_timezone_set('Asia/Manila');
+
 // Check if the user is logged in as staff
 if (!isset($_SESSION['staff_logged_in']) || $_SESSION['staff_logged_in'] !== true) {
     // Redirect to the staff login page if not logged in
@@ -216,7 +218,7 @@ $chartData = [
                         </div>
                         <div>
                             <label>Date:</label>
-                            <input type="date" name="personnel_date">
+                            <input type="date" name="personnel_date" value="<?= date('Y-m-d') ?>" readonly>
                         </div>
                     </div>
                     <br>
@@ -825,7 +827,7 @@ $chartData = [
                                 <p><strong>Age:</strong> ${details.age}</p>
                             </div>
                             <div>
-                                <p><strong>Request ID:</strong> ${details.id}</p>
+                                <p><strong>Request ID:</strong> <span style="color:red; font-weight: bold;">${details.id}</span></p>
                                 <p><strong>Request Date:</strong> ${requestDate}</p>
                                 <p><strong>Client Profile:</strong> ${details.designation}</p>
                                 <p><strong>Company:</strong> ${details.company}</p>
