@@ -1,4 +1,5 @@
 <?php
+session_name('admin_session');
 session_start(); // Start the session
 
 // Destroy admin session variables

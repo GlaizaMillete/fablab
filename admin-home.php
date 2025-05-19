@@ -1,5 +1,8 @@
 <?php
-session_start(); // Start the session
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('admin_session');
+    session_start(); // Start the session only if it's not already started
+}
 
 // Check if the user is logged in as admin
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {

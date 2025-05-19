@@ -1211,20 +1211,21 @@ button {
 }
 
 .credits-panel {
-    background: #fff;
+    background: #3F3F3F;
     color: #222;
     min-width: 220px;
     max-width: fit-content;
+    border: 4px solid black;
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-    padding: 20px 24px 16px 24px;
+    padding: 20px 24px 24px 24px;
     position: absolute;
     left: 0;
     bottom: 60px;
     transform: translateY(120%);
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.4s cubic-bezier(.77, 0, .18, 1), opacity 0.3s;
+    transition: transform 0.4scubic -bezier(.77, 0, .18, 1), opacity 0.3s;
     font-family: 'Roboto Slab';
     display: flex;
     flex-direction: column;
@@ -1239,10 +1240,12 @@ button {
 
 .credits-panel h3 {
     margin: 0 0 10px 0;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #029BE1;
-    font-weight: bold;
+    font-weight: bolder;
     letter-spacing: 1px;
+    text-align: center;
+    width: 100%;
 }
 
 .credits-panel ul {
@@ -1286,12 +1289,10 @@ button {
 
 .dev-card img {
     width: 156px;
-    /* was 64px */
     height: 156px;
-    /* was 64px */
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid #029BE1;
+    border: 4px solid black;
     box-shadow: 0 2px 8px rgba(2, 155, 225, 0.15);
     margin-bottom: 6px;
     background: #eee;
@@ -1299,7 +1300,7 @@ button {
 
 .dev-card span {
     font-size: 0.95rem;
-    color: #222;
+    color: #F37123;
     font-family: 'Roboto Slab';
     text-align: center;
     font-weight: 600;

@@ -1,5 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    session_name('staff_session');
     session_start(); // Start the session only if it's not already started
 }
 

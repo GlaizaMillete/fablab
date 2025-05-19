@@ -1,5 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    session_name('staff_session');
     session_start(); // Start the session only if it's not already started
 }
 include 'config.php'; // Include the database connection
@@ -88,9 +89,9 @@ $chartData = [
 </head>
 
 <body>
-    <div class="back-button">
-        <a href="staff-home.php">&larr; Back</a>
-    </div>
+    <button class="back-button" onclick="window.location.href='staff-home.php'">
+        &larr; Back
+    </button>
     <div class="container">
         <h1>Client Profile and Service Request</h1>
         <!-- The Modal -->
@@ -174,11 +175,12 @@ $chartData = [
                     </div>
                     <br>
                     <div>
-                        <label>Other Details:</label>
+                        <h3>Other Details:</h3>
                         <label>If consultation, what mode of meeting do you prefer?</label>
                         <input type="radio" name="consultation_mode" value="Virtual"> Virtual<br>
                         <input type="radio" name="consultation_mode" value="Face to Face"> Face to Face<br>
-                        <input type="text" name="consultation_schedule" placeholder="Specify your schedule (date and time)">
+                        <label>Consultation Schedule:</label>
+                        <input class="datetime-local" type="datetime-local" name="consultation_schedule">
                     </div>
                     <br>
                     <div>
@@ -223,8 +225,11 @@ $chartData = [
             </div>
         </div>
         <div class="dashboard">
-            <div class="chart-container">
+            <div class="chart-container" style="position: relative;">
                 <canvas id="requestChart"></canvas>
+                <div id="noDataMessage" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;text-align:center;font-size:1.2rem;">
+                    No data available to display.
+                </div>
             </div>
             <div class="totals-card">
                 <h3>Data Visualization</h3>
@@ -319,7 +324,7 @@ $chartData = [
 
         <div class="request-table">
             <h2>Client Profile and Service Requests</h2>
-            <button class="cpsc_button" id="openFormBtn">Add New Request</button>
+            <button class="cpsc_button" id="openFormBtn">Add Data</button>
         </div>
         <table>
             <thead>
@@ -333,57 +338,63 @@ $chartData = [
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($jobRequests as $request): ?>
-                    <tr data-id="<?= $request['id'] ?>">
-                        <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
-                        <td><?= htmlspecialchars($request['client_name']) ?></td>
-                        <td>
-                            <?php
-                            // Start with the service requested
-                            $serviceRequest = htmlspecialchars($request['service_requested']);
-
-                            // Append equipment if available
-                            if (!empty($request['equipment'])) {
-                                $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
-                            }
-
-                            // Append hand tools if available, ensuring no redundancy
-                            if (!empty($request['hand_tools_other'])) {
-                                $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
-                            }
-
-                            // Append other equipment if available
-                            if (!empty($request['equipment_other'])) {
-                                $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
-                            }
-
-                            echo $serviceRequest;
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            // Check if the designation is "Others" and display only the "designation_other" value
-                            if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
-                                echo htmlspecialchars($request['designation_other']);
-                            } else {
-                                echo htmlspecialchars($request['designation']);
-                            }
-                            ?>
-                        </td>
-                        <td>
-                            <?php if (!empty($request['reference_file'])): ?>
-                                <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
-                            <?php else: ?>
-                                None
-                            <?php endif; ?>
-                        </td>
-                        <td class="action-container">
-                            <button class="view-btn" data-id="<?= $request['id'] ?>">View</button>
-                            <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
-                            <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>
-                        </td>
+                <?php if (empty($jobRequests)): ?>
+                    <tr>
+                        <td colspan="6" style="text-align:center; color:#888;">No client profile & service request data is available. Click Add to create data</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($jobRequests as $request): ?>
+                        <tr data-id="<?= $request['id'] ?>">
+                            <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
+                            <td><?= htmlspecialchars($request['client_name']) ?></td>
+                            <td>
+                                <?php
+                                // Start with the service requested
+                                $serviceRequest = htmlspecialchars($request['service_requested']);
+
+                                // Append equipment if available
+                                if (!empty($request['equipment'])) {
+                                    $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
+                                }
+
+                                // Append hand tools if available, ensuring no redundancy
+                                if (!empty($request['hand_tools_other'])) {
+                                    $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
+                                }
+
+                                // Append other equipment if available
+                                if (!empty($request['equipment_other'])) {
+                                    $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
+                                }
+
+                                echo $serviceRequest;
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                // Check if the designation is "Others" and display only the "designation_other" value
+                                if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
+                                    echo htmlspecialchars($request['designation_other']);
+                                } else {
+                                    echo htmlspecialchars($request['designation']);
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php if (!empty($request['reference_file'])): ?>
+                                    <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
+                                <?php else: ?>
+                                    None
+                                <?php endif; ?>
+                            </td>
+                            <td class="action-container">
+                                <button class="view-btn" data-id="<?= $request['id'] ?>">View</button>
+                                <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
+                                <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -566,6 +577,15 @@ $chartData = [
                             }
                         }
                     });
+
+                    const noDataMessage = document.getElementById('noDataMessage');
+                    const hasData = values.some(v => parseFloat(v) > 0);
+
+                    if (!hasData) {
+                        noDataMessage.style.display = 'block';
+                    } else {
+                        noDataMessage.style.display = 'none';
+                    }
                 })
                 .catch(error => console.error('Error fetching chart data:', error));
         }
@@ -596,7 +616,7 @@ $chartData = [
                 const id = this.getAttribute('data-id');
                 fetch(`fetch-job_requests-handler.php?id=${id}`, {
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest' // Add this header
+                            'X-Requested-With': 'XMLHttpRequest'
                         }
                     })
                     .then(response => {
@@ -622,7 +642,74 @@ $chartData = [
                         document.querySelector('[name="age"]').value = data.age || '';
                         if (data.designation) {
                             document.querySelector(`[name="designation"][value="${data.designation}"]`).checked = true;
+                            // Enable/disable designation_other
+                            const otherInput = document.querySelector('input[name="designation_other"]');
+                            if (data.designation === "Others") {
+                                otherInput.disabled = false;
+                                otherInput.value = data.designation_other || '';
+                            } else {
+                                otherInput.disabled = true;
+                                otherInput.value = "";
+                            }
                         }
+                        document.querySelector('[name="company"]').value = data.company || '';
+
+                        // Service Requested (checkboxes)
+                        if (data.service_requested) {
+                            // Uncheck all first
+                            document.querySelectorAll('input[name="service_requested[]"]').forEach(cb => cb.checked = false);
+                            // Parse as array (if stored as comma-separated string)
+                            let services = Array.isArray(data.service_requested) ?
+                                data.service_requested :
+                                data.service_requested.split(',').map(s => s.trim());
+                            document.querySelectorAll('input[name="service_requested[]"]').forEach(cb => {
+                                if (services.includes(cb.value)) cb.checked = true;
+                            });
+                        }
+
+                        // Equipment (checkboxes)
+                        if (data.equipment) {
+                            document.querySelectorAll('input[name="equipment[]"]').forEach(cb => cb.checked = false);
+                            let equipmentArr = Array.isArray(data.equipment) ?
+                                data.equipment :
+                                data.equipment.split(',').map(s => s.trim());
+                            document.querySelectorAll('input[name="equipment[]"]').forEach(cb => {
+                                if (equipmentArr.includes(cb.value)) cb.checked = true;
+                            });
+                        }
+                        document.querySelector('[name="hand_tools_other"]').value = data.hand_tools_other || '';
+                        document.querySelector('[name="equipment_other"]').value = data.equipment_other || '';
+
+                        // Consultation mode and schedule
+                        if (data.consultation_mode) {
+                            let radio = document.querySelector(`[name="consultation_mode"][value="${data.consultation_mode}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                        if (data.consultation_schedule && data.consultation_schedule !== "0000-00-00 00:00:00") {
+                            let dt = new Date(data.consultation_schedule);
+                            let local = dt.toISOString().slice(0, 16);
+                            document.querySelector('[name="consultation_schedule"]').value = local;
+                        } else {
+                            document.querySelector('[name="consultation_schedule"]').value = '';
+                        }
+
+                        // Equipment schedule (datetime-local)
+                        if (data.equipment_schedule && data.equipment_schedule !== "0000-00-00 00:00:00") {
+                            // Format for input[type="datetime-local"]
+                            let dt = new Date(data.equipment_schedule);
+                            let local = dt.toISOString().slice(0, 16);
+                            document.querySelector('[name="equipment_schedule"]').value = local;
+                        } else {
+                            document.querySelector('[name="equipment_schedule"]').value = '';
+                        }
+
+                        // Personnel_date
+                        if (data.personnel_date && data.personnel_date !== "0000-00-00") {
+                            document.querySelector('[name="personnel_date"]').value = data.personnel_date;
+                        } else {
+                            document.querySelector('[name="personnel_date"]').value = '';
+                        }
+
                         document.querySelector('[name="work_description"]').value = data.work_description || '';
                         document.querySelector('[name="date"]').value = data.request_date || '';
 
@@ -637,6 +724,9 @@ $chartData = [
                         } else {
                             hiddenIdField.value = data.id;
                         }
+
+                        // Make reference file optional in edit mode
+                        document.querySelector('[name="reference_file"]').required = false;
 
                         // Show the modal
                         const modal = document.getElementById("jobRequestModal");

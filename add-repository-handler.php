@@ -1,5 +1,8 @@
 <?php
-session_start(); // Start the session
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('staff_session');
+    session_start(); // Start the session only if it's not already started
+}
 include 'config.php'; // Include the database connection
 
 // Check if the user is logged in as staff
@@ -37,8 +40,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Log the action
         if (isset($_SESSION['staff_name'])) {
             $staff_name = $_SESSION['staff_name'];
-            $action = $repository_id ? "Edited repository listing: $listing_name" : "Added repository listing: $listing_name";
             $log_date = date('Y-m-d H:i:s');
+
+            // Field label mapping
+            $fieldLabels = [
+                'listing_name' => 'Listing Name',
+                'listing_type' => 'Listing Type',
+                'reference_file' => 'Reference File',
+                'note' => 'Note'
+            ];
+
+            if ($repository_id) {
+                // Fetch old data for comparison
+                $oldStmt = $conn->prepare("SELECT * FROM repository WHERE id = ?");
+                $oldStmt->bind_param('i', $repository_id);
+                $oldStmt->execute();
+                $oldData = $oldStmt->get_result()->fetch_assoc();
+                $oldStmt->close();
+
+                $changes = [];
+                foreach ($oldData as $key => $value) {
+                    if (array_key_exists($key, $fieldLabels) && $value != ${$key}) {
+                        $label = $fieldLabels[$key];
+                        $changes[] = "$label: '$value' -> '" . ${$key} . "'";
+                    }
+                }
+                $action = "Edited repository listing: $listing_name\nChanges:\n" . implode("\n", $changes);
+            } else {
+                $action = "Added repository listing: $listing_name";
+            }
 
             $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
             $log_stmt->bind_param('sss', $staff_name, $action, $log_date);

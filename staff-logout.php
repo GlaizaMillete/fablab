@@ -1,4 +1,5 @@
 <?php
+session_name('staff_session');
 session_start(); // Start the session
 
 // Destroy staff session variables
