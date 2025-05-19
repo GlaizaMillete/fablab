@@ -224,8 +224,11 @@ $chartData = [
             </div>
         </div>
         <div class="dashboard">
-            <div class="chart-container">
+            <div class="chart-container" style="position: relative;">
                 <canvas id="requestChart"></canvas>
+                <div id="noDataMessage" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;text-align:center;font-size:1.2rem;">
+                    No data available to display.
+                </div>
             </div>
             <div class="totals-card">
                 <h3>Data Visualization</h3>
@@ -320,7 +323,7 @@ $chartData = [
 
         <div class="request-table">
             <h2>Client Profile and Service Requests</h2>
-            <button class="cpsc_button" id="openFormBtn">Add New Service Request</button>
+            <button class="cpsc_button" id="openFormBtn">Add Data</button>
         </div>
         <table>
             <thead>
@@ -334,57 +337,63 @@ $chartData = [
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($jobRequests as $request): ?>
-                    <tr data-id="<?= $request['id'] ?>">
-                        <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
-                        <td><?= htmlspecialchars($request['client_name']) ?></td>
-                        <td>
-                            <?php
-                            // Start with the service requested
-                            $serviceRequest = htmlspecialchars($request['service_requested']);
-
-                            // Append equipment if available
-                            if (!empty($request['equipment'])) {
-                                $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
-                            }
-
-                            // Append hand tools if available, ensuring no redundancy
-                            if (!empty($request['hand_tools_other'])) {
-                                $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
-                            }
-
-                            // Append other equipment if available
-                            if (!empty($request['equipment_other'])) {
-                                $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
-                            }
-
-                            echo $serviceRequest;
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            // Check if the designation is "Others" and display only the "designation_other" value
-                            if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
-                                echo htmlspecialchars($request['designation_other']);
-                            } else {
-                                echo htmlspecialchars($request['designation']);
-                            }
-                            ?>
-                        </td>
-                        <td>
-                            <?php if (!empty($request['reference_file'])): ?>
-                                <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
-                            <?php else: ?>
-                                None
-                            <?php endif; ?>
-                        </td>
-                        <td class="action-container">
-                            <button class="view-btn" data-id="<?= $request['id'] ?>">View</button>
-                            <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
-                            <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>
-                        </td>
+                <?php if (empty($jobRequests)): ?>
+                    <tr>
+                        <td colspan="6" style="text-align:center; color:#888;">No client profile & service request data is available. Click Add to create data</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($jobRequests as $request): ?>
+                        <tr data-id="<?= $request['id'] ?>">
+                            <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
+                            <td><?= htmlspecialchars($request['client_name']) ?></td>
+                            <td>
+                                <?php
+                                // Start with the service requested
+                                $serviceRequest = htmlspecialchars($request['service_requested']);
+
+                                // Append equipment if available
+                                if (!empty($request['equipment'])) {
+                                    $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
+                                }
+
+                                // Append hand tools if available, ensuring no redundancy
+                                if (!empty($request['hand_tools_other'])) {
+                                    $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
+                                }
+
+                                // Append other equipment if available
+                                if (!empty($request['equipment_other'])) {
+                                    $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
+                                }
+
+                                echo $serviceRequest;
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                // Check if the designation is "Others" and display only the "designation_other" value
+                                if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
+                                    echo htmlspecialchars($request['designation_other']);
+                                } else {
+                                    echo htmlspecialchars($request['designation']);
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php if (!empty($request['reference_file'])): ?>
+                                    <a href="uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>" class="ref-link" target="_blank">View File</a>
+                                <?php else: ?>
+                                    None
+                                <?php endif; ?>
+                            </td>
+                            <td class="action-container">
+                                <button class="view-btn" data-id="<?= $request['id'] ?>">View</button>
+                                <button class="edit-btn" data-id="<?= $request['id'] ?>">Edit</button>
+                                <button class="delete-btn" data-id="<?= $request['id'] ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -567,6 +576,15 @@ $chartData = [
                             }
                         }
                     });
+
+                    const noDataMessage = document.getElementById('noDataMessage');
+                    const hasData = values.some(v => parseFloat(v) > 0);
+
+                    if (!hasData) {
+                        noDataMessage.style.display = 'block';
+                    } else {
+                        noDataMessage.style.display = 'none';
+                    }
                 })
                 .catch(error => console.error('Error fetching chart data:', error));
         }

@@ -34,52 +34,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($stmt->execute()) {
-        if ($stmt->execute()) {
-            // Log the action
-            if (isset($_SESSION['staff_name'])) {
-                $staff_name = $_SESSION['staff_name'];
-                $log_date = date('Y-m-d H:i:s');
+        // Log the action
+        if (isset($_SESSION['staff_name'])) {
+            $staff_name = $_SESSION['staff_name'];
+            $log_date = date('Y-m-d H:i:s');
 
-                // Field label mapping
-                $fieldLabels = [
-                    'listing_name' => 'Listing Name',
-                    'listing_type' => 'Listing Type',
-                    'reference_file' => 'Reference File',
-                    'note' => 'Note'
-                ];
+            // Field label mapping
+            $fieldLabels = [
+                'listing_name' => 'Listing Name',
+                'listing_type' => 'Listing Type',
+                'reference_file' => 'Reference File',
+                'note' => 'Note'
+            ];
 
-                if ($repository_id) {
-                    // Fetch old data for comparison
-                    $oldStmt = $conn->prepare("SELECT * FROM repository WHERE id = ?");
-                    $oldStmt->bind_param('i', $repository_id);
-                    $oldStmt->execute();
-                    $oldData = $oldStmt->get_result()->fetch_assoc();
-                    $oldStmt->close();
+            if ($repository_id) {
+                // Fetch old data for comparison
+                $oldStmt = $conn->prepare("SELECT * FROM repository WHERE id = ?");
+                $oldStmt->bind_param('i', $repository_id);
+                $oldStmt->execute();
+                $oldData = $oldStmt->get_result()->fetch_assoc();
+                $oldStmt->close();
 
-                    $changes = [];
-                    foreach ($oldData as $key => $value) {
-                        if (array_key_exists($key, $fieldLabels) && $value != ${$key}) {
-                            $label = $fieldLabels[$key];
-                            $changes[] = "$label: '$value' -> '" . ${$key} . "'";
-                        }
+                $changes = [];
+                foreach ($oldData as $key => $value) {
+                    if (array_key_exists($key, $fieldLabels) && $value != ${$key}) {
+                        $label = $fieldLabels[$key];
+                        $changes[] = "$label: '$value' -> '" . ${$key} . "'";
                     }
-                    $action = "Edited repository listing: $listing_name\nChanges:\n" . implode("\n", $changes);
-                } else {
-                    $action = "Added repository listing: $listing_name";
                 }
-
-                $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
-                $log_stmt->bind_param('sss', $staff_name, $action, $log_date);
-                $log_stmt->execute();
-                $log_stmt->close();
+                $action = "Edited repository listing: $listing_name\nChanges:\n" . implode("\n", $changes);
+            } else {
+                $action = "Added repository listing: $listing_name";
             }
 
-            // Redirect back to the referring page
-            $stmt->close();
-            $conn->close();
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
+            $log_stmt = $conn->prepare("INSERT INTO logs (staff_name, action, log_date) VALUES (?, ?, ?)");
+            $log_stmt->bind_param('sss', $staff_name, $action, $log_date);
+            $log_stmt->execute();
+            $log_stmt->close();
         }
+
+        // Redirect back to the referring page
+        $stmt->close();
+        $conn->close();
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     } else {
         die('Error: ' . $stmt->error);
     }

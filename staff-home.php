@@ -99,44 +99,50 @@ include 'fetch-repository-handler.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($jobRequests as $request): ?>
+                            <?php if (empty($jobRequests)): ?>
                                 <tr>
-                                    <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
-                                    <td><?= htmlspecialchars($request['client_name']) ?></td>
-                                    <td>
-                                        <?php
-                                        $serviceRequest = htmlspecialchars($request['service_requested']);
-                                        if (!empty($request['equipment'])) {
-                                            $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
-                                        }
-                                        if (!empty($request['hand_tools_other'])) {
-                                            $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
-                                        }
-                                        if (!empty($request['equipment_other'])) {
-                                            $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
-                                        }
-                                        echo $serviceRequest;
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        // Check if the designation is "Others" and display only the "designation_other" value
-                                        if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
-                                            echo htmlspecialchars($request['designation_other']);
-                                        } else {
-                                            echo htmlspecialchars($request['designation']);
-                                        }
-                                        ?>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <?php if (!empty($request['reference_file'])): ?>
-                                            <button onclick="window.open('uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>', '_blank')">View</button>
-                                        <?php else: ?>
-                                            None
-                                        <?php endif; ?>
-                                    </td>
+                                    <td colspan="5" style="text-align:center; color:#888;">No client profile & service request data is available. Go to Full Page to be able to add, edit, or delete client profile & service request data.</td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php foreach ($jobRequests as $request): ?>
+                                    <tr>
+                                        <td><?= date("F d, Y", strtotime($request['request_date'])) ?></td>
+                                        <td><?= htmlspecialchars($request['client_name']) ?></td>
+                                        <td>
+                                            <?php
+                                            $serviceRequest = htmlspecialchars($request['service_requested']);
+                                            if (!empty($request['equipment'])) {
+                                                $serviceRequest .= ": " . htmlspecialchars($request['equipment']);
+                                            }
+                                            if (!empty($request['hand_tools_other'])) {
+                                                $serviceRequest .= ": " . htmlspecialchars($request['hand_tools_other']);
+                                            }
+                                            if (!empty($request['equipment_other'])) {
+                                                $serviceRequest .= ": " . htmlspecialchars($request['equipment_other']);
+                                            }
+                                            echo $serviceRequest;
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            // Check if the designation is "Others" and display only the "designation_other" value
+                                            if ($request['designation'] === "Others" && !empty($request['designation_other'])) {
+                                                echo htmlspecialchars($request['designation_other']);
+                                            } else {
+                                                echo htmlspecialchars($request['designation']);
+                                            }
+                                            ?>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <?php if (!empty($request['reference_file'])): ?>
+                                                <button onclick="window.open('uploads/job-requests/<?= htmlspecialchars($request['reference_file']) ?>', '_blank')">View</button>
+                                            <?php else: ?>
+                                                None
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -161,23 +167,29 @@ include 'fetch-repository-handler.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($billingRows as $row): ?>
+                            <?php if (empty($billingRows)): ?>
                                 <tr>
-                                    <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
-                                    <td><?php echo htmlspecialchars($row['no']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['client_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['description']); ?></td>
-                                    <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
-                                    <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
-                                    <td style="text-align: center;">
-                                        <?php if (!empty($row['billing_pdf'])): ?>
-                                            <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">View</button>
-                                        <?php else: ?>
-                                            <span class="no-pdf">None</span>
-                                        <?php endif; ?>
-                                    </td>
+                                    <td colspan="7" style="text-align:center; color:#888;">No payment and release data is available. Go to Full Page to be able to add, edit, or delete payment and release data.</td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php foreach ($billingRows as $row): ?>
+                                    <tr>
+                                        <td><?php echo date("F d, Y", strtotime($row['billing_date'])); ?></td>
+                                        <td><?php echo htmlspecialchars($row['no']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['description']); ?></td>
+                                        <td><?php echo htmlspecialchars(trim($row['client_profile'])); ?></td>
+                                        <td>&#8369;<?php echo number_format($row['total_invoice'], 2); ?></td>
+                                        <td style="text-align: center;">
+                                            <?php if (!empty($row['billing_pdf'])): ?>
+                                                <button onclick="window.open('uploads/billing/<?php echo htmlspecialchars($row['billing_pdf']); ?>', '_blank')">View</button>
+                                            <?php else: ?>
+                                                <span class="no-pdf">None</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -204,7 +216,11 @@ include 'fetch-repository-handler.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($repositoryRows)): ?>
+                            <?php if (empty($repositoryRows)): ?>
+                                <tr>
+                                    <td colspan="6" style="text-align:center; color:#888;">No repository listings available.</td>
+                                </tr>
+                            <?php else: ?>
                                 <?php foreach ($repositoryRows as $row): ?>
                                     <tr>
                                         <td><?php echo date("F d, Y", strtotime($row['date'])); ?></td>
@@ -224,10 +240,6 @@ include 'fetch-repository-handler.php';
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="6">No repository listings available</td>
-                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

@@ -69,16 +69,15 @@ if (!$result) {
 
 $ovaTotal = 0;
 $totalsByProfile = ['STUDENT' => 0, 'MSME' => 0, 'OTHERS' => 0];
-$rows = [];
+// Add counters for each profile
+$countsByProfile = ['STUDENT' => 0, 'MSME' => 0, 'OTHERS' => 0];
 
 while ($row = $result->fetch_assoc()) {
     $rows[] = $row;
     $ovaTotal += $row['total_invoice'];
-    if (isset($totalsByProfile[$row['client_profile']])) {
-        $totalsByProfile[$row['client_profile']] += $row['total_invoice'];
-    } else {
-        $totalsByProfile['OTHERS'] += $row['total_invoice'];
-    }
+    $profile = isset($totalsByProfile[$row['client_profile']]) ? $row['client_profile'] : 'OTHERS';
+    $totalsByProfile[$profile] += $row['total_invoice'];
+    $countsByProfile[$profile]++;
 }
 ?>
 
@@ -240,8 +239,17 @@ while ($row = $result->fetch_assoc()) {
         </div>
 
         <div class="dashboard">
-            <div class="chart-container">
+            <div class="chart-container" style="position: relative;">
                 <canvas id="profileChart"></canvas>
+                <?php if (
+                    $totalsByProfile['STUDENT'] == 0 &&
+                    $totalsByProfile['MSME'] == 0 &&
+                    $totalsByProfile['OTHERS'] == 0
+                ): ?>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#888;text-align:center;font-size:1.2rem;">
+                        No data available to display.
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="totals-card">
@@ -251,15 +259,17 @@ while ($row = $result->fetch_assoc()) {
                 <h4>By Client Profile</h4>
                 <div class="profile-total">
                     <strong>STUDENT:</strong> &#8369;<?php echo number_format($totalsByProfile['STUDENT'], 2); ?>
+                    <!-- (<?php echo $countsByProfile['STUDENT']; ?>) -->
                 </div>
                 <div class="profile-total">
                     <strong>MSME:</strong> &#8369;<?php echo number_format($totalsByProfile['MSME'], 2); ?>
+                    <!-- (<?php echo $countsByProfile['MSME']; ?>) -->
                 </div>
                 <div class="profile-total">
                     <strong>OTHERS:</strong> &#8369;<?php echo number_format($totalsByProfile['OTHERS'], 2); ?>
+                    <!-- (<?php echo $countsByProfile['OTHERS']; ?>) -->
                 </div>
             </div>
-
         </div>
 
         <h2>Filter Payment and Release Records</h2>
@@ -324,7 +334,7 @@ while ($row = $result->fetch_assoc()) {
 
         <div class="billing-table">
             <h2>Payment and Release Records</h2>
-            <button id="openFormBtn">Add New Payment and Release</button>
+            <button id="openFormBtn">Add Data</button>
         </div>
         <table>
             <thead>
@@ -340,28 +350,34 @@ while ($row = $result->fetch_assoc()) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($rows as $row): ?>
-                    <tr data-id="<?= $row['no'] ?>">
-                        <td><?= date("F d, Y", strtotime($row['billing_date'])) ?></td>
-                        <td><?= htmlspecialchars($row['no']) ?></td>
-                        <td><?= htmlspecialchars($row['client_name']) ?></td>
-                        <td><?= htmlspecialchars($row['description']) ?></td>
-                        <td><?= htmlspecialchars(trim($row['client_profile'])) ?></td>
-                        <td>&#8369;<?= number_format($row['total_invoice'], 2) ?></td>
-                        <td>
-                            <?php if (!empty($row['billing_pdf'])): ?>
-                                <a href="uploads/billing/<?= htmlspecialchars($row['billing_pdf']) ?>" class="ref-link" target="_blank">View PDF</a>
-                            <?php else: ?>
-                                <span class="no-pdf">None</span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="action-container">
-                            <button class="view-btn" data-id="<?= $row['no'] ?>">View</button>
-                            <button class="edit-btn" data-id="<?= $row['no'] ?>">Edit</button>
-                            <button class="delete-btn" data-id="<?= $row['no'] ?>">Delete</button>
-                        </td>
+                <?php if (empty($rows)): ?>
+                    <tr>
+                        <td colspan="8" style="text-align:center; color:#888;">No payment and release data is available. Click Add to create data.</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($rows as $row): ?>
+                        <tr data-id="<?= $row['no'] ?>">
+                            <td><?= date("F d, Y", strtotime($row['billing_date'])) ?></td>
+                            <td><?= htmlspecialchars($row['no']) ?></td>
+                            <td><?= htmlspecialchars($row['client_name']) ?></td>
+                            <td><?= htmlspecialchars($row['description']) ?></td>
+                            <td><?= htmlspecialchars(trim($row['client_profile'])) ?></td>
+                            <td>&#8369;<?= number_format($row['total_invoice'], 2) ?></td>
+                            <td>
+                                <?php if (!empty($row['billing_pdf'])): ?>
+                                    <a href="uploads/billing/<?= htmlspecialchars($row['billing_pdf']) ?>" class="ref-link" target="_blank">View PDF</a>
+                                <?php else: ?>
+                                    <span class="no-pdf">None</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="action-container">
+                                <button class="view-btn" data-id="<?= $row['no'] ?>">View</button>
+                                <button class="edit-btn" data-id="<?= $row['no'] ?>">Edit</button>
+                                <button class="delete-btn" data-id="<?= $row['no'] ?>">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -401,72 +417,83 @@ while ($row = $result->fetch_assoc()) {
         }
 
         // Chart.js configuration
-        const ctx = document.getElementById('profileChart').getContext('2d');
-        const profileChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['STUDENT', 'MSME', 'OTHERS'],
-                datasets: [{
-                    data: [
-                        <?php echo $totalsByProfile['STUDENT']; ?>,
-                        <?php echo $totalsByProfile['MSME']; ?>,
-                        <?php echo $totalsByProfile['OTHERS']; ?>
+        const hasChartData =
+            <?php echo ($totalsByProfile['STUDENT'] > 0 || $totalsByProfile['MSME'] > 0 || $totalsByProfile['OTHERS'] > 0) ? 'true' : 'false'; ?>;
+
+        if (hasChartData) {
+            const ctx = document.getElementById('profileChart').getContext('2d');
+            const profileChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'STUDENT (<?php echo $countsByProfile['STUDENT']; ?>)',
+                        'MSME (<?php echo $countsByProfile['MSME']; ?>)',
+                        'OTHERS (<?php echo $countsByProfile['OTHERS']; ?>)'
                     ],
-                    backgroundColor: [
-                        '#3498db',
-                        '#2ecc71',
-                        '#e74c3c'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                font: {
-                    family: 'Roboto Slab',
-                    // size: 16,
-                    // weight: 'bold'
+                    datasets: [{
+                        data: [
+                            <?php echo $totalsByProfile['STUDENT']; ?>,
+                            <?php echo $totalsByProfile['MSME']; ?>,
+                            <?php echo $totalsByProfile['OTHERS']; ?>
+                        ],
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#e74c3c'
+                        ],
+                        borderWidth: 0
+                    }]
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 20,
-                            padding: 10,
-                            font: {
-                                family: 'Roboto Slab', // Set your custom font family
-                                size: 14, // Set font size
-                                weight: 'bold', // Set font weight
-                                style: 'italic', // Optional: Set font style
-                                lineHeight: 1.5 // Optional: Set line height
-                            },
-                            color: '#333' // Set font color
-                        }
+                options: {
+                    font: {
+                        family: 'Roboto Slab',
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ₱' + context.raw.toLocaleString('en-PH', {
-                                    minimumFractionDigits: 2
-                                });
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 20,
+                                padding: 10,
+                                font: {
+                                    family: 'Roboto Slab',
+                                    size: 14,
+                                    weight: 'bold',
+                                    style: 'italic',
+                                    lineHeight: 1.5
+                                },
+                                color: '#333'
                             }
                         },
-                        bodyFont: {
-                            family: 'Roboto Slab', // Set custom font for tooltips
-                            size: 15, // Set font size for tooltips
-                            weight: 'normal' // Set font weight for tooltips
-                        },
-                        titleFont: {
-                            family: 'Roboto Slab', // Set custom font for tooltip titles
-                            size: 16, // Set font size for tooltip titles
-                            weight: 'bold' // Set font weight for tooltip titles
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ₱' + context.raw.toLocaleString('en-PH', {
+                                        minimumFractionDigits: 2
+                                    });
+                                }
+                            },
+                            bodyFont: {
+                                family: 'Roboto Slab',
+                                size: 15,
+                                weight: 'normal'
+                            },
+                            titleFont: {
+                                family: 'Roboto Slab',
+                                size: 16,
+                                weight: 'bold'
+                            }
                         }
-                    }
-                },
-                cutout: '45%'
-            }
-        });
+                    },
+                    cutout: '45%'
+                }
+            });
+        } else {
+            // Optionally, you can clear the canvas if needed
+            const ctx = document.getElementById('profileChart').getContext('2d');
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
 
         // Add new row to the service table
         document.getElementById('addRowBtn').addEventListener('click', function() {
