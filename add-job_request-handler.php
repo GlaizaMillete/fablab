@@ -258,4 +258,9 @@ if ($stmt->execute()) {
 } else {
     die('Error: ' . $stmt->error);
 }
+
+// Redirect back to the job requests page
+header('Location: ' . $_SERVER['HTTP_REFERER']);
+exit();
+
 ?>

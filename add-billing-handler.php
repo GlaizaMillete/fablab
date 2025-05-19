@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         )");
         // Corrected bind_param types: 16 s, 1 i, 1 d -> ssssssssssssssisssd
         $stmt->bind_param(
-            'sssssssssssssisssd',
+            'sssssssssd',
             $billingDate,
             $clientName,
             $address,
