@@ -1,5 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    session_name('staff_session');
     session_start(); // Start the session only if it's not already started
 }
 
@@ -59,7 +60,7 @@ include 'header.php';
         <ul class="credits-devs">
             <li>
                 <div class="dev-card">
-                    <img src="devs/jade.jpg" alt="Jade Raposa">
+                    <img src="devs/jaded.jpg" alt="Jade Raposa">
                     <span>Jade Raposa</span>
                 </div>
             </li>

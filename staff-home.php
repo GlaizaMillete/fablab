@@ -1,4 +1,5 @@
 <?php
+session_name('staff_session'); 
 session_start(); // Start the session
 
 // Check if the user is logged in as staff
