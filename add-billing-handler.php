@@ -230,6 +230,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die('Error updating billing record: ' . $stmt->error);
         }
     } else {
+        // Check for duplicate 'no' if user provided a value
+        if (isset($_POST['no']) && !empty($_POST['no'])) {
+            $no = intval($_POST['no']);
+            $checkStmt = $conn->prepare("SELECT COUNT(*) FROM billing WHERE no = ?");
+            $checkStmt->bind_param('i', $no);
+            $checkStmt->execute();
+            $checkStmt->bind_result($count);
+            $checkStmt->fetch();
+            $checkStmt->close();
+            if ($count > 0) {
+                // Show a browser alert and redirect back
+                echo "<script>
+                    alert('The No. value already exists. Please use a unique number.');
+                    window.history.back();
+                </script>";
+                exit();
+            }
+        }
         // Insert into billing table
         // Ensure the column names match the database schema
         $stmt = $conn->prepare("INSERT INTO billing (

@@ -116,7 +116,7 @@ while ($row = $result->fetch_assoc()) {
                     <h3>Personal Information</h3>
                     <div>
                         <label>No:</label>
-                        <input type="number" id="noField" name="no" readonly>
+                        <input type="number" id="noField" name="no">
                     </div>
                     <div>
                         <label>Date:</label>
